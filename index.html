@@ -1,0 +1,2832 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>GeoStunting Indonesia: Precision Targeting Program MBG</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=Nunito:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="data.js"></script>
+<style>
+:root{
+  --red:#ff4757;--amber:#ffa502;--green:#2ed573;
+  --orange:#ff6b35;--teal:#00cec9;--sky:#74b9ff;
+  --bg:#061612;--bg2:#0b1f18;--bg3:#112a1f;--bg4:#1a3d2b;
+  --border:#1e4a32;--border2:#265c3e;
+  --text:#e8f5ee;--text2:#7eb89a;--text3:#4a7a5e;
+  --card:rgba(17,42,31,0.85);
+  --sidebar-w:248px;
+  --glow-red:rgba(255,71,87,0.25);--glow-amber:rgba(255,165,2,0.25);--glow-green:rgba(46,213,115,0.25);--glow-orange:rgba(255,107,53,0.3);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;}
+
+/* ── BACKGROUND TEXTURE ── */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(255,107,53,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(0,206,201,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 80%, rgba(46,213,115,0.03) 0%, transparent 40%);
+}
+
+/* ── PARTICLES ── */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;border-radius:50%;animation:float-particle linear infinite;opacity:0;}
+@keyframes float-particle{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:1}90%{opacity:0.4}100%{transform:translateY(-10vh) scale(1.5);opacity:0}}
+
+/* ── NAV SVG ICONS ── */
+.nav-ico{width:18px;height:18px;fill:currentColor;flex-shrink:0;}
+
+/* ── MBG PLATE ICON ── */
+.mbg-plate-wrap{display:flex;justify-content:center;align-items:center;margin-bottom:10px;position:relative;}
+.mbg-plate-svg{width:56px;height:56px;filter:drop-shadow(0 0 14px rgba(255,107,53,0.5));animation:plate-pulse 3s ease-in-out infinite;}
+@keyframes plate-pulse{
+  0%,100%{filter:drop-shadow(0 0 10px rgba(255,107,53,0.4));transform:scale(1);}
+  50%{filter:drop-shadow(0 0 22px rgba(255,107,53,0.75));transform:scale(1.05);}
+}
+/* Spinning ring around plate */
+.plate-ring{
+  position:absolute;width:68px;height:68px;
+  border:1.5px dashed rgba(255,107,53,0.3);
+  border-radius:50%;animation:ring-spin 12s linear infinite;
+}
+@keyframes ring-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);
+  background:linear-gradient(180deg,#091a13 0%,#071510 100%);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;flex-shrink:0;
+  position:relative;z-index:10;
+  box-shadow:4px 0 40px rgba(0,0,0,0.5);
+}
+.sidebar-logo{
+  padding:28px 20px 22px;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,rgba(255,107,53,0.08),rgba(0,206,201,0.05));
+  text-align:center;
+}
+.brand{font-family:'Sora',sans-serif;font-size:18px;font-weight:900;letter-spacing:1px;color:#fff;line-height:1.1;}
+.brand .geo{color:var(--orange);}
+.brand .stunting{color:var(--teal);}
+.brand-sub{font-size:11px;color:var(--text3);margin-top:5px;letter-spacing:0.8px;text-transform:uppercase;}
+
+.nav-section-label{
+  padding:16px 20px 6px;
+  font-size:10.5px;color:var(--text3);
+  letter-spacing:1.5px;text-transform:uppercase;font-weight:700;
+}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 16px;margin:2px 10px;
+  cursor:pointer;border-radius:10px;
+  font-size:13px;color:var(--text2);font-weight:600;
+  transition:all .2s;border:1px solid transparent;
+  position:relative;overflow:hidden;
+}
+.nav-item::before{
+  content:'';position:absolute;left:0;top:0;height:100%;width:3px;
+  border-radius:3px;background:var(--orange);
+  transform:scaleY(0);transition:transform .2s;
+}
+.nav-item:hover{background:rgba(255,107,53,0.06);color:var(--text);border-color:rgba(255,107,53,0.15);}
+.nav-item.active{background:rgba(255,107,53,0.1);color:var(--orange);border-color:rgba(255,107,53,0.25);}
+.nav-item.active::before{transform:scaleY(1);}
+.nav-label{flex:1;}
+
+.sidebar-footer{margin-top:auto;padding:16px;}
+.sdg-badge{
+  background:linear-gradient(135deg,rgba(0,206,201,0.1),rgba(116,185,255,0.08));
+  border:1px solid rgba(0,206,201,0.2);
+  border-radius:10px;padding:10px 12px;
+  font-size:11px;color:var(--teal);font-weight:700;
+  text-align:center;letter-spacing:0.5px;margin-bottom:8px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.budget-badge{
+  background:linear-gradient(135deg,rgba(255,107,53,0.1),rgba(255,165,2,0.08));
+  border:1px solid rgba(255,107,53,0.2);
+  border-radius:10px;padding:10px 12px;
+  font-size:11px;color:var(--text2);
+  text-align:center;line-height:1.6;
+}
+.budget-badge span{font-size:14px;font-weight:800;color:var(--orange);display:block;}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:1;}
+
+/* ── TOPBAR ── */
+.topbar{
+  background:rgba(9,26,19,0.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 28px;height:60px;
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.page-title-wrap{}
+.topbar-title{font-family:'Sora',sans-serif;font-size:16px;font-weight:700;color:var(--text);}
+.topbar-sub{font-size:12px;color:var(--text3);margin-top:1px;}
+.topbar-tags{display:flex;align-items:center;gap:8px;}
+.ttag{
+  padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;
+  letter-spacing:0.3px;
+}
+.ttag-orange{background:rgba(255,107,53,0.12);color:var(--orange);border:1px solid rgba(255,107,53,0.3);}
+.ttag-teal{background:rgba(0,206,201,0.1);color:var(--teal);border:1px solid rgba(0,206,201,0.25);}
+.ttag-green{background:rgba(46,213,115,0.1);color:var(--green);border:1px solid rgba(46,213,115,0.25);}
+.ttag-red{background:rgba(255,71,87,0.1);color:var(--red);border:1px solid rgba(255,71,87,0.25);}
+
+/* ── CONTENT ── */
+.content{flex:1;overflow-y:auto;padding:24px 28px;scroll-behavior:smooth;}
+.content::-webkit-scrollbar{width:4px;}
+.content::-webkit-scrollbar-track{background:transparent;}
+.content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+
+.page{display:none;}.page.active{display:block;animation:page-in .3s ease;}
+@keyframes page-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CARDS ── */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;padding:20px;
+  position:relative;overflow:hidden;
+  backdrop-filter:blur(8px);
+  transition:border-color .2s,box-shadow .2s;
+}
+.card:hover{border-color:var(--border2);box-shadow:0 4px 30px rgba(0,0,0,0.3);}
+.card-accent{position:absolute;top:0;left:0;width:3px;height:100%;border-radius:16px 0 0 16px;}
+.card-label{font-size:12px;color:var(--text2);font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px;}
+.card-value{font-family:'Sora',sans-serif;font-size:28px;font-weight:800;line-height:1;margin-bottom:6px;}
+.card-sub{font-size:12px;color:var(--text3);line-height:1.5;}
+.card-delta{font-size:12px;font-weight:700;margin-top:6px;}
+.delta-neg{color:var(--red);}
+.delta-pos{color:var(--green);}
+.card-glow{position:absolute;inset:0;border-radius:16px;pointer-events:none;opacity:0.06;}
+
+/* Grid layouts */
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px;}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:18px;}
+
+/* ── SECTION HEADERS ── */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.section-title{
+  font-family:'Sora',sans-serif;font-size:14px;font-weight:700;
+  display:flex;align-items:center;gap:8px;
+}
+.section-title-line{width:3px;height:16px;border-radius:3px;flex-shrink:0;}
+.section-sub{font-size:12px;color:var(--text3);}
+
+/* ── ZONA CARDS ── */
+.zona-big-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:20px;
+  transition:all .2s;cursor:default;
+}
+.zona-big-card:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,0.3);}
+.zona-top{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.zona-dot-big{width:12px;height:12px;border-radius:50%;flex-shrink:0;animation:zona-pulse 2.5s ease-in-out infinite;}
+@keyframes zona-pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.2);opacity:0.7}}
+.zona-name-big{font-family:'Sora',sans-serif;font-size:13px;font-weight:800;}
+.zona-count-big{font-family:'Sora',sans-serif;font-size:36px;font-weight:900;line-height:1;margin-bottom:6px;}
+.zona-progress-wrap{margin:10px 0;}
+.zona-progress-track{height:6px;background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;}
+.zona-progress-fill{height:100%;border-radius:6px;transition:width 1.2s cubic-bezier(0.34,1.56,0.64,1);}
+.zona-stats{display:flex;flex-direction:column;gap:6px;margin-top:10px;}
+.zona-stat-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;}
+.zona-stat-label{color:var(--text3);}
+.zona-stat-val{font-weight:700;color:var(--text);}
+.zona-badge-pill{
+  display:inline-block;padding:3px 9px;border-radius:20px;
+  font-size:10.5px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;
+}
+
+/* ── MAP ── */
+#map{height:380px;border-radius:14px;border:1px solid var(--border);margin-bottom:18px;position:relative;}
+.map-overlay{position:absolute;top:10px;left:10px;z-index:500;}
+.map-title-tag{
+  background:rgba(6,22,18,0.92);backdrop-filter:blur(8px);
+  border:1px solid var(--border2);border-radius:10px;
+  padding:8px 14px;font-size:12px;font-weight:700;color:var(--text);
+}
+.leaflet-container{background:#071510 !important;}
+
+/* ── TABLES ── */
+.table-wrap{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;margin-bottom:18px;
+}
+.table-head-row{
+  padding:14px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.table-head-title{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;}
+.table-head-sub{font-size:12px;color:var(--text3);}
+.table-scroll{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{
+  padding:10px 14px;font-size:11px;color:var(--text3);
+  text-align:left;border-bottom:1px solid var(--border);
+  background:rgba(17,42,31,0.6);font-weight:700;
+  letter-spacing:0.6px;text-transform:uppercase;white-space:nowrap;
+}
+td{
+  padding:10px 14px;font-size:12px;
+  border-bottom:1px solid rgba(30,74,50,0.4);
+  white-space:nowrap;transition:background .15s;
+}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,107,53,0.04);}
+.rank-num{
+  font-family:'Sora',sans-serif;font-weight:800;font-size:12px;
+  color:var(--text2);
+}
+.rank-top{color:var(--orange);}
+
+.zona-pill{
+  padding:3px 10px;border-radius:20px;
+  font-size:11px;font-weight:800;letter-spacing:0.3px;
+  display:inline-block;text-transform:uppercase;
+}
+.zona-pill.MERAH{background:rgba(255,71,87,0.12);color:var(--red);border:1px solid rgba(255,71,87,0.3);}
+.zona-pill.KUNING{background:rgba(255,165,2,0.12);color:var(--amber);border:1px solid rgba(255,165,2,0.3);}
+.zona-pill.HIJAU{background:rgba(46,213,115,0.12);color:var(--green);border:1px solid rgba(46,213,115,0.3);}
+
+.lisa-pill{
+  padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;
+  display:inline-block;
+}
+.lisa-hh{background:rgba(255,71,87,0.12);color:var(--red);}
+.lisa-ll{background:rgba(116,185,255,0.12);color:var(--sky);}
+.lisa-lh{background:rgba(255,165,2,0.12);color:var(--amber);}
+.lisa-hl{background:rgba(46,213,115,0.12);color:var(--green);}
+.lisa-ns{background:rgba(126,184,154,0.08);color:var(--text3);}
+
+.crs-bar-wrap{display:flex;align-items:center;gap:8px;}
+.crs-bar{height:5px;flex:1;background:rgba(255,255,255,0.06);border-radius:5px;overflow:hidden;min-width:40px;}
+.crs-fill{height:100%;border-radius:5px;transition:width .8s ease;}
+
+/* ── CHART CARDS ── */
+.chart-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:20px;margin-bottom:18px;
+}
+.chart-card-title{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px;}
+.chart-card-sub{font-size:12px;color:var(--text3);margin-bottom:16px;}
+canvas{max-height:280px;}
+
+/* ── SEARCH BAR ── */
+.search-area{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+.search-box{
+  flex:1;min-width:220px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;padding:11px 16px;
+  color:var(--text);font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;
+  outline:none;transition:border-color .2s,box-shadow .2s;
+}
+.search-box:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,107,53,0.12);}
+.search-box::placeholder{color:var(--text3);}
+.filter-sel{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;padding:11px 14px;
+  color:var(--text);font-size:12px;font-family:'Plus Jakarta Sans',sans-serif;
+  cursor:pointer;outline:none;transition:border-color .2s;
+}
+.filter-sel:focus{border-color:var(--orange);}
+.btn-primary{
+  background:linear-gradient(135deg,var(--orange),#ff8c42);
+  color:#fff;border:none;border-radius:10px;
+  padding:11px 20px;font-size:13px;font-weight:700;
+  cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;
+  transition:opacity .2s,transform .1s;
+  box-shadow:0 4px 15px rgba(255,107,53,0.3);
+}
+.btn-primary:hover{opacity:0.9;transform:translateY(-1px);}
+.btn-primary:active{transform:translateY(0);}
+
+/* ── PAGINATION ── */
+.pagination{
+  display:flex;align-items:center;gap:6px;
+  padding:14px 20px;border-top:1px solid var(--border);
+  flex-wrap:wrap;
+}
+.page-btn{
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--text2);padding:5px 12px;border-radius:7px;
+  cursor:pointer;font-size:12px;font-weight:600;
+  transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif;
+}
+.page-btn:hover,.page-btn.active{background:var(--orange);color:#fff;border-color:var(--orange);}
+.page-info{font-size:12px;color:var(--text3);margin-left:auto;}
+
+/* ── INFO BANNER ── */
+.info-banner{
+  background:linear-gradient(135deg,rgba(255,107,53,0.06),rgba(0,206,201,0.04));
+  border:1px solid rgba(255,107,53,0.2);border-radius:14px;
+  padding:14px 18px;margin-bottom:18px;
+  display:flex;align-items:flex-start;gap:12px;font-size:13px;line-height:1.7;
+  color:var(--text2);
+}
+.info-banner-icon{width:22px;height:22px;flex-shrink:0;margin-top:2px;color:var(--orange);}
+.info-banner-icon svg{width:100%;height:100%;fill:currentColor;}
+
+/* ── FORMULA BOX ── */
+.formula-box{
+  background:rgba(6,22,18,0.6);border:1px solid var(--border);
+  border-radius:14px;padding:18px;margin-bottom:18px;
+}
+.formula-title{
+  font-size:11px;color:var(--orange);font-weight:800;
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.formula-line{font-size:12.5px;color:var(--text);margin:4px 0;font-family:'Courier New',monospace;line-height:1.7;}
+.fk{color:var(--amber);}.fv{color:#93c5fd;}.feq{color:var(--text3);}
+
+/* ── ABOUT PAGE ── */
+.about-hero{
+  background:linear-gradient(135deg,rgba(255,107,53,0.06) 0%,rgba(0,206,201,0.06) 50%,rgba(46,213,115,0.04) 100%);
+  border:1px solid var(--border);border-radius:20px;
+  padding:36px;margin-bottom:22px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.about-hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 50%,rgba(255,107,53,0.05) 0%,transparent 70%);
+}
+.about-hero h1{
+  font-family:'Sora',sans-serif;font-size:26px;font-weight:900;
+  margin-bottom:12px;position:relative;
+}
+.about-hero h1 .geo{color:var(--orange);}
+.about-hero h1 .stunting{color:var(--teal);}
+.about-hero p{font-size:13px;color:var(--text2);line-height:1.8;max-width:600px;margin:0 auto;position:relative;}
+.model-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;}
+.metric-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:18px;text-align:center;
+  transition:border-color .2s;
+}
+.metric-card:hover{border-color:var(--border2);}
+.m-val{font-family:'Sora',sans-serif;font-size:24px;font-weight:900;color:var(--orange);}
+.m-label{font-size:11px;color:var(--text3);margin-top:5px;line-height:1.4;}
+
+/* ── PIPELINE STEPS ── */
+.pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:18px;}
+.pipeline-step{
+  background:var(--bg3);border:1px solid var(--border);
+  padding:16px;position:relative;
+}
+.pipeline-step:first-child{border-radius:12px 0 0 12px;}
+.pipeline-step:last-child{border-radius:0 12px 12px 0;}
+.pipeline-step:not(:last-child)::after{
+  content:'';position:absolute;right:-10px;top:50%;transform:translateY(-50%);
+  width:20px;height:20px;z-index:2;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff6b35'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/contain no-repeat;
+  background-color:var(--bg);border-radius:50%;padding:2px;
+}
+.ps-num{font-size:10px;color:var(--text3);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.ps-title{font-family:'Sora',sans-serif;font-size:12px;font-weight:800;margin-bottom:8px;}
+.ps-items{font-size:11.5px;color:var(--text2);line-height:1.9;}
+
+/* ── DETAIL PANEL ── */
+.detail-panel{
+  background:var(--card);border:1px solid var(--orange);
+  border-radius:16px;padding:20px;margin-bottom:18px;
+  display:none;animation:page-in .25s ease;
+}
+.detail-panel.visible{display:block;}
+.detail-name{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px;}
+.detail-prov{font-size:13px;color:var(--text3);margin-bottom:14px;}
+.detail-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+.detail-stat{
+  background:rgba(17,42,31,0.7);border:1px solid var(--border);
+  border-radius:10px;padding:12px;text-align:center;
+}
+.ds-val{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:4px;}
+.ds-label{font-size:11px;color:var(--text3);line-height:1.4;}
+
+/* ── SIMULASI STATUS PILLS ── */
+.status-pill{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:800;display:inline-block;letter-spacing:0.3px;}
+.status-defisit-ekstrim{background:rgba(255,71,87,0.12);color:var(--red);border:1px solid rgba(255,71,87,0.3);}
+.status-defisit-sedang{background:rgba(255,165,2,0.12);color:var(--amber);border:1px solid rgba(255,165,2,0.3);}
+.status-surplus{background:rgba(46,213,115,0.12);color:var(--green);border:1px solid rgba(46,213,115,0.3);}
+.gap-pill{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:800;}
+.gap-neg{background:rgba(255,71,87,0.1);color:var(--red);}
+.gap-pos{background:rgba(46,213,115,0.1);color:var(--green);}
+
+/* ============================================================
+   BERANDA PAGE
+   ============================================================ */
+.hero{
+  position:relative;
+  background:linear-gradient(135deg,rgba(255,107,53,0.06) 0%,rgba(0,206,201,0.04) 40%,rgba(6,22,18,0) 80%);
+  border:1px solid var(--border);border-radius:20px;
+  padding:48px 40px;margin-bottom:22px;overflow:hidden;
+  display:flex;align-items:center;gap:20px;
+}
+.hero-left{flex:1;min-width:0;}
+.hero-right{flex:0 0 420px;display:flex;align-items:center;justify-content:center;margin-left:-30px;}
+.hero-tray-wrap{position:relative;width:400px;height:400px;}
+.hero-tray-glow{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 60%,rgba(255,107,53,0.22) 0%,rgba(0,206,201,0.1) 50%,transparent 75%);
+  border-radius:50%;animation:tray-glow-pulse 3s ease-in-out infinite;
+}
+@keyframes tray-glow-pulse{
+  0%,100%{opacity:0.7;transform:scale(1);}
+  50%{opacity:1;transform:scale(1.08);}
+}
+.hero-tray-ring{
+  position:absolute;inset:6px;
+  border:1.5px dashed rgba(255,107,53,0.22);
+  border-radius:50%;animation:ring-spin 20s linear infinite;
+}
+.hero-tray-ring2{
+  position:absolute;inset:20px;
+  border:1px dashed rgba(0,206,201,0.15);
+  border-radius:50%;animation:ring-spin 30s linear infinite reverse;
+}
+.hero-tray-svg{
+  width:400px;height:400px;position:relative;z-index:2;
+  filter:drop-shadow(0 10px 40px rgba(255,107,53,0.35)) drop-shadow(0 2px 10px rgba(0,0,0,0.6));
+  animation:tray-float 4s ease-in-out infinite;
+}
+@keyframes tray-float{
+  0%,100%{transform:translateY(0px);}
+  50%{transform:translateY(-12px);}
+}
+@media(max-width:1200px){.hero-right{flex:0 0 300px;margin-left:0;}.hero-tray-wrap{width:290px;height:290px;}.hero-tray-svg{width:290px;height:290px;}}
+@media(max-width:900px){.hero-right{display:none;}}
+.hero-bg-art{
+  position:absolute;right:-20px;top:-20px;
+  width:320px;height:320px;
+  background:radial-gradient(ellipse,rgba(255,107,53,0.08) 0%,transparent 70%);
+  border-radius:50%;pointer-events:none;
+}
+.hero-bg-art2{
+  position:absolute;right:100px;bottom:-40px;
+  width:200px;height:200px;
+  background:radial-gradient(ellipse,rgba(0,206,201,0.07) 0%,transparent 70%);
+  border-radius:50%;pointer-events:none;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,107,53,0.1);border:1px solid rgba(255,107,53,0.25);
+  border-radius:20px;padding:5px 14px;
+  font-size:11.5px;font-weight:700;color:var(--orange);
+  letter-spacing:0.5px;text-transform:uppercase;margin-bottom:18px;
+}
+.hero-eyebrow svg{width:16px;height:16px;fill:currentColor;}
+.hero-title{
+  font-family:'Sora',sans-serif;font-size:34px;font-weight:900;
+  line-height:1.15;margin-bottom:16px;
+  background:linear-gradient(135deg,#fff 30%,rgba(255,107,53,0.9) 70%,rgba(0,206,201,0.9) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{
+  font-size:14px;color:var(--text2);line-height:1.8;max-width:540px;margin-bottom:28px;
+}
+.hero-stats{display:flex;gap:28px;flex-wrap:wrap;}
+.hero-stat{text-align:center;}
+.hero-stat-val{
+  font-family:'Sora',sans-serif;font-size:28px;font-weight:900;
+  background:linear-gradient(135deg,var(--orange),#ff8c42);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-stat-label{font-size:11.5px;color:var(--text3);margin-top:2px;line-height:1.4;}
+.hero-divider{width:1px;background:var(--border);align-self:stretch;}
+
+/* Problem section */
+.problem-section{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;padding:28px;margin-bottom:18px;
+}
+.problem-title{
+  font-family:'Sora',sans-serif;font-size:17px;font-weight:800;
+  margin-bottom:6px;
+}
+.problem-desc{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:20px;}
+.paradox-visual{
+  display:flex;align-items:center;gap:0;margin-bottom:20px;
+  border-radius:12px;overflow:hidden;border:1px solid var(--border);
+}
+.paradox-side{flex:1;padding:18px;text-align:center;}
+.paradox-side.bad{background:rgba(255,71,87,0.06);}
+.paradox-side.good{background:rgba(46,213,115,0.06);}
+.paradox-divider{
+  width:2px;background:var(--border);align-self:stretch;position:relative;
+}
+.paradox-divider::after{
+  content:'VS';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:var(--bg);border:1px solid var(--border);border-radius:20px;
+  padding:4px 8px;font-size:10px;font-weight:800;color:var(--text3);white-space:nowrap;
+}
+.paradox-label{font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:6px;}
+.paradox-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.paradox-val{font-family:'Sora',sans-serif;font-size:30px;font-weight:900;margin-bottom:4px;}
+.paradox-desc{font-size:12px;color:var(--text2);line-height:1.5;}
+
+/* How it works */
+.how-section{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;padding:28px;margin-bottom:18px;
+}
+.how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px;}
+.how-step{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:14px;padding:18px;position:relative;
+  transition:border-color .2s,transform .2s;
+}
+.how-step:hover{border-color:var(--border2);transform:translateY(-3px);}
+.how-step-num{
+  font-family:'Sora',sans-serif;font-size:30px;font-weight:900;
+  color:rgba(255,107,53,0.15);line-height:1;margin-bottom:10px;
+}
+.how-step-icon{width:28px;height:28px;margin-bottom:10px;color:var(--orange);}
+.how-step-icon svg{width:100%;height:100%;fill:currentColor;}
+.how-step-title{font-family:'Sora',sans-serif;font-size:13px;font-weight:800;margin-bottom:6px;}
+.how-step-desc{font-size:12px;color:var(--text2);line-height:1.7;}
+
+/* Zone explainer */
+.zone-explainer{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;padding:28px;margin-bottom:18px;
+}
+.zone-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px;}
+.zone-expl-card{
+  border-radius:14px;padding:20px;
+  transition:transform .2s;cursor:default;
+}
+.zone-expl-card:hover{transform:translateY(-3px);}
+.zone-expl-card.red{background:rgba(255,71,87,0.06);border:1px solid rgba(255,71,87,0.2);}
+.zone-expl-card.amber{background:rgba(255,165,2,0.06);border:1px solid rgba(255,165,2,0.2);}
+.zone-expl-card.green{background:rgba(46,213,115,0.06);border:1px solid rgba(46,213,115,0.2);}
+.zone-expl-dot{width:14px;height:14px;border-radius:50%;margin-bottom:12px;animation:zona-pulse 2.5s ease-in-out infinite;}
+.zone-expl-count{font-family:'Sora',sans-serif;font-size:32px;font-weight:900;line-height:1;margin-bottom:4px;}
+.zone-expl-name{font-size:13px;font-weight:800;margin-bottom:8px;}
+.zone-expl-desc{font-size:12px;color:var(--text2);line-height:1.7;}
+.zone-expl-stat{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:10px;font-size:12px;
+}
+.zone-expl-stat-label{color:var(--text3);}
+.zone-expl-stat-val{font-weight:800;}
+
+/* CTA Button */
+.cta-section{
+  display:flex;align-items:center;justify-content:center;
+  gap:14px;padding:24px;margin-bottom:10px;
+}
+.btn-cta-primary{
+  background:linear-gradient(135deg,var(--orange),#ff8c42);
+  color:#fff;border:none;border-radius:12px;
+  padding:14px 28px;font-size:14px;font-weight:800;
+  cursor:pointer;font-family:'Sora',sans-serif;
+  box-shadow:0 6px 20px rgba(255,107,53,0.35);
+  transition:all .2s;display:flex;align-items:center;gap:8px;
+}
+.btn-cta-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,107,53,0.45);}
+.btn-cta-primary svg{width:18px;height:18px;fill:currentColor;}
+.btn-cta-secondary{
+  background:transparent;color:var(--teal);border:1px solid var(--teal);
+  border-radius:12px;padding:14px 24px;font-size:14px;font-weight:700;
+  cursor:pointer;font-family:'Sora',sans-serif;
+  transition:all .2s;display:flex;align-items:center;gap:8px;
+}
+.btn-cta-secondary:hover{background:rgba(0,206,201,0.08);}
+.btn-cta-secondary svg{width:18px;height:18px;fill:currentColor;}
+
+/* Animated highlight numbers */
+.highlight-num{
+  font-family:'Sora',sans-serif;font-weight:900;
+  background:linear-gradient(135deg,var(--orange),#ffa502);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* ── BUDGET COMPARISON VISUAL ── */
+.budget-compare{
+  display:grid;grid-template-columns:1fr auto 1fr;gap:14px;
+  align-items:center;margin-bottom:18px;
+}
+.budget-col{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:22px;
+}
+.budget-col-title{font-family:'Sora',sans-serif;font-size:13px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.budget-col-title svg{width:18px;height:18px;fill:currentColor;}
+.budget-col-title.aktual{color:var(--red);}
+.budget-col-title.ideal{color:var(--green);}
+.budget-bar-item{margin-bottom:14px;}
+.budget-bar-label{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;margin-bottom:5px;
+}
+.budget-bar-name{font-weight:700;}
+.budget-bar-pct{font-weight:800;font-size:13px;}
+.budget-bar-track{height:10px;background:rgba(255,255,255,0.06);border-radius:10px;overflow:hidden;}
+.budget-bar-fill{height:100%;border-radius:10px;transition:width 1.5s cubic-bezier(0.34,1.56,0.64,1);}
+.budget-arrow{font-family:'Sora',sans-serif;font-size:24px;font-weight:900;color:var(--text3);text-align:center;}
+
+/* ── ZONE DOT SMALL (emoji replacement) ── */
+.zdot{display:inline-block;width:10px;height:10px;border-radius:50%;flex-shrink:0;vertical-align:middle;margin-right:4px;}
+.zdot-sm{display:inline-block;width:8px;height:8px;border-radius:50%;vertical-align:middle;margin-right:3px;}
+.ico-sm{width:14px;height:14px;fill:currentColor;display:inline-block;vertical-align:middle;margin-right:4px;flex-shrink:0;}
+.ico-inline{width:16px;height:16px;fill:currentColor;vertical-align:middle;flex-shrink:0;}
+.formula-arr{display:inline-flex;align-items:center;margin:0 4px;}
+.formula-arr svg{width:14px;height:14px;fill:var(--text3);}
+.warn-badge{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;vertical-align:middle;margin-left:2px;}
+.warn-badge svg{width:14px;height:14px;fill:var(--amber);}
+.check-badge{display:inline-flex;align-items:center;margin-right:6px;}
+.check-badge svg{width:16px;height:16px;fill:var(--green);}
+
+/* ── TICKER BAR ── */
+.ticker-bar{
+  background:rgba(6,22,18,0.97);border-bottom:1px solid rgba(255,107,53,0.15);
+  height:32px;overflow:hidden;position:relative;flex-shrink:0;
+  display:flex;align-items:center;
+}
+.ticker-label{
+  padding:0 16px;font-size:10px;font-weight:800;color:var(--orange);
+  letter-spacing:1px;text-transform:uppercase;white-space:nowrap;flex-shrink:0;
+  border-right:1px solid rgba(255,107,53,0.2);height:100%;
+  display:flex;align-items:center;gap:6px;background:rgba(255,107,53,0.06);
+}
+.ticker-label svg{width:12px;height:12px;fill:currentColor;}
+.ticker-track{flex:1;overflow:hidden;position:relative;}
+.ticker-inner{
+  display:flex;align-items:center;gap:0;
+  animation:ticker-scroll 28s linear infinite;
+  white-space:nowrap;
+}
+.ticker-inner:hover{animation-play-state:paused;}
+@keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:0 24px;font-size:11px;color:var(--text2);font-weight:600;
+  border-right:1px solid rgba(30,74,50,0.5);
+}
+.ticker-item strong{font-weight:800;}
+.ticker-item .ticker-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+/* ── STUNTING RING WIDGET ── */
+.ring-widget{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;
+}
+.ring-svg{width:72px;height:72px;}
+.ring-track{fill:none;stroke:rgba(255,255,255,0.06);stroke-width:7;}
+.ring-fill-current{fill:none;stroke:var(--amber);stroke-width:7;stroke-linecap:round;
+  stroke-dasharray:188;stroke-dashoffset:152;
+  transition:stroke-dashoffset 2s cubic-bezier(.4,0,.2,1);transform:rotate(-90deg);transform-origin:50% 50%;}
+.ring-fill-target{fill:none;stroke:var(--green);stroke-width:3;stroke-linecap:round;stroke-dasharray:2 6;
+  stroke-dashoffset:166;transform:rotate(-90deg);transform-origin:50% 50%;opacity:0.6;}
+.ring-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+.ring-val{font-family:'Sora',sans-serif;font-size:13px;font-weight:900;color:var(--amber);}
+.ring-sub{font-size:9px;color:var(--text3);white-space:nowrap;}
+
+/* ── MISALOKASI IMPACT COUNTER ── */
+.impact-counter{
+  background:linear-gradient(135deg,rgba(255,71,87,0.08),rgba(255,107,53,0.05));
+  border:1px solid rgba(255,71,87,0.2);border-radius:16px;
+  padding:22px 28px;margin-bottom:18px;
+  display:flex;align-items:center;gap:28px;flex-wrap:wrap;
+  position:relative;overflow:hidden;
+}
+.impact-counter::before{
+  content:'';position:absolute;top:-1px;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--red),transparent);
+  animation:scan-line 3s ease-in-out infinite;
+}
+@keyframes scan-line{0%,100%{opacity:0.4}50%{opacity:1}}
+.impact-icon{
+  width:48px;height:48px;background:rgba(255,71,87,0.15);
+  border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.impact-icon svg{width:26px;height:26px;fill:var(--red);}
+.impact-body{flex:1;}
+.impact-label{font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;}
+.impact-value{font-family:'Sora',sans-serif;font-size:28px;font-weight:900;color:var(--red);line-height:1;}
+.impact-sub{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.5;}
+.impact-divider{width:1px;height:50px;background:rgba(255,71,87,0.15);flex-shrink:0;}
+.impact-mini{text-align:center;}
+.impact-mini-val{font-family:'Sora',sans-serif;font-size:18px;font-weight:900;line-height:1;margin-bottom:3px;}
+.impact-mini-label{font-size:11px;color:var(--text3);}
+
+/* ── FLOW ANIMATION (budget arrow) ── */
+.budget-arrow-el{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  font-family:'Sora',sans-serif;font-size:11px;font-weight:700;color:var(--text3);text-align:center;
+}
+.flow-arrow-wrap{
+  position:relative;width:48px;height:60px;display:flex;align-items:center;justify-content:center;
+}
+.flow-arrow-svg{width:32px;height:32px;fill:var(--orange);animation:flow-pulse 1.6s ease-in-out infinite;}
+@keyframes flow-pulse{0%,100%{transform:translateX(0);opacity:0.7}50%{transform:translateX(4px);opacity:1}}
+.flow-dots{display:flex;gap:3px;margin-top:2px;}
+.flow-dot{width:5px;height:5px;border-radius:50%;background:var(--orange);opacity:0;animation:dot-wave 1.6s ease-in-out infinite;}
+.flow-dot:nth-child(1){animation-delay:0s;}
+.flow-dot:nth-child(2){animation-delay:.2s;}
+.flow-dot:nth-child(3){animation-delay:.4s;}
+@keyframes dot-wave{0%,100%{opacity:0;transform:scale(0.7)}50%{opacity:1;transform:scale(1)}}
+
+/* ── KABUPATEN 0 SPPG PULSE ── */
+.zero-sppg-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(255,71,87,0.12);border:1px solid rgba(255,71,87,0.3);
+  border-radius:6px;padding:2px 7px;font-size:11px;color:var(--red);font-weight:700;
+}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--red);
+  animation:red-pulse 1.2s ease-in-out infinite;}
+@keyframes red-pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:0.5}}
+
+/* ── PAGINATION ARROW BUTTON ── */
+.page-btn-arrow{
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--orange);padding:5px 10px;border-radius:7px;
+  cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+  transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif;
+}
+.page-btn-arrow:hover{background:var(--orange);border-color:var(--orange);}
+.page-btn-arrow svg{width:14px;height:14px;fill:currentColor;}
+
+/* ── CARD DELTA INLINE ARROW ── */
+.trend-arr{display:inline-flex;align-items:center;vertical-align:middle;}
+.trend-arr svg{width:13px;height:13px;fill:currentColor;}
+
+/* ── RESPONSIVE GRID FIXES ── */
+@media(max-width:1100px){
+  .grid-4,.model-metrics{grid-template-columns:repeat(2,1fr);}
+  .how-steps{grid-template-columns:repeat(2,1fr);}
+  .zone-cards{grid-template-columns:repeat(3,1fr);}
+}
+@media(max-width:800px){
+  :root{--sidebar-w:60px;}
+  .nav-label,.sidebar-footer,.sidebar-logo .brand,.brand-sub,.nav-section-label{display:none;}
+  .nav-item{justify-content:center;padding:12px;margin:2px 6px;}
+  .logo-icon{margin:0;font-size:24px;}
+  .sidebar-logo{padding:14px 8px;text-align:center;}
+  .grid-4,.grid-3,.grid-2,.model-metrics{grid-template-columns:1fr 1fr;}
+  .pipeline,.how-steps{grid-template-columns:1fr 1fr;}
+  .detail-grid{grid-template-columns:repeat(3,1fr);}
+}
+
+/* ── MOBILE PHONE — Bottom Navigation Pattern ── */
+@media(max-width:600px){
+  /* Sidebar becomes fixed bottom nav bar */
+  .sidebar{
+    position:fixed;bottom:0;left:0;right:0;
+    width:100% !important;height:54px;
+    flex-direction:row;align-items:stretch;
+    border-right:none;border-top:1px solid var(--border);
+    box-shadow:0 -4px 20px rgba(0,0,0,0.4);
+    z-index:200;overflow:hidden;
+    background:rgba(6,14,10,0.98);backdrop-filter:blur(16px);
+  }
+  .sidebar-logo,.nav-section-label,.sidebar-footer{display:none !important;}
+  .nav-item{
+    flex:1;flex-direction:column;align-items:center;justify-content:center;
+    gap:2px;padding:4px 2px;margin:0;border-radius:0;
+    font-size:9px;border:none !important;min-width:0;
+  }
+  .nav-item::before{display:none;}
+  .nav-item .nav-ico{width:18px;height:18px;}
+  .nav-item .nav-label{
+    display:block !important;font-size:9px;text-align:center;
+    line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    max-width:56px;
+  }
+  .nav-item.active{background:rgba(255,107,53,0.12);color:var(--orange);}
+
+  /* Main: full width, with bottom padding for nav */
+  .main{width:100%;}
+  .content{padding:12px 14px 80px;}
+
+  /* Topbar: compact */
+  .topbar{padding:0 14px;height:50px;}
+  .topbar-title{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;}
+  .topbar-sub{display:none;}
+  .topbar-tags{gap:4px;}
+  .ttag{font-size:9.5px;padding:3px 8px;}
+
+  /* Ticker bar: slimmer */
+  .ticker-bar{height:26px;}
+  .ticker-label{padding:0 10px;font-size:9px;}
+  .ticker-item{font-size:10px;padding:0 14px;}
+
+  /* Grids: full single column on phone */
+  .grid-4,.grid-3,.grid-2,.model-metrics{grid-template-columns:1fr !important;}
+  .pipeline,.how-steps{grid-template-columns:1fr !important;}
+  .zone-cards{grid-template-columns:1fr !important;}
+  .detail-grid{grid-template-columns:repeat(2,1fr) !important;}
+
+  /* Hero section */
+  .hero{padding:22px 16px;flex-direction:column;}
+  .hero-right{display:none !important;}
+  .hero-title{font-size:22px;line-height:1.2;}
+  .hero-sub{font-size:13px;}
+  .hero-stats{flex-direction:column;gap:12px;align-items:flex-start;}
+  .hero-divider{width:100%;height:1px;align-self:stretch;background:var(--border);}
+  .hero-stat-val{font-size:22px;}
+
+  /* Impact counter: stack vertically */
+  .impact-counter{flex-direction:column;gap:12px;padding:14px 16px;}
+  .impact-divider{width:100%;height:1px;background:rgba(255,71,87,0.12);flex-shrink:0;}
+  .impact-mini{text-align:left;display:flex;align-items:center;gap:14px;}
+  .impact-mini-val{font-size:24px;}
+  .impact-value{font-size:22px;}
+
+  /* Budget compare: single col */
+  .budget-compare{grid-template-columns:1fr !important;gap:10px;}
+  .budget-arrow-el{display:none;}
+
+  /* Paradox visual: stack */
+  .paradox-visual{flex-direction:column;}
+  .paradox-divider{width:100%;height:2px;position:relative;}
+  .paradox-divider::after{top:50%;left:50%;}
+  .paradox-val{font-size:24px;}
+
+  /* About hero */
+  .about-hero{padding:22px 16px;}
+  .about-hero h1{font-size:20px;}
+
+  /* CTA buttons: full width stack */
+  .cta-section{flex-direction:column;align-items:stretch;padding:14px;}
+  .btn-cta-primary,.btn-cta-secondary{justify-content:center;width:100%;}
+
+  /* Cards */
+  .card-value{font-size:22px;}
+  .card{padding:16px;}
+
+  /* Search area */
+  .search-area{flex-direction:column;}
+  .search-box,.filter-sel,.btn-primary{width:100%;min-width:unset;}
+
+  /* Map */
+  #map{height:240px;}
+
+  /* Formula */
+  .formula-line{font-size:11px;overflow-x:auto;}
+
+  /* Pipeline steps */
+  .pipeline-step:not(:last-child)::after{display:none;}
+
+  /* Charts */
+  canvas{max-height:220px;}
+
+  /* Zona big cards */
+  .zona-count-big{font-size:28px;}
+
+  /* Detail panel */
+  .detail-name{font-size:16px;}
+
+}
+
+/* ── VERY SMALL SCREENS (<400px) ── */
+@media(max-width:400px){
+  .topbar-tags{display:none;}
+  .topbar-title{max-width:100%;}
+}
+
+/* ── TABLET PORTRAIT ── */
+@media(max-width:700px) and (min-width:601px){
+  .grid-4{grid-template-columns:repeat(2,1fr);}
+  .budget-compare{grid-template-columns:1fr;}
+  .budget-arrow-el{display:none;}
+}
+
+/* ── INTERACTIVE REALLOCATION WIDGET STYLES ── */
+.realloc-widget{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;padding:26px;margin-bottom:18px;
+  position:relative;overflow:hidden;
+}
+.realloc-widget::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--red),var(--amber),var(--green));
+}
+.realloc-title{
+  font-family:'Sora',sans-serif;font-size:14px;font-weight:800;
+  margin-bottom:4px;display:flex;align-items:center;gap:8px;
+}
+.realloc-sub{font-size:12px;color:var(--text3);margin-bottom:20px;}
+
+/* Three column gauge layout */
+.realloc-gauges{
+  display:grid;grid-template-columns:1fr 80px 1fr;
+  gap:12px;align-items:center;margin-bottom:20px;
+}
+@media(max-width:600px){
+  .realloc-gauges{grid-template-columns:1fr;gap:6px;}
+  .realloc-mid{display:none;}
+}
+.realloc-col{
+  background:rgba(17,42,31,0.5);border:1px solid var(--border);
+  border-radius:14px;padding:16px;
+}
+.realloc-col-head{
+  font-size:11px;font-weight:700;color:var(--text3);
+  text-transform:uppercase;letter-spacing:0.8px;margin-bottom:14px;
+  display:flex;align-items:center;gap:7px;
+}
+.realloc-col-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.realloc-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.realloc-row-label{font-size:12px;font-weight:700;min-width:78px;}
+.realloc-bar-track{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:8px;overflow:hidden;}
+.realloc-bar-fill{height:100%;border-radius:8px;transition:width 1.4s cubic-bezier(0.34,1.56,0.64,1);width:0;}
+.realloc-pct{font-family:'Sora',sans-serif;font-size:12px;font-weight:800;min-width:42px;text-align:right;}
+
+/* Animated flow center */
+.realloc-mid{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+}
+.realloc-mid-label{font-size:9px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:0.8px;text-align:center;}
+.flow-anim-svg{width:30px;height:50px;}
+.flow-anim-circle{fill:var(--orange);animation:flow-rise 1.2s ease-in-out infinite;}
+.flow-anim-circle:nth-child(2){animation-delay:0.4s;}
+.flow-anim-circle:nth-child(3){animation-delay:0.8s;}
+@keyframes flow-rise{
+  0%{opacity:0;transform:translateY(18px);}
+  40%{opacity:1;}
+  100%{opacity:0;transform:translateY(-18px);}
+}
+
+/* Slider zone */
+.realloc-slider-zone{
+  background:rgba(17,42,31,0.4);border:1px solid var(--border);
+  border-radius:14px;padding:16px 20px;
+}
+.realloc-slider-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;
+}
+.realloc-slider-title{font-size:12px;font-weight:700;color:var(--text2);}
+.realloc-slider-val{
+  font-family:'Sora',sans-serif;font-size:22px;font-weight:900;
+  color:var(--orange);min-width:70px;text-align:right;
+  transition:color 0.3s;
+}
+input[type='range'].alloc-range{
+  -webkit-appearance:none;appearance:none;
+  width:100%;height:6px;border-radius:6px;outline:none;cursor:pointer;
+  background:linear-gradient(90deg,var(--orange) var(--progress,2.9%),rgba(255,255,255,0.1) var(--progress,2.9%));
+  margin-bottom:10px;
+}
+input[type='range'].alloc-range::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--orange);border:3px solid var(--bg);
+  box-shadow:0 0 10px rgba(255,107,53,0.5);cursor:pointer;
+}
+input[type='range'].alloc-range::-moz-range-thumb{
+  width:20px;height:20px;border-radius:50%;
+  background:var(--orange);border:3px solid var(--bg);
+  box-shadow:0 0 10px rgba(255,107,53,0.5);cursor:pointer;
+  border:none;
+}
+.realloc-slider-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+}
+@media(max-width:600px){.realloc-slider-stats{grid-template-columns:1fr 1fr;}}
+.rss-item{text-align:center;}
+.rss-val{font-family:'Sora',sans-serif;font-size:16px;font-weight:900;line-height:1;margin-bottom:3px;}
+.rss-label{font-size:10px;color:var(--text3);line-height:1.3;}
+.realloc-reset{
+  margin-top:12px;background:transparent;border:1px solid var(--border2);
+  border-radius:8px;padding:7px 16px;color:var(--text3);font-size:12px;
+  cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;
+  transition:all .2s;display:inline-flex;align-items:center;gap:6px;
+}
+.realloc-reset:hover{border-color:var(--orange);color:var(--orange);}
+.realloc-reset svg{width:13px;height:13px;fill:currentColor;}
+.ideal-badge{
+  display:inline-block;padding:3px 9px;border-radius:20px;
+  font-size:10px;font-weight:700;background:rgba(46,213,115,0.12);
+  color:var(--green);border:1px solid rgba(46,213,115,0.25);margin-left:8px;
+  transition:opacity 0.3s;
+}
+</style>
+</head>
+<body>
+
+<!-- Floating particles -->
+<div class="particles" id="particles"></div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="mbg-plate-wrap">
+      <div class="plate-ring"></div>
+      <svg class="mbg-plate-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <!-- Plate -->
+        <circle cx="40" cy="44" r="26" fill="none" stroke="#ff6b35" stroke-width="2.5" opacity="0.9"/>
+        <circle cx="40" cy="44" r="21" fill="rgba(255,107,53,0.08)" stroke="rgba(255,107,53,0.3)" stroke-width="1"/>
+        <!-- Rice mound -->
+        <ellipse cx="40" cy="46" rx="12" ry="7" fill="#ff8c42" opacity="0.7"/>
+        <ellipse cx="40" cy="43" rx="9" ry="5" fill="#ffaa60" opacity="0.85"/>
+        <ellipse cx="40" cy="41" rx="5" ry="3" fill="#ffc080" opacity="0.9"/>
+        <!-- Veggies left -->
+        <circle cx="31" cy="50" r="3" fill="#2ed573" opacity="0.8"/>
+        <circle cx="28" cy="47" r="2" fill="#2ed573" opacity="0.6"/>
+        <!-- Protein right -->
+        <ellipse cx="50" cy="50" rx="5" ry="3" fill="#ff6b35" opacity="0.75"/>
+        <!-- Fork left -->
+        <line x1="13" y1="22" x2="13" y2="42" stroke="#00cec9" stroke-width="2" stroke-linecap="round"/>
+        <line x1="10" y1="22" x2="10" y2="30" stroke="#00cec9" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="13" y1="22" x2="13" y2="30" stroke="#00cec9" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="16" y1="22" x2="16" y2="30" stroke="#00cec9" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Spoon right -->
+        <ellipse cx="67" cy="26" rx="4" ry="5.5" fill="#00cec9" opacity="0.8"/>
+        <line x1="67" y1="31" x2="67" y2="44" stroke="#00cec9" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="brand"><span class="geo">GEO</span><span class="stunting">STUNTING</span></div>
+    <div class="brand-sub">MBG Intelligence System</div>
+  </div>
+
+  <div class="nav-section-label">Menu Utama</div>
+  <div class="nav-item active" onclick="navigate('beranda')" id="nav-beranda">
+    <svg class="nav-ico" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    <span class="nav-label">Beranda</span>
+  </div>
+  <div class="nav-item" onclick="navigate('dashboard')" id="nav-dashboard">
+    <svg class="nav-ico" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+    <span class="nav-label">Dashboard</span>
+  </div>
+  <div class="nav-item" onclick="navigate('data')" id="nav-data">
+    <svg class="nav-ico" viewBox="0 0 24 24"><path d="M20 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 2v3H5V5h15zm-5 14h-5v-9h5v9zm-7 0H5v-9h3v9zm12 0h-3v-9h3v9z"/></svg>
+    <span class="nav-label">Data Kabupaten</span>
+  </div>
+
+  <div class="nav-section-label">Analisis</div>
+  <div class="nav-item" onclick="navigate('simulasi')" id="nav-simulasi">
+    <svg class="nav-ico" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+    <span class="nav-label">Simulasi Anggaran</span>
+  </div>
+  <div class="nav-item" onclick="navigate('about')" id="nav-about">
+    <svg class="nav-ico" viewBox="0 0 24 24"><path d="M19.5 12c0-.23-.01-.45-.03-.68l1.86-1.41c.4-.3.51-.86.26-1.3l-1.87-3.23c-.25-.44-.79-.62-1.25-.42l-2.15.91c-.37-.26-.76-.49-1.17-.68l-.29-2.31C14.8 2.38 14.37 2 13.87 2h-3.73c-.5 0-.93.38-.99.88L8.85 5.19c-.41.19-.8.42-1.17.68L5.53 4.96c-.46-.2-1-.02-1.25.42L2.41 8.62c-.25.44-.14.99.26 1.3l1.86 1.41c-.02.22-.03.44-.03.67s.01.45.03.68l-1.86 1.41c-.4.3-.51.86-.26 1.3l1.87 3.23c.25.44.79.62 1.25.42l2.15-.91c.37.26.76.49 1.17.68l.29 2.31c.06.5.49.88.99.88h3.73c.5 0 .93-.38.99-.88l.29-2.31c.41-.19.8-.42 1.17-.68l2.15.91c.46.2 1 .02 1.25-.42l1.87-3.23c.25-.44.14-.99-.26-1.3l-1.86-1.41c.02-.22.03-.44.03-.67zm-7.46 2.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+    <span class="nav-label">Tentang Sistem</span>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="sdg-badge">
+      <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93V18h-2v1.93C7.06 19.48 4.52 16.94 4.07 13H6v-2H4.07C4.52 7.06 7.06 4.52 11 4.07V6h2V4.07c3.94.45 6.48 2.99 6.93 6.93H18v2h1.93c-.45 3.94-2.99 6.48-6.93 6.93zM12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z"/></svg>
+      SDG 2 &amp; SDG 3
+    </div>
+    <div class="budget-badge">
+      Budget-Neutral
+      <span>Rp 335 Triliun</span>
+      514 Kab/Kota &middot; 38 Provinsi
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="page-title-wrap">
+      <div class="topbar-title" id="topbar-title">Beranda: GeoStunting Indonesia</div>
+      <div class="topbar-sub" id="topbar-sub">Sistem Precision Targeting MBG Berbasis Geospatial Machine Learning</div>
+    </div>
+    <div class="topbar-tags">
+      <span class="ttag ttag-orange">Hybrid GWR-RF</span>
+      <span class="ttag ttag-teal">514 Kab Real Data</span>
+      <span class="ttag ttag-green">Budget-Neutral</span>
+    </div>
+  </div>
+
+  <!-- TICKER BAR -->
+  <div class="ticker-bar">
+    <div class="ticker-label">
+      <svg viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+      LIVE DATA
+    </div>
+    <div class="ticker-track">
+      <div class="ticker-inner" id="ticker-inner">
+        <span class="ticker-item"><span class="ticker-dot" style="background:var(--red);"></span>68 Kabupaten <strong style="color:var(--red)">Zona Merah</strong> — rata-rata stunting <strong style="color:var(--red)">34,5%</strong></span>
+        <span class="ticker-item"><span class="ticker-dot" style="background:var(--amber);"></span>Dana Zona Merah saat ini: <strong style="color:var(--amber)">Rp9,73T</strong> dari Rp335T (hanya 2,9%)</span>
+        <span class="ticker-item"><span class="ticker-dot" style="background:var(--orange);"></span>Deficit tahunan: <strong style="color:var(--orange)">Rp80,02T</strong> — dana yang semestinya sampai ke Zona Merah</span>
+        <span class="ticker-item"><span class="ticker-dot" style="background:var(--red);"></span>16 kabupaten <strong style="color:var(--red)">0 unit SPPG</strong> — semuanya di Zona Merah</span>
+        <span class="ticker-item"><span class="ticker-dot" style="background:var(--teal);"></span>Model GWR-RF: R² = <strong style="color:var(--teal)">0,628</strong> · 1,7× lebih akurat dari OLS</span>
+        <span class="ticker-item"><span class="ticker-dot" style="background:var(--green);"></span>Target RPJMN 2029: Stunting turun ke <strong style="color:var(--green)">14,2%</strong> (saat ini 19,8%)</span>
+        <span class="ticker-item"><span class="ticker-dot" style="background:var(--amber);"></span>Spearman ρ = <strong style="color:var(--amber)">−0,519</strong> · Risiko tinggi justru minim SPPG</span>
+        <!-- duplicate for seamless loop -->
+        <span class="ticker-item"><span class="ticker-dot" style="background:var(--red);"></span>68 Kabupaten <strong style="color:var(--red)">Zona Merah</strong> — rata-rata stunting <strong style="color:var(--red)">34,5%</strong></span>
+        <span class="ticker-item"><span class="ticker-dot" style="background:var(--amber);"></span>Dana Zona Merah saat ini: <strong style="color:var(--amber)">Rp9,73T</strong> dari Rp335T (hanya 2,9%)</span>
+        <span class="ticker-item"><span class="ticker-dot" style="background:var(--orange);"></span>Deficit tahunan: <strong style="color:var(--orange)">Rp80,02T</strong> — dana yang semestinya sampai ke Zona Merah</span>
+        <span class="ticker-item"><span class="ticker-dot" style="background:var(--red);"></span>16 kabupaten <strong style="color:var(--red)">0 unit SPPG</strong> — semuanya di Zona Merah</span>
+        <span class="ticker-item"><span class="ticker-dot" style="background:var(--teal);"></span>Model GWR-RF: R² = <strong style="color:var(--teal)">0,628</strong> · 1,7× lebih akurat dari OLS</span>
+        <span class="ticker-item"><span class="ticker-dot" style="background:var(--green);"></span>Target RPJMN 2029: Stunting turun ke <strong style="color:var(--green)">14,2%</strong> (saat ini 19,8%)</span>
+        <span class="ticker-item"><span class="ticker-dot" style="background:var(--amber);"></span>Spearman ρ = <strong style="color:var(--amber)">−0,519</strong> · Risiko tinggi justru minim SPPG</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ========================================
+         PAGE: BERANDA
+    ======================================== -->
+    <div class="page active" id="page-beranda">
+
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-bg-art"></div>
+        <div class="hero-bg-art2"></div>
+        <div class="hero-left">
+        <div class="hero-eyebrow">
+          <svg viewBox="0 0 24 24"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>
+          Inovasi Kebijakan Gizi Indonesia 2026
+        </div>
+        <h1 class="hero-title">Anggaran Besar,<br>Sasaran yang Tepat.</h1>
+        <p class="hero-sub">
+          Indonesia mengalokasikan <strong style="color:var(--orange)">Rp335 triliun</strong> untuk Program Makan Bergizi Gratis (MBG).
+          Namun data membuktikan bahwa daerah paling membutuhkan hanya menerima <strong style="color:var(--red)">3%</strong> dari total anggaran.
+          GeoStunting hadir untuk mengoreksi ketimpangan ini secara terukur, tanpa tambahan anggaran sepeser pun.
+        </p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-val" id="h-stunting">19,8%</div>
+            <div class="hero-stat-label">Prevalensi Stunting<br>Nasional (SSGI 2024)</div>
+          </div>
+          <div class="hero-divider"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-val" id="h-anggaran">Rp335T</div>
+            <div class="hero-stat-label">Anggaran MBG 2026<br>Pos APBN terbesar</div>
+          </div>
+          <div class="hero-divider"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-val" id="h-kab">514</div>
+            <div class="hero-stat-label">Kab/Kota dianalisis<br>38 Provinsi</div>
+          </div>
+          <div class="hero-divider"></div>
+          <div class="hero-stat">
+            <div class="ring-widget">
+              <svg class="ring-svg" viewBox="0 0 80 80">
+                <circle class="ring-track" cx="40" cy="40" r="30"/>
+                <circle class="ring-fill-current" id="ring-current" cx="40" cy="40" r="30" stroke-dasharray="188.5" stroke-dashoffset="37.7"/>
+                <circle class="ring-fill-target" cx="40" cy="40" r="30" stroke-dasharray="188.5" stroke-dashoffset="161.9"/>
+              </svg>
+              <div class="ring-center">
+                <div class="ring-val">19,8%</div>
+                <div class="ring-sub">stunting</div>
+              </div>
+            </div>
+            <div class="hero-stat-label" style="margin-top:6px;">Target 2029: 14,2%<br><span style="color:var(--green);font-weight:700">5,6 poin lagi</span></div>
+          </div>
+        </div><!-- end hero-stats -->
+        </div><!-- end hero-left -->
+
+        <!-- MBG Tray Illustration -->
+        <div class="hero-right">
+          <div class="hero-tray-wrap">
+            <div class="hero-tray-glow"></div>
+            <div class="hero-tray-ring"></div>
+            <div class="hero-tray-ring2"></div>
+            <svg class="hero-tray-svg" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="130" cy="130" r="120" fill="none" stroke="rgba(255,107,53,0.08)" stroke-width="1"/>
+              <!-- TRAY BASE -->
+              <rect x="30" y="80" width="200" height="130" rx="18" ry="18" fill="#0d2519" stroke="rgba(255,107,53,0.25)" stroke-width="1.5"/>
+              <rect x="34" y="84" width="192" height="122" rx="15" ry="15" fill="#0f2b1d"/>
+              <!-- TRAY DIVIDERS -->
+              <line x1="30" y1="150" x2="230" y2="150" stroke="rgba(255,107,53,0.15)" stroke-width="1.5"/>
+              <line x1="140" y1="84" x2="140" y2="150" stroke="rgba(255,107,53,0.15)" stroke-width="1.5"/>
+              <line x1="140" y1="150" x2="140" y2="206" stroke="rgba(255,107,53,0.15)" stroke-width="1.5"/>
+              <!-- RICE (top-left cell) -->
+              <ellipse cx="87" cy="117" rx="38" ry="22" fill="rgba(255,165,2,0.12)" stroke="rgba(255,165,2,0.2)" stroke-width="1"/>
+              <ellipse cx="80" cy="120" rx="4" ry="2.5" fill="#c8a05a" opacity="0.9" transform="rotate(-15 80 120)"/>
+              <ellipse cx="90" cy="115" rx="4" ry="2.5" fill="#d4b06a" opacity="0.85" transform="rotate(10 90 115)"/>
+              <ellipse cx="100" cy="121" rx="4" ry="2.5" fill="#c8a05a" opacity="0.8" transform="rotate(-20 100 121)"/>
+              <ellipse cx="75" cy="112" rx="4" ry="2.5" fill="#d4b06a" opacity="0.75" transform="rotate(5 75 112)"/>
+              <ellipse cx="95" cy="108" rx="4" ry="2.5" fill="#c8a05a" opacity="0.85" transform="rotate(-10 95 108)"/>
+              <ellipse cx="84" cy="126" rx="4" ry="2.5" fill="#d4b06a" opacity="0.7"/>
+              <ellipse cx="70" cy="119" rx="3.5" ry="2" fill="#c8a05a" opacity="0.7" transform="rotate(20 70 119)"/>
+              <ellipse cx="105" cy="113" rx="3.5" ry="2" fill="#d4b06a" opacity="0.75" transform="rotate(-15 105 113)"/>
+              <text x="87" y="139" text-anchor="middle" font-size="8.5" fill="rgba(200,160,90,0.7)" font-family="sans-serif" font-weight="600" letter-spacing="0.5">NASI</text>
+              <!-- PROTEIN/CHICKEN (top-right cell) -->
+              <ellipse cx="185" cy="117" rx="35" ry="20" fill="rgba(255,107,53,0.1)" stroke="rgba(255,107,53,0.2)" stroke-width="1"/>
+              <ellipse cx="185" cy="115" rx="22" ry="14" fill="#8B4513" opacity="0.85"/>
+              <ellipse cx="185" cy="113" rx="18" ry="11" fill="#A0522D" opacity="0.9"/>
+              <ellipse cx="185" cy="111" rx="13" ry="8" fill="#CD853F" opacity="0.85"/>
+              <ellipse cx="196" cy="122" rx="4" ry="3" fill="#D2B48C" opacity="0.9"/>
+              <line x1="192" y1="122" x2="200" y2="126" stroke="#D2B48C" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+              <circle cx="180" cy="110" r="1.5" fill="#ff6b35" opacity="0.7"/>
+              <circle cx="188" cy="107" r="1.5" fill="#ff8c42" opacity="0.6"/>
+              <circle cx="178" cy="116" r="1" fill="#ffa502" opacity="0.6"/>
+              <text x="185" y="134" text-anchor="middle" font-size="8.5" fill="rgba(255,107,53,0.7)" font-family="sans-serif" font-weight="600" letter-spacing="0.3">LAUK</text>
+              <!-- VEGETABLES (bottom-left cell) -->
+              <rect x="34" y="154" width="102" height="48" rx="8" fill="rgba(46,213,115,0.06)"/>
+              <circle cx="68" cy="172" r="10" fill="#1a8a3a" opacity="0.9"/>
+              <circle cx="58" cy="175" r="7" fill="#228b3b" opacity="0.85"/>
+              <circle cx="78" cy="176" r="7" fill="#1a8a3a" opacity="0.85"/>
+              <circle cx="68" cy="168" r="6" fill="#2ed573" opacity="0.7"/>
+              <rect x="65" y="179" width="6" height="10" rx="2" fill="#145a23" opacity="0.8"/>
+              <ellipse cx="100" cy="173" rx="8" ry="5" fill="#ff8c00" opacity="0.85" transform="rotate(-10 100 173)"/>
+              <ellipse cx="100" cy="173" rx="5" ry="3" fill="#ffaa00" opacity="0.7" transform="rotate(-10 100 173)"/>
+              <ellipse cx="114" cy="177" rx="7" ry="4.5" fill="#ff8c00" opacity="0.8" transform="rotate(15 114 177)"/>
+              <text x="74" y="198" text-anchor="middle" font-size="8.5" fill="rgba(46,213,115,0.7)" font-family="sans-serif" font-weight="600" letter-spacing="0.3">SAYUR</text>
+              <!-- MILK CARTON (bottom-right cell) -->
+              <rect x="144" y="154" width="82" height="48" rx="8" fill="rgba(116,185,255,0.06)"/>
+              <rect x="173" y="163" width="26" height="30" rx="3" fill="#1a3a5c" stroke="rgba(116,185,255,0.4)" stroke-width="1.5"/>
+              <rect x="174" y="164" width="24" height="28" rx="2" fill="#1e4470"/>
+              <polygon points="173,163 186,155 199,163" fill="#1a3a5c" stroke="rgba(116,185,255,0.3)" stroke-width="1"/>
+              <rect x="177" y="171" width="18" height="12" rx="2" fill="rgba(255,255,255,0.15)"/>
+              <text x="186" y="180" text-anchor="middle" font-size="6" fill="rgba(116,185,255,0.9)" font-family="sans-serif" font-weight="800">SUSU</text>
+              <text x="186" y="173" text-anchor="middle" font-size="4.5" fill="rgba(116,185,255,0.6)" font-family="sans-serif">MBG</text>
+              <circle cx="180" cy="186" r="2" fill="rgba(255,255,255,0.2)"/>
+              <circle cx="185" cy="189" r="1.5" fill="rgba(255,255,255,0.15)"/>
+              <circle cx="190" cy="185" r="2" fill="rgba(255,255,255,0.18)"/>
+              <text x="185" y="198" text-anchor="middle" font-size="8.5" fill="rgba(116,185,255,0.7)" font-family="sans-serif" font-weight="600" letter-spacing="0.3">SUSU</text>
+              <!-- FORK left -->
+              <g transform="translate(22, 95) rotate(-25)">
+                <rect x="-2" y="0" width="4" height="42" rx="2" fill="#00cec9" opacity="0.7"/>
+                <rect x="-4" y="0" width="2" height="14" rx="1" fill="#00cec9" opacity="0.7"/>
+                <rect x="2" y="0" width="2" height="14" rx="1" fill="#00cec9" opacity="0.7"/>
+              </g>
+              <!-- SPOON right -->
+              <g transform="translate(238, 95) rotate(25)">
+                <ellipse cx="0" cy="6" rx="5" ry="7" fill="#00cec9" opacity="0.6"/>
+                <rect x="-2" y="12" width="4" height="30" rx="2" fill="#00cec9" opacity="0.6"/>
+              </g>
+              <!-- MBG badge top -->
+              <rect x="96" y="50" width="68" height="24" rx="12" fill="rgba(255,107,53,0.15)" stroke="rgba(255,107,53,0.4)" stroke-width="1.5"/>
+              <text x="130" y="66" text-anchor="middle" font-size="10" fill="#ff6b35" font-family="sans-serif" font-weight="800" letter-spacing="1">MBG 2026</text>
+              <!-- Sparkles -->
+              <circle cx="50" cy="65" r="3" fill="rgba(255,107,53,0.5)"><animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/></circle>
+              <circle cx="210" cy="60" r="2" fill="rgba(0,206,201,0.5)"><animate attributeName="opacity" values="1;0.3;1" dur="1.8s" repeatCount="indefinite"/></circle>
+              <circle cx="230" cy="90" r="2.5" fill="rgba(46,213,115,0.5)"><animate attributeName="opacity" values="0.5;1;0.5" dur="2.4s" repeatCount="indefinite"/></circle>
+              <circle cx="35" cy="215" r="2" fill="rgba(255,165,2,0.5)"><animate attributeName="opacity" values="1;0.4;1" dur="1.6s" repeatCount="indefinite"/></circle>
+              <circle cx="220" cy="215" r="3" fill="rgba(255,107,53,0.4)"><animate attributeName="opacity" values="0.4;1;0.4" dur="2.2s" repeatCount="indefinite"/></circle>
+            </svg>
+          </div>
+        </div><!-- end hero-right -->
+      </div>
+
+      <!-- PROBLEM STATEMENT -->
+      <div class="problem-section">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="width:4px;height:22px;background:var(--red);border-radius:4px;"></div>
+          <div class="problem-title">Masalah: Paradoks Distribusi SPPG</div>
+        </div>
+        <p class="problem-desc">
+          Distribusi fasilitas gizi (SPPG) bersifat <em>supply-driven</em> sehingga lebih mengikuti ketersediaan infrastruktur
+          daripada peta kebutuhan aktual. Kondisi ini menghasilkan korelasi negatif yang signifikan antara jumlah SPPG dan tingkat risiko stunting
+          (<strong style="color:var(--red)">Spearman ρ = −0,519, p &lt; 0,001</strong>).
+        </p>
+        <div class="paradox-visual">
+          <div class="paradox-side bad">
+            <div class="paradox-label"><span class="paradox-dot" style="background:var(--red);"></span>Zona Merah (68 Kab)</div>
+            <div class="paradox-val" style="color:var(--red)">Rp 9,73T</div>
+            <div class="paradox-desc">Hanya <strong>2,9%</strong> distribusi aktual<br>padahal stunting rata-rata <strong>34,5%</strong><br>Rata-rata 10,5 unit SPPG per kab</div>
+          </div>
+          <div class="paradox-divider"></div>
+          <div class="paradox-side good">
+            <div class="paradox-label"><span class="paradox-dot" style="background:var(--green);"></span>Zona Hijau (263 Kab)</div>
+            <div class="paradox-val" style="color:var(--green)">Rp 243,2T</div>
+            <div class="paradox-desc">Menguasai <strong>72,6%</strong> distribusi aktual<br>padahal stunting rata-rata hanya <strong>17,4%</strong><br>Rata-rata 66,8 unit SPPG per kab</div>
+          </div>
+        </div>
+        <div style="background:rgba(255,71,87,0.04);border:1px solid rgba(255,71,87,0.15);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--text2);line-height:1.7;display:flex;gap:10px;align-items:flex-start;">
+          <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--red);flex-shrink:0;margin-top:2px;"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+          <span><strong style="color:var(--red)">16 kabupaten di Indonesia timur</strong> dengan prevalensi stunting tertinggi sama sekali tidak memiliki unit SPPG.
+          Sementara Jawa Barat, Jawa Tengah, dan Jawa Timur yang masuk sepuluh besar stunting terendah mendominasi jumlah SPPG nasional.</span>
+        </div>
+      </div>
+
+      <!-- HOW IT WORKS -->
+      <div class="how-section">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <div style="width:4px;height:22px;background:var(--teal);border-radius:4px;"></div>
+          <div class="problem-title" style="color:var(--teal)">Solusi: Bagaimana GeoStunting Bekerja?</div>
+        </div>
+        <p class="problem-desc">
+          GeoStunting mengintegrasikan 6 sumber data resmi pemerintah ke dalam model kecerdasan buatan berbasis lokasi (Hybrid GWR-RF)
+          untuk menghasilkan Composite Risk Score (CRS) bagi setiap kabupaten/kota di Indonesia.
+        </p>
+        <div class="how-steps">
+          <div class="how-step">
+            <div class="how-step-num">01</div>
+            <div class="how-step-icon"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></div>
+            <div class="how-step-title">Kumpulkan Data</div>
+            <div class="how-step-desc">6 sumber data resmi: SSGI 2024, BPS, Kemenkes, Kemendikdasmen, BIG, dan BGN mencakup 514 kab/kota.</div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-num">02</div>
+            <div class="how-step-icon"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></div>
+            <div class="how-step-title">Proses &amp; Rekayasa</div>
+            <div class="how-step-desc">Harmonisasi data, imputasi nilai hilang, dan rekayasa 8 fitur turunan yang merepresentasikan risiko multidimensi.</div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-num">03</div>
+            <div class="how-step-icon"><svg viewBox="0 0 24 24"><path d="M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zm-2 10H6V7h12v12zm-9-6c-.83 0-1.5-.67-1.5-1.5S8.17 10 9 10s1.5.67 1.5 1.5S9.83 13 9 13zm6 0c-.83 0-1.5-.67-1.5-1.5S14.17 10 15 10s1.5.67 1.5 1.5S15.83 13 15 13zm-4.5 2h3l-1.5 2-1.5-2z"/></svg></div>
+            <div class="how-step-title">Model Spasial</div>
+            <div class="how-step-desc">Hybrid GWR-RF menghasilkan R²=0,628, hampir 2× lebih akurat dari OLS konvensional (R²=0,36).</div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-num">04</div>
+            <div class="how-step-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93V18h-2v1.93C7.06 19.48 4.52 16.94 4.07 13H6v-2H4.07C4.52 7.06 7.06 4.52 11 4.07V6h2V4.07c3.94.45 6.48 2.99 6.93 6.93H18v2h1.93c-.45 3.94-2.99 6.48-6.93 6.93zM12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z"/></svg></div>
+            <div class="how-step-title">Skor &amp; Zonasi</div>
+            <div class="how-step-desc">Setiap kabupaten mendapat CRS 0-100. K-Means clustering menghasilkan 3 zona prioritas MBG yang terverifikasi.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ZONE EXPLAINER -->
+      <div class="zone-explainer">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <div style="width:4px;height:22px;background:var(--amber);border-radius:4px;"></div>
+          <div class="problem-title" style="color:var(--amber)"><svg class="ico-inline" style="fill:var(--amber);margin-right:6px;" viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>3 Zona Prioritas MBG</div>
+        </div>
+        <p class="problem-desc">
+          Berdasarkan Composite Risk Score, seluruh 514 kabupaten/kota diklasifikasikan ke dalam 3 zona. 
+          Zona ini menentukan berapa besar anggaran MBG yang seharusnya dialokasikan ke setiap daerah.
+        </p>
+        <div class="zone-cards">
+          <div class="zone-expl-card red">
+            <div class="zone-expl-dot" style="background:var(--red);box-shadow:0 0 10px var(--red);"></div>
+            <div class="zone-expl-count" style="color:var(--red)">68</div>
+            <div class="zone-expl-name">Zona Merah</div>
+            <div class="zone-expl-desc">Kabupaten dengan kebutuhan gizi paling mendesak. Terkonsentrasi di Papua, Papua Pegunungan, Papua Tengah, dan NTT.</div>
+            <div class="zone-expl-stat"><span class="zone-expl-stat-label">Skor CRS</span><span class="zone-expl-stat-val" style="color:var(--red)">43,5 – 82,5</span></div>
+            <div class="zone-expl-stat"><span class="zone-expl-stat-label">Stunting rata-rata</span><span class="zone-expl-stat-val" style="color:var(--red)">34,5%</span></div>
+            <div class="zone-expl-stat"><span class="zone-expl-stat-label">Alokasi ideal</span><span class="zone-expl-stat-val" style="color:var(--green)">26,79%</span></div>
+            <div class="zone-expl-stat"><span class="zone-expl-stat-label">Alokasi aktual</span><span class="zone-expl-stat-val" style="color:var(--red)">2,9% <span class="warn-badge"><svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg></span></span></div>
+          </div>
+          <div class="zone-expl-card amber">
+            <div class="zone-expl-dot" style="background:var(--amber);box-shadow:0 0 10px var(--amber);"></div>
+            <div class="zone-expl-count" style="color:var(--amber)">183</div>
+            <div class="zone-expl-name">Zona Kuning</div>
+            <div class="zone-expl-desc">Kabupaten dengan risiko sedang. Mendominasi Kalimantan, Sulawesi, sebagian Sumatera, NTB dan NTT sebagai wilayah transisi.</div>
+            <div class="zone-expl-stat"><span class="zone-expl-stat-label">Skor CRS</span><span class="zone-expl-stat-val" style="color:var(--amber)">24,5 – 43,1</span></div>
+            <div class="zone-expl-stat"><span class="zone-expl-stat-label">Stunting rata-rata</span><span class="zone-expl-stat-val" style="color:var(--amber)">26,6%</span></div>
+            <div class="zone-expl-stat"><span class="zone-expl-stat-label">Alokasi ideal</span><span class="zone-expl-stat-val" style="color:var(--green)">39,3%</span></div>
+            <div class="zone-expl-stat"><span class="zone-expl-stat-label">Alokasi aktual</span><span class="zone-expl-stat-val" style="color:var(--amber)">24,5%</span></div>
+          </div>
+          <div class="zone-expl-card green">
+            <div class="zone-expl-dot" style="background:var(--green);box-shadow:0 0 10px var(--green);"></div>
+            <div class="zone-expl-count" style="color:var(--green)">263</div>
+            <div class="zone-expl-name">Zona Hijau</div>
+            <div class="zone-expl-desc">Kabupaten dengan risiko relatif rendah. Mendominasi Jawa, Bali, dan sebagian Sumatera Barat — infrastruktur sudah memadai.</div>
+            <div class="zone-expl-stat"><span class="zone-expl-stat-label">Skor CRS</span><span class="zone-expl-stat-val" style="color:var(--green)">5,9 – 24,4</span></div>
+            <div class="zone-expl-stat"><span class="zone-expl-stat-label">Stunting rata-rata</span><span class="zone-expl-stat-val" style="color:var(--green)">17,4%</span></div>
+            <div class="zone-expl-stat"><span class="zone-expl-stat-label">Alokasi ideal</span><span class="zone-expl-stat-val" style="color:var(--green)">33,91%</span></div>
+            <div class="zone-expl-stat"><span class="zone-expl-stat-label">Alokasi aktual</span><span class="zone-expl-stat-val" style="color:var(--amber)">72,6% <span class="warn-badge"><svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg></span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IMPACT COUNTER -->
+      <div class="impact-counter">
+        <div class="impact-icon">
+          <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+        </div>
+        <div class="impact-body">
+          <div class="impact-label">Dana yang tidak tepat sasaran setiap harinya</div>
+          <div class="impact-value" id="counter-daily">Rp 219,2 M</div>
+          <div class="impact-sub">Selisih Rp80,02T/tahun ÷ 365 hari — dana yang seharusnya mengalir ke 68 kabupaten Zona Merah</div>
+        </div>
+        <div class="impact-divider"></div>
+        <div class="impact-mini">
+          <div class="impact-mini-val" style="color:var(--red)" id="counter-sppg">16</div>
+          <div class="impact-mini-label">Kab tanpa SPPG</div>
+        </div>
+        <div class="impact-divider"></div>
+        <div class="impact-mini">
+          <div class="impact-mini-val" style="color:var(--amber)" id="counter-gap-pct">23,9%</div>
+          <div class="impact-mini-label">Gap distribusi Zona Merah</div>
+        </div>
+        <div class="impact-divider"></div>
+        <div class="impact-mini">
+          <div class="impact-mini-val" style="color:var(--green)">9×</div>
+          <div class="impact-mini-label">Potensi kenaikan alokasi</div>
+        </div>
+      </div>
+
+      <!-- ── INTERACTIVE REALLOCATION WIDGET ── -->
+      <div class="realloc-widget">
+        <div class="realloc-title">
+          <svg style="width:16px;height:16px;fill:var(--orange);" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+          Simulator Realokasi Anggaran MBG
+          <span class="ideal-badge" id="ideal-badge" style="opacity:0">Ideal Tercapai!</span>
+        </div>
+        <div class="realloc-sub">Geser slider untuk melihat dampak perubahan alokasi ke Zona Merah secara langsung</div>
+
+        <!-- Comparison gauges -->
+        <div class="realloc-gauges">
+          <!-- Current state -->
+          <div class="realloc-col">
+            <div class="realloc-col-head">
+              <div class="realloc-col-dot" style="background:var(--red);box-shadow:0 0 6px var(--red);"></div>
+              Distribusi Aktual SPPG
+            </div>
+            <div class="realloc-row">
+              <span class="realloc-row-label" style="color:var(--red);">Zona Merah</span>
+              <div class="realloc-bar-track"><div class="realloc-bar-fill" id="curr-bar-red" style="background:var(--red);width:2.9%;"></div></div>
+              <span class="realloc-pct" style="color:var(--red);">2,9%</span>
+            </div>
+            <div class="realloc-row">
+              <span class="realloc-row-label" style="color:var(--amber);">Zona Kuning</span>
+              <div class="realloc-bar-track"><div class="realloc-bar-fill" id="curr-bar-amb" style="background:var(--amber);width:24.5%;"></div></div>
+              <span class="realloc-pct" style="color:var(--amber);">24,5%</span>
+            </div>
+            <div class="realloc-row">
+              <span class="realloc-row-label" style="color:var(--green);">Zona Hijau</span>
+              <div class="realloc-bar-track"><div class="realloc-bar-fill" id="curr-bar-grn" style="background:var(--green);width:72.6%;"></div></div>
+              <span class="realloc-pct" style="color:var(--green);">72,6%</span>
+            </div>
+          </div>
+
+          <!-- Animated flow arrow -->
+          <div class="realloc-mid">
+            <div class="realloc-mid-label">GeoStunting<br>CRS</div>
+            <svg class="flow-anim-svg" viewBox="0 0 24 60">
+              <circle class="flow-anim-circle" cx="12" cy="50" r="3.5"/>
+              <circle class="flow-anim-circle" cx="12" cy="30" r="3.5"/>
+              <circle class="flow-anim-circle" cx="12" cy="10" r="3.5"/>
+            </svg>
+          </div>
+
+          <!-- Ideal state (animated by slider) -->
+          <div class="realloc-col">
+            <div class="realloc-col-head">
+              <div class="realloc-col-dot" style="background:var(--green);box-shadow:0 0 6px var(--green);"></div>
+              Hasil Simulasi
+            </div>
+            <div class="realloc-row">
+              <span class="realloc-row-label" style="color:var(--red);">Zona Merah</span>
+              <div class="realloc-bar-track"><div class="realloc-bar-fill" id="sim-bar-red" style="background:var(--red);width:2.9%;"></div></div>
+              <span class="realloc-pct" style="color:var(--red);" id="sim-pct-red">2,9%</span>
+            </div>
+            <div class="realloc-row">
+              <span class="realloc-row-label" style="color:var(--amber);">Zona Kuning</span>
+              <div class="realloc-bar-track"><div class="realloc-bar-fill" id="sim-bar-amb" style="background:var(--amber);width:24.5%;"></div></div>
+              <span class="realloc-pct" style="color:var(--amber);" id="sim-pct-amb">24,5%</span>
+            </div>
+            <div class="realloc-row">
+              <span class="realloc-row-label" style="color:var(--green);">Zona Hijau</span>
+              <div class="realloc-bar-track"><div class="realloc-bar-fill" id="sim-bar-grn" style="background:var(--green);width:72.6%;"></div></div>
+              <span class="realloc-pct" style="color:var(--amber);" id="sim-pct-grn">72,6%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slider control -->
+        <div class="realloc-slider-zone">
+          <div class="realloc-slider-head">
+            <span class="realloc-slider-title">Alokasi ke Zona Merah</span>
+            <span class="realloc-slider-val" id="slider-display-pct">2,9%</span>
+          </div>
+          <input type="range" class="alloc-range" id="realloc-slider"
+            min="2.9" max="26.79" value="2.9" step="0.1"/>
+          <div class="realloc-slider-stats">
+            <div class="rss-item">
+              <div class="rss-val" style="color:var(--orange);" id="rss-dana">Rp 9,73T</div>
+              <div class="rss-label">Dana Zona Merah/Tahun</div>
+            </div>
+            <div class="rss-item">
+              <div class="rss-val" style="color:var(--red);" id="rss-selisih">+Rp 0T</div>
+              <div class="rss-label">Tambahan vs Aktual</div>
+            </div>
+            <div class="rss-item">
+              <div class="rss-val" style="color:var(--teal);" id="rss-multiplier">1×</div>
+              <div class="rss-label">Kelipatan dari Aktual</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <button class="realloc-reset" id="btn-set-ideal">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+              Set ke Ideal (26,79%)
+            </button>
+            <button class="realloc-reset" id="btn-reset-slider">
+              <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+              Reset Aktual
+            </button>
+            <span style="font-size:11px;color:var(--text3);margin-left:auto;">Total anggaran tetap Rp335T · Budget-Neutral</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- KEY FINDING -->
+      <div style="background:linear-gradient(135deg,rgba(46,213,115,0.06),rgba(0,206,201,0.04));border:1px solid rgba(46,213,115,0.2);border-radius:20px;padding:28px;margin-bottom:18px;text-align:center;">
+        <div style="font-size:13px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px;"><svg style="width:16px;height:16px;fill:var(--text3);" viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg> Temuan Kunci GeoStunting</div>
+        <div style="font-family:'Sora',sans-serif;font-size:26px;font-weight:900;line-height:1.3;margin-bottom:12px;">
+          Selisih <span class="highlight-num">Rp80 Triliun/tahun</span> dari Zona Merah.<br>
+          <span style="color:var(--green)">Semua bisa dikoreksi tanpa tambah anggaran.</span>
+        </div>
+        <p style="font-size:13px;color:var(--text2);max-width:540px;margin:0 auto 20px;line-height:1.8;">
+          Simulasi realokasi berdasarkan CRS menghasilkan total distribusi yang identik dengan target MBG bulanan Rp27,917T,
+          namun dengan proporsi yang jauh lebih adil dan berdampak nyata bagi anak-anak di Zona Merah.
+        </p>
+        <div class="cta-section" style="padding:0;margin:0;justify-content:center;gap:12px;">
+          <button class="btn-cta-primary" onclick="navigate('dashboard')"><svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg> Lihat Dashboard <svg style="width:16px;height:16px;fill:currentColor;" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <button class="btn-cta-secondary" onclick="navigate('simulasi')"><svg viewBox="0 0 24 24"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5C3.9 3 3 3.9 3 5v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2.28c.59-.35 1-.98 1-1.72v-4c0-.74-.41-1.37-1-1.72zM20 17H5V5h15v2h-6c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h6v2zm0-6h-6v-2h6v2z"/></svg> Simulasi Anggaran</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================
+         PAGE: DASHBOARD
+    ======================================== -->
+    <div class="page" id="page-dashboard">
+
+      <!-- KPI CARDS -->
+      <div class="grid-4">
+        <div class="card">
+          <div class="card-accent" style="background:var(--amber);"></div>
+          <div class="card-glow" style="background:radial-gradient(ellipse at 0% 50%,var(--amber),transparent);"></div>
+          <div class="card-label">Prevalensi Stunting Nasional</div>
+          <div class="card-value" style="color:var(--amber);" id="kpi-stunting">19,8%</div>
+          <div class="card-sub">SSGI 2024 · Ambang darurat WHO: 20%</div>
+          <div class="card-delta delta-neg"><span class="trend-arr" style="color:var(--amber);"><svg viewBox="0 0 24 24"><path d="M7 14l5-5 5 5z"/></svg></span> Hanya 0,3 poin dari zona krisis</div>
+        </div>
+        <div class="card">
+          <div class="card-accent" style="background:var(--orange);"></div>
+          <div class="card-glow" style="background:radial-gradient(ellipse at 0% 50%,var(--orange),transparent);"></div>
+          <div class="card-label">Anggaran MBG 2026</div>
+          <div class="card-value" style="color:var(--orange);">Rp335T</div>
+          <div class="card-sub">Pos APBN terbesar · Rp27,92T/bulan</div>
+          <div class="card-delta delta-neg">Laju penurunan stunting: 1,58%/tahun</div>
+        </div>
+        <div class="card">
+          <div class="card-accent" style="background:var(--teal);"></div>
+          <div class="card-glow" style="background:radial-gradient(ellipse at 0% 50%,var(--teal),transparent);"></div>
+          <div class="card-label">Total SPPG Aktif Nasional</div>
+          <div class="card-value" style="color:var(--teal);">24.204</div>
+          <div class="card-sub">514 Kab/Kota · 38 Provinsi</div>
+          <div class="card-delta delta-neg">16 kabupaten tanpa SPPG — semua Zona Merah</div>
+        </div>
+        <div class="card">
+          <div class="card-accent" style="background:var(--red);"></div>
+          <div class="card-glow" style="background:radial-gradient(ellipse at 0% 50%,var(--red),transparent);"></div>
+          <div class="card-label">Spearman ρ (SPPG vs CRS)</div>
+          <div class="card-value" style="color:var(--red);">−0,519</div>
+          <div class="card-sub">p = 0,000 · Korelasi negatif signifikan</div>
+          <div class="card-delta delta-neg">Risiko naik <span class="trend-arr" style="color:var(--red);"><svg viewBox="0 0 24 24"><path d="M7 14l5-5 5 5z"/></svg></span> SPPG turun <span class="trend-arr" style="color:var(--red);"><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></span> (paradoks sistemik)</div>
+        </div>
+      </div>
+
+      <!-- ZONA SUMMARY CARDS -->
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-line" style="background:var(--orange);"></div>
+          Distribusi 3 Zona Prioritas MBG
+        </div>
+        <div class="section-sub">Berdasarkan Composite Risk Score (CRS) · K-Means k=3</div>
+      </div>
+      <div class="grid-3" id="zona-cards-container"></div>
+
+      <!-- MAP -->
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-line" style="background:var(--teal);"></div>
+          Peta Interaktif Zona Prioritas MBG
+        </div>
+        <div class="section-sub">Klik wilayah untuk melihat detail · Warna = tingkat risiko stunting</div>
+      </div>
+      <div style="position:relative;">
+        <div id="map"></div>
+      </div>
+
+      <!-- TOP 10 + CHARTS -->
+      <div class="grid-2">
+        <div class="chart-card">
+          <div class="chart-card-title">Perbandingan Distribusi Anggaran</div>
+          <div class="chart-card-sub">Aktual vs Ideal berdasarkan CRS (% dari total)</div>
+          <canvas id="chartCompare"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Stunting Rata-rata per Zona</div>
+          <div class="chart-card-sub">Semakin merah <span class="formula-arr" style="display:inline-flex;vertical-align:middle;"><svg style="width:12px;height:12px;fill:var(--text3);" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></span> semakin tinggi beban stunting</div>
+          <canvas id="chartStunting"></canvas>
+        </div>
+      </div>
+
+      <!-- TOP 10 TABLE -->
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-line" style="background:var(--red);"></div>
+          Top 10 Kabupaten — CRS Tertinggi (Prioritas Utama MBG)
+        </div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-head-row">
+          <div class="table-head-title"><span class="zdot" style="background:var(--red);display:inline-block;"></span> Kabupaten Zona Merah — Penerima Prioritas Intervensi</div>
+          <div class="table-head-sub">Diurutkan berdasarkan Composite Risk Score tertinggi</div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr>
+              <th>Rank</th><th>Kabupaten/Kota</th><th>Provinsi</th><th>Zona</th>
+              <th>CRS</th><th>Stunting</th><th>Kemiskinan</th><th>SPPG</th><th>Alokasi Ideal/Bln</th>
+            </tr></thead>
+            <tbody id="top10-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================
+         PAGE: DATA KABUPATEN
+    ======================================== -->
+    <div class="page" id="page-data">
+      <div class="info-banner">
+        <span class="info-banner-icon"><svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:var(--orange);"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg></span>
+        <span>
+          Jelajahi data lengkap <strong>514 kabupaten/kota</strong> Indonesia dengan Composite Risk Score, data stunting, kemiskinan, infrastruktur, dan alokasi anggaran ideal.
+          Gunakan filter di bawah untuk mencari daerah tertentu. Klik nama kabupaten untuk melihat detail.
+        </span>
+      </div>
+
+      <div class="search-area">
+        <input class="search-box" type="text" id="search-input" placeholder="Cari kabupaten, kota, atau provinsi..."/>
+        <select class="filter-sel" id="filter-zona" onchange="searchKabupaten()">
+          <option value="ALL">Semua Zona</option>
+          <option value="MERAH">Zona Merah (68)</option>
+          <option value="KUNING">Zona Kuning (183)</option>
+          <option value="HIJAU">Zona Hijau (263)</option>
+        </select>
+        <select class="filter-sel" id="filter-provinsi" onchange="searchKabupaten()">
+          <option value="ALL">Semua Provinsi</option>
+        </select>
+        <select class="filter-sel" id="sort-by" onchange="searchKabupaten()">
+          <option value="rank">Rank CRS (tertinggi)</option>
+          <option value="stunting">Stunting (tertinggi)</option>
+          <option value="alokasi">Alokasi (terbesar)</option>
+          <option value="kemiskinan">Kemiskinan (tertinggi)</option>
+          <option value="sppg">SPPG (terendah)</option>
+        </select>
+        <button class="btn-primary" onclick="searchKabupaten()">Terapkan Filter</button>
+      </div>
+
+      <div class="detail-panel" id="detail-panel"></div>
+
+      <div class="table-wrap">
+        <div class="table-head-row">
+          <div class="table-head-title"><svg class="ico-sm" style="fill:var(--teal);" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg> Data Analitik 514 Kabupaten/Kota Indonesia</div>
+          <div class="table-head-sub" id="table-count">Memuat data...</div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr>
+              <th>Rank</th><th>Kabupaten/Kota</th><th>Provinsi</th><th>Zona</th>
+              <th>CRS (0–100)</th><th>Stunting %</th><th>Kemiskinan %</th><th>IPM</th>
+              <th>SPPG</th><th>Puskesmas</th><th>Rasio PIP %</th>
+              <th>Sanitasi %</th><th>Air Minum %</th><th>LISA</th><th>Alokasi/Bulan</th>
+            </tr></thead>
+            <tbody id="data-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </div>
+
+    <!-- ========================================
+         PAGE: SIMULASI ANGGARAN
+    ======================================== -->
+    <div class="page" id="page-simulasi">
+      <div class="info-banner">
+        <span class="info-banner-icon"><svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:var(--orange);"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg></span>
+        <span>
+          Simulasi bersifat <strong>budget-neutral = Rp335 Triliun</strong>. Redistribusi murni berdasarkan
+          <strong>Composite Risk Score (CRS)</strong> via mekanisme <strong>2-Step Burden Weight</strong>.
+          Total = Rp27,917T/bulan ≡ target MBG bulanan. <strong>Tidak perlu tambahan anggaran sepeser pun.</strong>
+          Ini adalah koreksi arah, bukan koreksi anggaran.
+        </span>
+      </div>
+
+      <!-- COMPARISON VISUAL -->
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-line" style="background:var(--orange);"></div>
+          Distribusi Aktual vs Alokasi Ideal GeoStunting
+        </div>
+        <div class="section-sub">Gap antara "apa yang terjadi" dan "apa yang seharusnya terjadi"</div>
+      </div>
+
+      <div class="budget-compare">
+        <div class="budget-col">
+          <div class="budget-col-title aktual"><svg style="width:16px;height:16px;fill:var(--red);" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg> Distribusi SPPG Aktual</div>
+          <div class="budget-bar-item">
+            <div class="budget-bar-label">
+              <span class="budget-bar-name" style="color:var(--red)"><span class="zdot-sm" style="background:var(--red);"></span>Zona Merah</span>
+              <span class="budget-bar-pct" style="color:var(--red)">2,9%</span>
+            </div>
+            <div class="budget-bar-track"><div class="budget-bar-fill" style="width:0%;background:var(--red);" data-target="2.9"></div></div>
+          </div>
+          <div class="budget-bar-item">
+            <div class="budget-bar-label">
+              <span class="budget-bar-name" style="color:var(--amber)"><span class="zdot-sm" style="background:var(--amber);"></span>Zona Kuning</span>
+              <span class="budget-bar-pct" style="color:var(--amber)">24,5%</span>
+            </div>
+            <div class="budget-bar-track"><div class="budget-bar-fill" style="width:0%;background:var(--amber);" data-target="24.5"></div></div>
+          </div>
+          <div class="budget-bar-item">
+            <div class="budget-bar-label">
+              <span class="budget-bar-name" style="color:var(--green)"><span class="zdot-sm" style="background:var(--green);"></span>Zona Hijau</span>
+              <span class="budget-bar-pct" style="color:var(--green)">72,6%</span>
+            </div>
+            <div class="budget-bar-track"><div class="budget-bar-fill" style="width:0%;background:var(--green);" data-target="72.6"></div></div>
+          </div>
+          <div style="margin-top:14px;padding:12px;background:rgba(255,71,87,0.06);border-radius:10px;border:1px solid rgba(255,71,87,0.15);">
+            <div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;margin-bottom:4px;">Dampak</div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.7;">Daerah paling membutuhkan hanya mendapat <strong style="color:var(--red)">Rp9,73T/tahun</strong> dari total anggaran Rp335T.</div>
+          </div>
+        </div>
+        <div class="budget-arrow-el">
+          <div class="flow-arrow-wrap">
+            <svg class="flow-arrow-svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div class="flow-dots">
+            <div class="flow-dot"></div>
+            <div class="flow-dot"></div>
+            <div class="flow-dot"></div>
+          </div>
+          <span style="margin-top:4px;">GeoStunting<br>CRS-Based</span>
+        </div>
+        <div class="budget-col">
+          <div class="budget-col-title ideal"><span class="check-badge"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></span>Alokasi Ideal GeoStunting</div>
+          <div class="budget-bar-item">
+            <div class="budget-bar-label">
+              <span class="budget-bar-name" style="color:var(--red)"><span class="zdot-sm" style="background:var(--red);"></span>Zona Merah</span>
+              <span class="budget-bar-pct" style="color:var(--green)">26,79%</span>
+            </div>
+            <div class="budget-bar-track"><div class="budget-bar-fill" style="width:0%;background:var(--red);" data-target="26.79"></div></div>
+          </div>
+          <div class="budget-bar-item">
+            <div class="budget-bar-label">
+              <span class="budget-bar-name" style="color:var(--amber)"><span class="zdot-sm" style="background:var(--amber);"></span>Zona Kuning</span>
+              <span class="budget-bar-pct" style="color:var(--green)">39,3%</span>
+            </div>
+            <div class="budget-bar-track"><div class="budget-bar-fill" style="width:0%;background:var(--amber);" data-target="39.3"></div></div>
+          </div>
+          <div class="budget-bar-item">
+            <div class="budget-bar-label">
+              <span class="budget-bar-name" style="color:var(--green)"><span class="zdot-sm" style="background:var(--green);"></span>Zona Hijau</span>
+              <span class="budget-bar-pct" style="color:var(--amber)">33,91%</span>
+            </div>
+            <div class="budget-bar-track"><div class="budget-bar-fill" style="width:0%;background:var(--green);" data-target="33.91"></div></div>
+          </div>
+          <div style="margin-top:14px;padding:12px;background:rgba(46,213,115,0.06);border-radius:10px;border:1px solid rgba(46,213,115,0.15);">
+            <div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;margin-bottom:4px;">Dampak Ideal</div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.7;">Zona Merah menerima <strong style="color:var(--green)">Rp89,75T/tahun</strong> — <strong style="color:var(--green)">9× lebih besar</strong> dari saat ini.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORMULA -->
+      <div class="formula-box">
+        <div class="formula-title"><svg style="width:14px;height:14px;fill:var(--orange);" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 8l2 2-2 2-1.41-1.41L13.17 12l-1.58-1.59L13 9l2 2zm-6 0l2-2 1.41 1.41L9.83 12l1.58 1.59L10 15l-2-2 2-2z"/></svg> Mekanisme 2-Step Burden Weight — Rumus Aktual GeoStunting</div>
+        <div class="formula-line"><span class="fk">Step 1 — Alokasi Per Zona (Proporsional terhadap Beban Risiko)</span></div>
+        <div class="formula-line" style="padding-left:20px"><span class="fk">Anggaran_Bulanan</span><span class="feq"> = </span><span class="fv">Rp335T ÷ 12 = Rp27,917T/bulan</span></div>
+        <div class="formula-line" style="padding-left:20px"><span class="fk">Raw_z</span><span class="feq"> = </span><span class="fv">N_kab_z × CRS_mean_z</span><span class="feq"> <span class="formula-arr"><svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></span>mengukur total beban risiko per zona</span></div>
+        <div class="formula-line" style="padding-left:20px"><span class="fk">DIST_IDEAL_z</span><span class="feq"> = </span><span class="fv">Raw_z / Σ Raw_z × 100%</span></div>
+        <div class="formula-line" style="margin-top:8px"><span class="fk">Step 2 — Alokasi Per Kabupaten (Proporsional terhadap CRS individual)</span></div>
+        <div class="formula-line" style="padding-left:20px"><span class="fk">Bobot_i</span><span class="feq"> = </span><span class="fv">CRS_i / Σ CRS_j (j ∈ zona_z)</span><span class="feq"> <span class="formula-arr"><svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></span>kabupaten risiko tertinggi dapat lebih banyak</span></div>
+        <div class="formula-line" style="padding-left:20px"><span class="fk">Alokasi_Bulanan_i</span><span class="feq"> = </span><span class="fv">Bobot_i × Pot_Zona_z</span></div>
+        <div class="formula-line" style="margin-top:8px;color:var(--green);display:flex;align-items:center;gap:6px;"><svg style="width:14px;height:14px;fill:var(--green);flex-shrink:0;" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> Validasi: Σ Alokasi_Bulanan (514 kab) = Rp27,917T ≡ Budget MBG Bulanan Pemerintah</div>
+      </div>
+
+      <!-- GAP TABLE -->
+      <div class="table-wrap">
+        <div class="table-head-row">
+          <div class="table-head-title">Gap Distribusi Aktual vs Alokasi Ideal per Zona</div>
+          <div class="table-head-sub">Spearman ρ = 1,000 · p = 0,000 · Distribusi deterministik berbasis CRS <svg style="width:12px;height:12px;fill:var(--green);vertical-align:middle;" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr>
+              <th>Zona</th><th>N Kab</th><th>Mean CRS</th>
+              <th>Distribusi Aktual (SPPG)</th><th>Alokasi Ideal GeoStunting</th>
+              <th>Gap</th><th>Status</th><th>Selisih/Tahun</th>
+            </tr></thead>
+            <tbody>
+              <tr>
+                <td><span class="zona-pill MERAH">MERAH</span></td>
+                <td style="font-weight:800">68</td>
+                <td>56,17</td>
+                <td><strong style="color:var(--red)">2,9%</strong> ≈ Rp9,73T/thn</td>
+                <td><strong style="color:var(--green)">26,79%</strong> ≈ Rp89,75T/thn</td>
+                <td><span class="gap-pill gap-neg">+23,9%</span></td>
+                <td><span class="status-pill status-defisit-ekstrim">Defisit Ekstrim</span></td>
+                <td style="color:var(--red);font-weight:800">−Rp80,0T</td>
+              </tr>
+              <tr>
+                <td><span class="zona-pill KUNING">KUNING</span></td>
+                <td style="font-weight:800">183</td>
+                <td>30,62</td>
+                <td><strong style="color:var(--amber)">24,5%</strong> ≈ Rp82,1T/thn</td>
+                <td><strong style="color:var(--green)">39,3%</strong> ≈ Rp131,65T/thn</td>
+                <td><span class="gap-pill gap-neg">+14,8%</span></td>
+                <td><span class="status-pill status-defisit-sedang">Defisit Sedang</span></td>
+                <td style="color:var(--amber);font-weight:800">−Rp49,6T</td>
+              </tr>
+              <tr>
+                <td><span class="zona-pill HIJAU">HIJAU</span></td>
+                <td style="font-weight:800">263</td>
+                <td>18,38</td>
+                <td><strong style="color:var(--amber)">72,6%</strong> ≈ Rp243,2T/thn</td>
+                <td><strong style="color:var(--green)">33,91%</strong> ≈ Rp113,6T/thn</td>
+                <td><span class="gap-pill gap-pos">−38,7%</span></td>
+                <td><span class="status-pill status-surplus">Surplus Signifikan</span></td>
+                <td style="color:var(--green);font-weight:800">+Rp129,6T</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CHARTS -->
+      <div class="grid-2">
+        <div class="chart-card">
+          <div class="chart-card-title">Gap Alokasi Ideal vs Aktual (Rp Triliun/Tahun)</div>
+          <div class="chart-card-sub">Positif = kurang didanai · Negatif = kelebihan dana</div>
+          <canvas id="chartGap"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Alokasi Ideal Bulanan per Zona (Budget-Neutral <svg style="width:13px;height:13px;fill:var(--green);vertical-align:middle;" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>)</div>
+          <div class="chart-card-sub">Total Rp27,917T/bulan ≡ target MBG bulanan pemerintah</div>
+          <canvas id="chartBulanan"></canvas>
+        </div>
+      </div>
+
+      <!-- TOP 20 TABLE -->
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-line" style="background:var(--red);"></div>
+          Top 20 Kabupaten — Alokasi Ideal Tertinggi per Bulan
+        </div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-head-row">
+          <div class="table-head-title">Penerima Prioritas Utama Redistribusi MBG</div>
+          <div class="table-head-sub">Diurutkan berdasarkan Composite Risk Score tertinggi</div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr>
+              <th>#</th><th>Kabupaten</th><th>Provinsi</th><th>Zona</th>
+              <th>CRS</th><th>Stunting %</th><th>Kemiskinan %</th>
+              <th>Alokasi/Bulan</th><th>Alokasi/Tahun</th>
+            </tr></thead>
+            <tbody id="simulasi-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================
+         PAGE: TENTANG SISTEM
+    ======================================== -->
+    <div class="page" id="page-about">
+
+      <div class="about-hero">
+        <h1><span class="geo">Geo</span><span class="stunting">Stunting</span> — Metodologi &amp; Validasi</h1>
+        <p>
+          Sistem precision targeting MBG berbasis Hybrid GWR-RF yang mengintegrasikan 6 sumber data resmi pemerintah
+          untuk menghasilkan Composite Risk Score (CRS) seluruh 514 kabupaten/kota Indonesia secara demand-driven dan budget-neutral.
+        </p>
+      </div>
+
+      <!-- MODEL METRICS -->
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-line" style="background:var(--orange);"></div>
+          Performa Model
+        </div>
+      </div>
+      <div class="model-metrics">
+        <div class="metric-card">
+          <div class="m-val">0,628</div>
+          <div class="m-label">R² Hybrid GWR-RF<br><span style="color:var(--green)">Hampir 2× lipat</span> OLS</div>
+        </div>
+        <div class="metric-card">
+          <div class="m-val" style="color:var(--red)">0,360</div>
+          <div class="m-label">R² OLS Konvensional<br><span style="color:var(--red)">Tidak memadai</span></div>
+        </div>
+        <div class="metric-card">
+          <div class="m-val" style="color:var(--teal)">0,503</div>
+          <div class="m-label">Global Moran's I<br>p = 0,001 (Klaster nyata)</div>
+        </div>
+        <div class="metric-card">
+          <div class="m-val" style="color:var(--green)">87%</div>
+          <div class="m-label">Reduksi Autokorelasi<br>Residual (Moran's I)</div>
+        </div>
+      </div>
+
+      <!-- PIPELINE -->
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-line" style="background:var(--teal);"></div>
+          Pipeline 4 Layer Sistem GeoStunting
+        </div>
+      </div>
+      <div class="pipeline">
+        <div class="pipeline-step">
+          <div class="ps-num">LAYER 1</div>
+          <div class="ps-title" style="color:var(--sky)">Data Input</div>
+          <div class="ps-items">
+            <svg class="ico-sm" style="fill:var(--sky);" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg> SSGI 2024 (PDF 352 hal.)<br>
+            <svg class="ico-sm" style="fill:var(--amber);" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg> BPS: Kemiskinan &amp; IPM<br>
+            <svg class="ico-sm" style="fill:var(--teal);" viewBox="0 0 24 24"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg> BPS: Sanitasi &amp; Air Minum<br>
+            <svg class="ico-sm" style="fill:var(--red);" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z"/></svg> Kemenkes: Faskes Nasional<br>
+            <svg class="ico-sm" style="fill:var(--green);" viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg> Kemendikdasmen: PIP<br>
+            <svg class="ico-sm" style="fill:var(--orange);" viewBox="0 0 24 24"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg> BGN: Persebaran SPPG
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="ps-num">LAYER 2</div>
+          <div class="ps-title" style="color:var(--amber)">Preprocessing</div>
+          <div class="ps-items">
+            <svg class="ico-sm" style="fill:var(--sky);" viewBox="0 0 24 24"><path d="M9.93 13.5h4.14L12 7.98zM20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-4.05 16.5l-1.14-3H9.17l-1.12 3H5.96l5.11-13h1.86l5.11 13h-2.09z"/></svg> pdfplumber + Regex Parser<br>
+            <svg class="ico-sm" style="fill:var(--teal);" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg> rapidFuzz Fuzzy Matching<br>
+            <svg class="ico-sm" style="fill:var(--amber);" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg> MICE BayesianRidge<br>
+            <svg class="ico-sm" style="fill:var(--orange);" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg> Feature Engineering<br>
+            <svg class="ico-sm" style="fill:var(--green);" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 8l2 2-2 2-1.41-1.41L13.17 12l-1.58-1.59L13 9l2 2zm-6 0l2-2 1.41 1.41L9.83 12l1.58 1.59L10 15l-2-2 2-2z"/></svg> 8 Fitur Turunan<br>
+            <svg class="ico-sm" style="fill:var(--sky);" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Spatial Lag (Queen+KNN)
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="ps-num">LAYER 3</div>
+          <div class="ps-title" style="color:var(--green)">Pemodelan Spasial</div>
+          <div class="ps-items">
+            <svg class="ico-sm" style="fill:var(--orange);" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> GWR Bisquare Adaptif (AICc)<br>
+            <svg class="ico-sm" style="fill:var(--teal);" viewBox="0 0 24 24"><path d="M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10 10-4.49 10-10S17.51 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3-8c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3z"/></svg> Bandwidth: 125 Kab/Kota<br>
+            <svg class="ico-sm" style="fill:var(--green);" viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg> Random Forest 300 Trees OOF<br>
+            <svg class="ico-sm" style="fill:var(--teal);" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg> Hybrid GWR-RF<br>
+            <svg class="ico-sm" style="fill:var(--amber);" viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg> Moran's I + LISA (999 perm.)<br>
+            <svg class="ico-sm" style="fill:var(--sky);" viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg> K-Means k=3 Zonasi
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="ps-num">LAYER 4</div>
+          <div class="ps-title" style="color:var(--orange)">Output Sistem</div>
+          <div class="ps-items">
+            <svg class="ico-sm" style="fill:var(--sky);" viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg> Peta Interaktif Folium HTML<br>
+            <svg class="ico-sm" style="fill:var(--green);" viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> Laporan Excel 5-Sheet<br>
+            <svg class="ico-sm" style="fill:var(--amber);" viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg> GeoPackage + Pickle Model<br>
+            <svg class="ico-sm" style="fill:var(--red);" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg> CRS 0–100 (514 Kab)<br>
+            <svg class="ico-sm" style="fill:var(--orange);" viewBox="0 0 24 24"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5C3.9 3 3 3.9 3 5v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2.28c.59-.35 1-.98 1-1.72v-4c0-.74-.41-1.37-1-1.72zM20 17H5V5h15v2h-6c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h6v2zm0-6h-6v-2h6v2z"/></svg> Simulasi Anggaran Rp335T<br>
+            <svg class="ico-sm" style="fill:var(--teal);" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/></svg> Web App Intelligence
+          </div>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW 1 -->
+      <div class="grid-2">
+        <div class="chart-card">
+          <div class="chart-card-title">Perbandingan Akurasi Model</div>
+          <div class="chart-card-sub">Hybrid GWR-RF vs OLS Konvensional — hampir 2× lebih akurat, reduksi autokorelasi 87%</div>
+          <canvas id="chartModelComp"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Feature Importance — Random Forest</div>
+          <div class="chart-card-sub">Spatial Lag Kemiskinan adalah prediktor terkuat (34,17%)</div>
+          <canvas id="chartFI"></canvas>
+        </div>
+      </div>
+
+      <!-- CRS WEIGHTS CHART -->
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-line" style="background:var(--amber);"></div>
+          Composite Risk Score — 7 Komponen Berbobot
+        </div>
+        <div class="section-sub">Bobot mencerminkan kontribusi aktual setiap dimensi berdasarkan hasil pemodelan</div>
+      </div>
+      <div class="chart-card">
+        <canvas id="chartCRS" style="max-height:180px"></canvas>
+      </div>
+
+      <!-- LISA DISTRIBUTION -->
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-line" style="background:var(--red);"></div>
+          Distribusi LISA — Autokorelasi Spasial Stunting Nasional
+        </div>
+        <div class="section-sub">Global Moran's I = 0,503 (p=0,001) · Stunting berpola klaster geografis, bukan acak</div>
+      </div>
+      <div class="grid-4">
+        <div class="card">
+          <div class="card-accent" style="background:var(--red);"></div>
+          <div class="card-label">High-High (Hotspot)</div>
+          <div class="card-value" style="color:var(--red)">56</div>
+          <div class="card-sub">Stunting tinggi, dikelilingi daerah stunting tinggi. Klaster paling kritis.</div>
+        </div>
+        <div class="card">
+          <div class="card-accent" style="background:var(--sky);"></div>
+          <div class="card-label">Low-Low (Coldspot)</div>
+          <div class="card-value" style="color:var(--sky)">10</div>
+          <div class="card-sub">Stunting rendah, dikelilingi daerah stunting rendah. Area aman.</div>
+        </div>
+        <div class="card">
+          <div class="card-accent" style="background:var(--amber);"></div>
+          <div class="card-label">Low-High (Outlier)</div>
+          <div class="card-value" style="color:var(--amber)">62</div>
+          <div class="card-sub">Stunting rendah di tengah wilayah berisiko tinggi. Perlu perhatian khusus.</div>
+        </div>
+        <div class="card">
+          <div class="card-accent" style="background:var(--green);"></div>
+          <div class="card-label">Not Significant</div>
+          <div class="card-value" style="color:var(--green)">386</div>
+          <div class="card-sub">Tidak membentuk klaster spasial yang signifikan. Analisis individual diperlukan.</div>
+        </div>
+      </div>
+
+      <!-- DATA SOURCES -->
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-title-line" style="background:var(--green);"></div>
+          Sumber Data &amp; Dataset yang Digunakan
+        </div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-head-row">
+          <div class="table-head-title">6 Sumber Data Resmi Pemerintah Indonesia</div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Dataset</th><th>Sumber</th><th>Format</th><th>Variabel Utama</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Prevalensi Stunting per Kab/Kota</strong></td><td>SSGI 2024, Kemenkes RI</td><td>PDF</td><td>Stunting (%)</td></tr>
+              <tr><td><strong>Sosial-Ekonomi Kab/Kota</strong></td><td>BPS</td><td>XLSX/CSV</td><td>Tingkat kemiskinan, IPM</td></tr>
+              <tr><td><strong>Infrastruktur Sanitasi &amp; Air</strong></td><td>BPS</td><td>XLSX/CSV</td><td>Akses sanitasi layak, akses air minum layak (%)</td></tr>
+              <tr><td><strong>Batas Administrasi Spasial</strong></td><td>BIG (Shapefile)</td><td>SHP/GeoJSON</td><td>Geometri polygon 514 kab/kota</td></tr>
+              <tr><td><strong>Data PIP/KIP</strong></td><td>Kemendikdasmen</td><td>XLSX/CSV</td><td>Jumlah penerima PIP per kab/kota</td></tr>
+              <tr><td><strong>Fasilitas Kesehatan &amp; SPPG</strong></td><td>Kemenkes RI + BGN</td><td>XLSX/CSV</td><td>Puskesmas, posyandu, unit SPPG aktif</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// PARTICLES
+// ═══════════════════════════════════════════════════════════
+(function(){
+  const container=document.getElementById('particles');
+  const colors=['rgba(255,107,53,','rgba(0,206,201,','rgba(46,213,115,','rgba(255,165,2,'];
+  for(let i=0;i<18;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    const sz=Math.random()*4+2;
+    const c=colors[Math.floor(Math.random()*colors.length)];
+    p.style.cssText=`
+      width:${sz}px;height:${sz}px;
+      left:${Math.random()*100}%;
+      background:${c}0.6);
+      animation-duration:${Math.random()*15+10}s;
+      animation-delay:${Math.random()*-15}s;
+    `;
+    container.appendChild(p);
+  }
+})();
+
+// ═══════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════
+const PAGE_META = {
+  beranda:  {title:'Beranda — GeoStunting Indonesia', sub:'Sistem Precision Targeting MBG · Geospatial Machine Learning · 514 Kab/Kota'},
+  dashboard:{title:'Dashboard Nasional', sub:'Analisis Prioritas MBG · Peta Interaktif · Real Data 514 Kabupaten/Kota'},
+  data:     {title:'Data Explorer 514 Kabupaten', sub:'Cari, filter, dan analisis data risiko stunting per daerah'},
+  simulasi: {title:'Simulasi Realokasi Anggaran', sub:'Budget-Neutral Rp335T · 2-Step Burden Weight CRS · Tanpa Tambah Anggaran'},
+  about:    {title:'Tentang Sistem GeoStunting', sub:'Metodologi · Hybrid GWR-RF · Validasi · Pipeline 4 Layer'},
+};
+
+function navigate(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.getElementById('nav-'+page).classList.add('active');
+  const m=PAGE_META[page];
+  document.getElementById('topbar-title').textContent=m.title;
+  document.getElementById('topbar-sub').textContent=m.sub;
+
+  if(page==='dashboard' && !mapInit){initMap();}
+  if(page==='dashboard' && !dashChartsInit){initDashCharts();}
+  if(page==='data' && !dataInit){initDataPage();}
+  if(page==='simulasi'){initSimulasi();}
+  if(page==='about' && !aboutInit){initAboutCharts();}
+}
+window.navigate=navigate;
+
+// ═══════════════════════════════════════════════════════════
+// DASHBOARD: ZONA CARDS
+// ═══════════════════════════════════════════════════════════
+function renderZonaCards(){
+  const container=document.getElementById('zona-cards-container');
+  const zonas=[
+    {key:'MERAH',label:'MERAH — Prioritas Tinggi',color:'var(--red)',glow:'rgba(255,71,87,0.15)',borderColor:'rgba(255,71,87,0.3)'},
+    {key:'KUNING',label:'KUNING — Prioritas Sedang',color:'var(--amber)',glow:'rgba(255,165,2,0.15)',borderColor:'rgba(255,165,2,0.3)'},
+    {key:'HIJAU',label:'HIJAU — Relatif Aman',color:'var(--green)',glow:'rgba(46,213,115,0.15)',borderColor:'rgba(46,213,115,0.3)'},
+  ];
+  container.innerHTML=zonas.map(z=>{
+    const d=ZONA_SUMMARY[z.key];
+    const pct=(d.n_kab/514*100).toFixed(1);
+    return `<div class="zona-big-card" style="border-color:${z.borderColor};background:linear-gradient(135deg,${z.glow},var(--card));">
+      <div class="zona-top">
+        <div class="zona-dot-big" style="background:${z.color};box-shadow:0 0 10px ${z.color};"></div>
+        <div class="zona-name-big" style="color:${z.color}">${z.label}</div>
+      </div>
+      <div class="zona-count-big" style="color:${z.color}">${d.n_kab} <span style="font-size:16px;font-weight:600;color:var(--text3)">kabupaten</span></div>
+      <div class="zona-progress-wrap">
+        <div class="zona-progress-track">
+          <div class="zona-progress-fill" style="width:0%;background:${z.color};" data-target="${pct}"></div>
+        </div>
+      </div>
+      <div class="zona-stats">
+        <div class="zona-stat-row"><span class="zona-stat-label">Skor CRS</span><span class="zona-stat-val">${d.crs_min} – ${d.crs_max}</span></div>
+        <div class="zona-stat-row"><span class="zona-stat-label">Stunting rata-rata</span><span class="zona-stat-val" style="color:${z.color}">${d.stunting_avg}%</span></div>
+        <div class="zona-stat-row"><span class="zona-stat-label">Rata-rata SPPG</span><span class="zona-stat-val">${d.avg_sppg} unit</span></div>
+        <div class="zona-stat-row"><span class="zona-stat-label">Distribusi aktual</span><span class="zona-stat-val" style="color:${z.key==='HIJAU'?'var(--amber)':'var(--red)'}">${d.sppg_aktual_pct}%</span></div>
+        <div class="zona-stat-row"><span class="zona-stat-label">Alokasi ideal</span><span class="zona-stat-val" style="color:var(--green)">${d.alokasi_ideal_pct}%</span></div>
+      </div>
+    </div>`;
+  }).join('');
+  // Animate progress bars
+  setTimeout(()=>{
+    document.querySelectorAll('.zona-progress-fill').forEach(el=>{
+      el.style.width=el.dataset.target+'%';
+    });
+  },300);
+}
+renderZonaCards();
+
+// ═══════════════════════════════════════════════════════════
+// DASHBOARD: TOP 10 TABLE
+// ═══════════════════════════════════════════════════════════
+function renderTop10(){
+  const tbody=document.getElementById('top10-tbody');
+  const top10=KABUPATEN_514.slice(0,10);
+  tbody.innerHTML=top10.map((d,i)=>`
+    <tr>
+      <td><span class="rank-num rank-top">#${i+1}</span></td>
+      <td><strong>${d.kabupaten}</strong></td>
+      <td style="color:var(--text3)">${d.provinsi}</td>
+      <td><span class="zona-pill ${d.zona}">${d.zona}</span></td>
+      <td>
+        <div class="crs-bar-wrap">
+          <span style="font-weight:800;color:var(--red);min-width:36px">${d.crs.toFixed(1)}</span>
+          <div class="crs-bar"><div class="crs-fill" style="width:${d.crs}%;background:var(--red);"></div></div>
+        </div>
+      </td>
+      <td style="color:var(--red);font-weight:700">${d.stunting.toFixed(1)}%</td>
+      <td>${d.kemiskinan.toFixed(1)}%</td>
+      <td>${d.sppg===0?'<span class="zero-sppg-badge"><span class="pulse-dot"></span>0 SPPG</span>':d.sppg}</td>
+      <td style="color:var(--orange);font-weight:700">Rp${d.alokasi_bulanan_M.toFixed(1)}M</td>
+    </tr>
+  `).join('');
+}
+renderTop10();
+
+// ═══════════════════════════════════════════════════════════
+// MAP
+// ═══════════════════════════════════════════════════════════
+let mapInit=false;
+let mapInstance=null;
+function initMap(){
+  mapInit=true;
+  const COLORS={MERAH:'#ff4757',KUNING:'#ffa502',HIJAU:'#2ed573'};
+  const FILL={MERAH:0.75,KUNING:0.65,HIJAU:0.55};
+
+  mapInstance=L.map('map',{
+    scrollWheelZoom:false,
+    zoomControl:true,
+    preferCanvas:true,
+  });
+
+  // Dark tile layer
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains:'abcd',maxZoom:19
+  }).addTo(mapInstance);
+
+  const loadDiv=document.createElement('div');
+  loadDiv.id='map-loading';
+  loadDiv.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(6,22,18,0.95);color:#e8f5ee;padding:14px 22px;border-radius:12px;font-size:13px;z-index:1000;border:1px solid #1e4a32;font-family:Nunito,sans-serif;backdrop-filter:blur(8px);';
+  loadDiv.innerHTML='Memuat peta 514 kabupaten...';
+  document.getElementById('map').appendChild(loadDiv);
+
+  let selectedLayer=null;
+
+  fetch('indonesia_kabupaten.geojson')
+    .then(r=>r.json())
+    .then(gj=>{
+      document.getElementById('map-loading')?.remove();
+      const layer=L.geoJSON(gj,{
+        style:f=>{
+          const z=f.properties.zona||'HIJAU';
+          return{fillColor:COLORS[z],fillOpacity:FILL[z],color:'#061612',weight:0.5,opacity:0.9};
+        },
+        onEachFeature:(f,lyr)=>{
+          const p=f.properties;
+          const z=p.zona||'HIJAU';
+          const c=COLORS[z];
+          lyr.on({
+            mouseover:()=>{if(selectedLayer!==lyr){lyr.setStyle({weight:2,color:'#fff',fillOpacity:0.95});lyr.bringToFront();}},
+            mouseout:()=>{if(selectedLayer!==lyr)layer.resetStyle(lyr);},
+            click:e=>{
+              if(selectedLayer&&selectedLayer!==lyr)layer.resetStyle(selectedLayer);
+              selectedLayer=lyr;
+              lyr.setStyle({weight:2.5,color:'#ff6b35',fillOpacity:1.0});
+              lyr.bringToFront();
+              L.popup({maxWidth:270,className:'geo-popup'})
+                .setLatLng(e.latlng)
+                .setContent(`
+                  <div style="font-family:Nunito,sans-serif;min-width:230px;padding:4px;">
+                    <div style="font-weight:900;font-size:14px;margin-bottom:3px;color:#1a1a1a">${p.nama_kab_kota}</div>
+                    <div style="font-size:11px;color:#666;margin-bottom:10px">${p.provinsi}</div>
+                    <div style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800;background:${c}22;color:${c};border:1px solid ${c}66;margin-bottom:10px">${z}</div>
+                    <table style="width:100%;font-size:11px;border-collapse:collapse">
+                      <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">Rank Nasional</td><td style="font-weight:800;color:#1a1a1a">#${p.rank_global}</td></tr>
+                      <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">Risk Score (CRS)</td><td style="font-weight:800;color:${c}">${(p.risk_score||0).toFixed(1)}</td></tr>
+                      <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">Stunting</td><td style="font-weight:800;color:#ff4757">${(p.stunting_pct||0).toFixed(1)}%</td></tr>
+                      <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">Kemiskinan</td><td style="font-weight:800;color:#1a1a1a">${(p.tingkat_kemiskinan||0).toFixed(1)}%</td></tr>
+                      <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">IPM</td><td style="font-weight:800;color:#1a1a1a">${(p.ipm||0).toFixed(1)}</td></tr>
+                      <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">SPPG Aktif</td><td style="font-weight:800;color:${(p.jumlah_sppg||0)===0?'#ff4757':'#1a1a1a'}">${p.jumlah_sppg||0}${(p.jumlah_sppg||0)===0?' (!!)':''}</td></tr>
+                      <tr><td style="color:#888;padding:4px 0">Alokasi Ideal/Bulan</td><td style="font-weight:800;color:#ff6b35">Rp${(p.alokasi_M||0).toFixed(1)}M</td></tr>
+                    </table>
+                  </div>
+                `)
+                .openOn(mapInstance);
+            }
+          });
+        }
+      }).addTo(mapInstance);
+      mapInstance.fitBounds(layer.getBounds(),{padding:[10,10]});
+
+      // Custom legend
+      const legend=L.control({position:'bottomright'});
+      legend.onAdd=()=>{
+        const div=L.DomUtil.create('div');
+        div.innerHTML=`
+          <div style="background:rgba(6,22,18,0.95);border:1px solid #1e4a32;border-radius:12px;padding:12px 16px;font-family:Nunito,sans-serif;font-size:11px;color:#e8f5ee;backdrop-filter:blur(8px);">
+            <div style="font-weight:800;margin-bottom:10px;color:#7eb89a;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;">ZONA PRIORITAS MBG</div>
+            <div style="display:flex;align-items:center;gap:8px;margin:6px 0"><div style="width:12px;height:12px;border-radius:3px;background:#ff4757;box-shadow:0 0 6px rgba(255,71,87,0.4)"></div><div>Merah — Prioritas Tinggi (68 kab)</div></div>
+            <div style="display:flex;align-items:center;gap:8px;margin:6px 0"><div style="width:12px;height:12px;border-radius:3px;background:#ffa502;box-shadow:0 0 6px rgba(255,165,2,0.4)"></div><div>Kuning — Prioritas Sedang (183 kab)</div></div>
+            <div style="display:flex;align-items:center;gap:8px;margin:6px 0"><div style="width:12px;height:12px;border-radius:3px;background:#2ed573;box-shadow:0 0 6px rgba(46,213,115,0.4)"></div><div>Hijau — Relatif Aman (263 kab)</div></div>
+            <div style="margin-top:8px;padding-top:8px;border-top:1px solid #1e4a32;font-size:9.5px;color:#4a7a5e">Klik wilayah untuk detail lengkap</div>
+          </div>`;
+        return div;
+      };
+      legend.addTo(mapInstance);
+    })
+    .catch(()=>{
+      document.getElementById('map-loading').textContent='Peta tidak dapat dimuat. Pastikan file indonesia_kabupaten.geojson tersedia.';
+    });
+}
+
+// ═══════════════════════════════════════════════════════════
+// DASHBOARD CHARTS
+// ═══════════════════════════════════════════════════════════
+let dashChartsInit=false;
+function initDashCharts(){
+  dashChartsInit=true;
+  const CHART_DEFAULTS={
+    font:{family:'Nunito,sans-serif'},
+    color:'rgba(126,184,154,0.7)',
+    grid:'rgba(30,74,50,0.4)',
+    borderColor:'rgba(30,74,50,0.6)',
+  };
+  const commonOptions={
+    responsive:true,maintainAspectRatio:true,
+    plugins:{legend:{labels:{color:'#7eb89a',font:{family:'Nunito,sans-serif',size:11},padding:16}}},
+    scales:{
+      x:{ticks:{color:'#7eb89a',font:{family:'Nunito,sans-serif',size:10}},grid:{color:CHART_DEFAULTS.grid}},
+      y:{ticks:{color:'#7eb89a',font:{family:'Nunito,sans-serif',size:10}},grid:{color:CHART_DEFAULTS.grid}},
+    }
+  };
+
+  // Compare chart
+  new Chart(document.getElementById('chartCompare'),{
+    type:'bar',
+    data:{
+      labels:['Zona Merah','Zona Kuning','Zona Hijau'],
+      datasets:[
+        {label:'Distribusi Aktual (%)',data:[2.9,24.5,72.6],backgroundColor:['rgba(255,71,87,0.5)','rgba(255,165,2,0.5)','rgba(46,213,115,0.5)'],borderColor:['#ff4757','#ffa502','#2ed573'],borderWidth:2,borderRadius:6},
+        {label:'Alokasi Ideal GeoStunting (%)',data:[26.79,39.3,33.91],backgroundColor:['rgba(255,71,87,0.2)','rgba(255,165,2,0.2)','rgba(46,213,115,0.2)'],borderColor:['#ff4757','#ffa502','#2ed573'],borderWidth:2,borderRadius:6,borderDash:[6,3]},
+      ]
+    },
+    options:{...commonOptions,plugins:{...commonOptions.plugins,tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.raw}%`}}}}
+  });
+
+  // Stunting by zona
+  new Chart(document.getElementById('chartStunting'),{
+    type:'doughnut',
+    data:{
+      labels:['Zona Merah (34,5%)','Zona Kuning (26,6%)','Zona Hijau (17,4%)'],
+      datasets:[{
+        data:[34.5,26.6,17.4],
+        backgroundColor:['rgba(255,71,87,0.7)','rgba(255,165,2,0.7)','rgba(46,213,115,0.7)'],
+        borderColor:['#ff4757','#ffa502','#2ed573'],borderWidth:2,
+        hoverOffset:8,
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'bottom',labels:{color:'#7eb89a',font:{family:'Nunito,sans-serif',size:10},padding:12}}}}
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// DATA PAGE
+// ═══════════════════════════════════════════════════════════
+let dataInit=false;
+let currentPage=1;
+let filteredData=[];
+const PAGE_SIZE=20;
+
+function initDataPage(){
+  dataInit=true;
+  // Populate provinsi filter
+  const provs=[...new Set(KABUPATEN_514.map(d=>d.provinsi))].sort();
+  const sel=document.getElementById('filter-provinsi');
+  provs.forEach(p=>sel.innerHTML+=`<option value="${p}">${p}</option>`);
+  searchKabupaten();
+  document.getElementById('search-input').addEventListener('keydown',e=>{if(e.key==='Enter')searchKabupaten();});
+}
+window.initDataPage=initDataPage;
+
+function searchKabupaten(){
+  const q=document.getElementById('search-input').value.toLowerCase().trim();
+  const zona=document.getElementById('filter-zona').value;
+  const prov=document.getElementById('filter-provinsi').value;
+  const sort=document.getElementById('sort-by').value;
+
+  filteredData=KABUPATEN_514.filter(d=>{
+    if(zona!=='ALL'&&d.zona!==zona)return false;
+    if(prov!=='ALL'&&d.provinsi!==prov)return false;
+    if(q&&!d.kabupaten.toLowerCase().includes(q)&&!d.provinsi.toLowerCase().includes(q))return false;
+    return true;
+  });
+
+  filteredData.sort((a,b)=>{
+    if(sort==='rank')return a.rank-b.rank;
+    if(sort==='stunting')return b.stunting-a.stunting;
+    if(sort==='alokasi')return b.alokasi_bulanan_M-a.alokasi_bulanan_M;
+    if(sort==='kemiskinan')return b.kemiskinan-a.kemiskinan;
+    if(sort==='sppg')return b.sppg-a.sppg;
+    return 0;
+  });
+
+  currentPage=1;
+  renderDataTable();
+}
+window.searchKabupaten=searchKabupaten;
+
+function renderDataTable(){
+  const total=filteredData.length;
+  const pages=Math.ceil(total/PAGE_SIZE);
+  const start=(currentPage-1)*PAGE_SIZE;
+  const slice=filteredData.slice(start,start+PAGE_SIZE);
+
+  document.getElementById('table-count').textContent=`Menampilkan ${start+1}–${Math.min(start+PAGE_SIZE,total)} dari ${total} kabupaten`;
+
+  const LISA_CLS={'High-High':'lisa-hh','Low-Low':'lisa-ll','Low-High':'lisa-lh','High-Low':'lisa-hl'};
+
+  document.getElementById('data-tbody').innerHTML=slice.map(d=>`
+    <tr onclick="showDetail('${d.kabupaten.replace(/'/g,"\\'")}','${d.provinsi}')" style="cursor:pointer">
+      <td><span class="rank-num ${d.rank<=10?'rank-top':''}">#${d.rank}</span></td>
+      <td><strong>${d.kabupaten}</strong></td>
+      <td style="color:var(--text3)">${d.provinsi}</td>
+      <td><span class="zona-pill ${d.zona}">${d.zona}</span></td>
+      <td>
+        <div class="crs-bar-wrap">
+          <span style="font-weight:800;min-width:38px;color:${d.zona==='MERAH'?'var(--red)':d.zona==='KUNING'?'var(--amber)':'var(--green)'}">${d.crs.toFixed(1)}</span>
+          <div class="crs-bar"><div class="crs-fill" style="width:${d.crs}%;background:${d.zona==='MERAH'?'var(--red)':d.zona==='KUNING'?'var(--amber)':'var(--green)'};"></div></div>
+        </div>
+      </td>
+      <td style="color:var(--red);font-weight:700">${d.stunting.toFixed(1)}%</td>
+      <td>${d.kemiskinan.toFixed(1)}%</td>
+      <td>${d.ipm.toFixed(1)}</td>
+      <td>${d.sppg===0?'<span class="zero-sppg-badge"><span class="pulse-dot"></span>0</span>':d.sppg}</td>
+      <td>${d.puskesmas||0}</td>
+      <td>${d.rasio_pip.toFixed(1)}%</td>
+      <td>${d.sanitasi.toFixed(1)}%</td>
+      <td>${d.air_minum.toFixed(1)}%</td>
+      <td><span class="lisa-pill ${LISA_CLS[d.lisa_label]||'lisa-ns'}">${d.lisa_label||'Not Sig'}</span></td>
+      <td style="color:var(--orange);font-weight:700">Rp${d.alokasi_bulanan_M.toFixed(1)}M</td>
+    </tr>
+  `).join('');
+
+  // Pagination
+  const pag=document.getElementById('pagination');
+  let html='';
+  const maxBtn=7;
+  let startPage=Math.max(1,currentPage-3);
+  let endPage=Math.min(pages,startPage+maxBtn-1);
+  if(endPage-startPage<maxBtn-1)startPage=Math.max(1,endPage-maxBtn+1);
+
+  if(currentPage>1)html+=`<button class="page-btn" onclick="goPage(${currentPage-1})">←</button>`;
+  if(startPage>1){html+=`<button class="page-btn" onclick="goPage(1)">1</button>`;if(startPage>2)html+=`<span style="color:var(--text3);padding:0 4px">…</span>`;}
+  for(let i=startPage;i<=endPage;i++){
+    html+=`<button class="page-btn${i===currentPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
+  }
+  if(endPage<pages){if(endPage<pages-1)html+=`<span style="color:var(--text3);padding:0 4px">…</span>`;html+=`<button class="page-btn" onclick="goPage(${pages})">${pages}</button>`;}
+  if(currentPage<pages)html+=`<button class="page-btn-arrow" onclick="goPage(${currentPage+1})"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>`;
+  html+=`<span class="page-info">Halaman ${currentPage} dari ${pages}</span>`;
+  pag.innerHTML=html;
+}
+
+function goPage(p){currentPage=p;renderDataTable();document.querySelector('.content').scrollTo(0,0);}
+window.goPage=goPage;
+
+function showDetail(kab,prov){
+  const d=KABUPATEN_514.find(x=>x.kabupaten===kab&&x.provinsi===prov);
+  if(!d)return;
+  const panel=document.getElementById('detail-panel');
+  const COLOR={MERAH:'var(--red)',KUNING:'var(--amber)',HIJAU:'var(--green)'};
+  const c=COLOR[d.zona];
+  panel.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
+      <div>
+        <div class="detail-name">${d.kabupaten} <span class="zona-pill ${d.zona}" style="font-size:11px">${d.zona}</span></div>
+        <div class="detail-prov"><svg style="width:13px;height:13px;fill:var(--text3);vertical-align:middle;margin-right:4px;" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${d.provinsi} · Rank Nasional #${d.rank}</div>
+      </div>
+      <button onclick="document.getElementById('detail-panel').classList.remove('visible')" style="background:none;border:none;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='none'"><svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-stat"><div class="ds-val" style="color:${c}">${d.crs.toFixed(1)}</div><div class="ds-label">Composite Risk Score</div></div>
+      <div class="detail-stat"><div class="ds-val" style="color:var(--red)">${d.stunting.toFixed(1)}%</div><div class="ds-label">Prevalensi Stunting</div></div>
+      <div class="detail-stat"><div class="ds-val">${d.kemiskinan.toFixed(1)}%</div><div class="ds-label">Tingkat Kemiskinan</div></div>
+      <div class="detail-stat"><div class="ds-val">${d.ipm.toFixed(1)}</div><div class="ds-label">IPM</div></div>
+      <div class="detail-stat"><div class="ds-val" style="color:var(--orange)">Rp${d.alokasi_bulanan_M.toFixed(1)}M</div><div class="ds-label">Alokasi Ideal/Bulan</div></div>
+      <div class="detail-stat"><div class="ds-val" style="${d.sppg===0?'color:var(--red)':''}">${d.sppg===0?'<span class="zero-sppg-badge"><span class="pulse-dot"></span>0</span>':d.sppg}</div><div class="ds-label">SPPG Aktif</div></div>
+      <div class="detail-stat"><div class="ds-val">${d.sanitasi.toFixed(1)}%</div><div class="ds-label">Akses Sanitasi</div></div>
+      <div class="detail-stat"><div class="ds-val">${d.air_minum.toFixed(1)}%</div><div class="ds-label">Akses Air Minum</div></div>
+      <div class="detail-stat"><div class="ds-val">${d.rasio_pip.toFixed(1)}%</div><div class="ds-label">Rasio PIP</div></div>
+      <div class="detail-stat"><div class="ds-val">${d.puskesmas||0}</div><div class="ds-label">Puskesmas</div></div>
+    </div>
+  `;
+  panel.classList.add('visible');
+}
+window.showDetail=showDetail;
+
+// ═══════════════════════════════════════════════════════════
+// SIMULASI
+// ═══════════════════════════════════════════════════════════
+let simulasiInit=false;
+let simulasiChartsInit=false;
+
+function initSimulasi(){
+  // Animate budget bars
+  setTimeout(()=>{
+    document.querySelectorAll('.budget-bar-fill').forEach(el=>{
+      el.style.width=el.dataset.target+'%';
+    });
+  },400);
+
+  if(!simulasiChartsInit){
+    simulasiChartsInit=true;
+    renderSimulasiTable();
+    initSimulasiCharts();
+  }
+}
+
+function renderSimulasiTable(){
+  const top20=KABUPATEN_514.slice(0,20);
+  document.getElementById('simulasi-tbody').innerHTML=top20.map((d,i)=>`
+    <tr>
+      <td><span class="rank-num rank-top">${i+1}</span></td>
+      <td><strong>${d.kabupaten}</strong></td>
+      <td style="color:var(--text3)">${d.provinsi}</td>
+      <td><span class="zona-pill ${d.zona}">${d.zona}</span></td>
+      <td style="color:var(--red);font-weight:800">${d.crs.toFixed(1)}</td>
+      <td style="color:var(--red);font-weight:700">${d.stunting.toFixed(1)}%</td>
+      <td>${d.kemiskinan.toFixed(1)}%</td>
+      <td style="color:var(--orange);font-weight:800">Rp${d.alokasi_bulanan_M.toFixed(1)}M</td>
+      <td style="color:var(--amber);font-weight:700">Rp${d.alokasi_tahunan_M.toFixed(0)}M</td>
+    </tr>
+  `).join('');
+}
+
+function initSimulasiCharts(){
+  const commonOpts={
+    responsive:true,maintainAspectRatio:true,
+    plugins:{legend:{labels:{color:'#7eb89a',font:{family:'Nunito,sans-serif',size:11}}}},
+    scales:{
+      x:{ticks:{color:'#7eb89a',font:{family:'Nunito,sans-serif',size:10}},grid:{color:'rgba(30,74,50,0.4)'}},
+      y:{ticks:{color:'#7eb89a',font:{family:'Nunito,sans-serif',size:10}},grid:{color:'rgba(30,74,50,0.4)'}},
+    }
+  };
+
+  // Gap chart
+  new Chart(document.getElementById('chartGap'),{
+    type:'bar',
+    data:{
+      labels:['Zona Merah','Zona Kuning','Zona Hijau'],
+      datasets:[{
+        label:'Gap Alokasi (Rp Triliun/Tahun)',
+        data:[80.02,49.55,-129.57],
+        backgroundColor:['rgba(255,71,87,0.6)','rgba(255,165,2,0.6)','rgba(46,213,115,0.6)'],
+        borderColor:['#ff4757','#ffa502','#2ed573'],borderWidth:2,borderRadius:8,
+      }]
+    },
+    options:{...commonOpts,plugins:{...commonOpts.plugins,tooltip:{callbacks:{label:ctx=>`Gap: Rp${ctx.raw.toFixed(1)}T/tahun`}}}}
+  });
+
+  // Bulanan chart
+  new Chart(document.getElementById('chartBulanan'),{
+    type:'doughnut',
+    data:{
+      labels:['Zona Merah (Rp7,48T)','Zona Kuning (Rp10,97T)','Zona Hijau (Rp9,47T)'],
+      datasets:[{
+        data:[7.48,10.97,9.47],
+        backgroundColor:['rgba(255,71,87,0.7)','rgba(255,165,2,0.7)','rgba(46,213,115,0.7)'],
+        borderColor:['#ff4757','#ffa502','#2ed573'],borderWidth:2,hoverOffset:10
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'bottom',labels:{color:'#7eb89a',font:{family:'Nunito,sans-serif',size:10},padding:12}}}}
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// ABOUT CHARTS
+// ═══════════════════════════════════════════════════════════
+let aboutInit=false;
+function initAboutCharts(){
+  aboutInit=true;
+  const opts={
+    responsive:true,maintainAspectRatio:true,
+    plugins:{legend:{labels:{color:'#7eb89a',font:{family:'Nunito,sans-serif',size:11}}}},
+    scales:{
+      x:{ticks:{color:'#7eb89a',font:{family:'Nunito,sans-serif',size:10}},grid:{color:'rgba(30,74,50,0.4)'}},
+      y:{ticks:{color:'#7eb89a',font:{family:'Nunito,sans-serif',size:10}},grid:{color:'rgba(30,74,50,0.4)'},min:0,max:1},
+    }
+  };
+
+  // Model comparison
+  new Chart(document.getElementById('chartModelComp'),{
+    type:'bar',
+    data:{
+      labels:['OLS Konvensional','Hybrid GWR-RF'],
+      datasets:[
+        {label:'R² (Akurasi)',data:[0.36,0.628],backgroundColor:['rgba(255,71,87,0.5)','rgba(46,213,115,0.6)'],borderColor:['#ff4757','#2ed573'],borderWidth:2,borderRadius:8},
+        {label:"Moran's I Residual (lebih kecil = lebih baik)",data:[0.302,0.039],backgroundColor:['rgba(255,165,2,0.4)','rgba(116,185,255,0.4)'],borderColor:['#ffa502','#74b9ff'],borderWidth:2,borderRadius:8},
+      ]
+    },
+    options:{...opts,plugins:{...opts.plugins,tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.raw.toFixed(3)}`}}}}
+  });
+
+  // Feature importance
+  new Chart(document.getElementById('chartFI'),{
+    type:'bar',
+    data:{
+      labels:FEATURE_IMPORTANCE.map(f=>f.name.length>20?f.name.substring(0,18)+'…':f.name),
+      datasets:[{
+        label:'Kontribusi (%)',
+        data:FEATURE_IMPORTANCE.map(f=>f.pct),
+        backgroundColor:FEATURE_IMPORTANCE.map(f=>f.color+'99'),
+        borderColor:FEATURE_IMPORTANCE.map(f=>f.color),
+        borderWidth:2,borderRadius:6,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:true,
+      indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw.toFixed(2)}%`}}},
+      scales:{
+        x:{ticks:{color:'#7eb89a',font:{family:'Nunito,sans-serif',size:10},callback:v=>v+'%'},grid:{color:'rgba(30,74,50,0.4)'}},
+        y:{ticks:{color:'#7eb89a',font:{family:'Nunito,sans-serif',size:10}},grid:{color:'rgba(30,74,50,0.4)'}},
+      }
+    }
+  });
+
+  // CRS weights
+  const crsComponents=[
+    {label:'Stunting Aktual (30%)',val:30,color:'#ff4757'},
+    {label:'GWR Fitted (20%)',val:20,color:'#ff6b35'},
+    {label:'Klaster LISA (15%)',val:15,color:'#ffa502'},
+    {label:'Indeks Deprivasi (15%)',val:15,color:'#fdcb6e'},
+    {label:'Indeks Infrastruktur (10%)',val:10,color:'#00cec9'},
+    {label:'Rasio PIP (5%)',val:5,color:'#74b9ff'},
+    {label:'Rasio Posyandu (5%)',val:5,color:'#a29bfe'},
+  ];
+  new Chart(document.getElementById('chartCRS'),{
+    type:'bar',
+    data:{
+      labels:crsComponents.map(c=>c.label),
+      datasets:[{
+        label:'Bobot (%)',
+        data:crsComponents.map(c=>c.val),
+        backgroundColor:crsComponents.map(c=>c.color+'88'),
+        borderColor:crsComponents.map(c=>c.color),
+        borderWidth:2,borderRadius:6,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`Bobot: ${ctx.raw}%`}}},
+      scales:{
+        x:{ticks:{color:'#7eb89a',font:{family:'Nunito,sans-serif',size:9}},grid:{color:'rgba(30,74,50,0.4)'}},
+        y:{ticks:{color:'#7eb89a',font:{family:'Nunito,sans-serif',size:10},callback:v=>v+'%'},grid:{color:'rgba(30,74,50,0.4)'},max:35},
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// SCROLL ANIMATION FOR PROGRESS BARS
+// ═══════════════════════════════════════════════════════════
+function animateOnScroll(){
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.querySelectorAll('[data-target]').forEach(el=>{
+          setTimeout(()=>{el.style.width=el.dataset.target+'%';},200);
+        });
+      }
+    });
+  },{threshold:0.3});
+  document.querySelectorAll('.budget-compare,.zona-big-card').forEach(el=>observer.observe(el));
+}
+animateOnScroll();
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// IMPACT COUNTER — animated Rp misalokasi per detik
+// ═══════════════════════════════════════════════════════════
+(function(){
+  // Rp80.02T deficit / tahun — per detik
+  const perDetik = (80.02e12 / 365 / 24 / 3600);
+  const startMs = Date.now();
+  const el = document.getElementById('counter-daily');
+  if(!el) return;
+
+  function fmt(val){
+    if(val >= 1e12) return 'Rp ' + (val/1e12).toFixed(3) + ' T';
+    if(val >= 1e9)  return 'Rp ' + (val/1e9).toFixed(2) + ' M';
+    return 'Rp ' + (val/1e6).toFixed(1) + ' Jt';
+  }
+
+  // Start from daily base (Rp219.2M) and tick up each second
+  const dailyBase = 80.02e12 / 365;
+  let accumulated = dailyBase; // start from today's base
+  function tick(){
+    const elapsed = (Date.now() - startMs) / 1000;
+    accumulated = dailyBase + elapsed * perDetik;
+    el.textContent = fmt(accumulated);
+    el.style.animation = 'none';
+    el.offsetHeight; // reflow
+    el.style.animation = '';
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+// ═══════════════════════════════════════════════════════════
+// STUNTING RING ANIMATION
+// ═══════════════════════════════════════════════════════════
+window.addEventListener('load', function(){
+  const ring = document.getElementById('ring-current');
+  if(ring){
+    // Full circumference = 2π×30 ≈ 188.5
+    // Current 19.8% of scale 0-40% — dashoffset
+    const circ = 188.5;
+    const maxPct = 40; // treat 40% as full ring
+    const currentPct = 19.8;
+    const offset = circ - (currentPct / maxPct) * circ;
+    setTimeout(()=>{ ring.style.strokeDashoffset = offset; }, 500);
+  }
+});
+
+// ═══════════════════════════════════════════════════════════
+// INTERACTIVE REALLOCATION SLIDER
+// ═══════════════════════════════════════════════════════════
+(function(){
+  const slider = document.getElementById('realloc-slider');
+  if(!slider) return;
+
+  // Constants
+  const TOTAL = 335; // Rp Triliun
+  const ACTUAL_RED = 2.9, ACTUAL_AMB = 24.5, ACTUAL_GRN = 72.6;
+  const IDEAL_RED = 26.79;
+  // Remaining 100% - merah split proportionally between kuning & hijau
+  // Kuning/Hijau original ratio: 24.5 / (24.5+72.6) = 0.252 : 0.748
+  const AMB_RATIO = 24.5 / (24.5 + 72.6);
+  const GRN_RATIO = 72.6 / (24.5 + 72.6);
+
+  function fmtT(val){ return 'Rp ' + val.toFixed(2) + 'T'; }
+  function fmtPct(val){ return val.toFixed(1).replace('.',',') + '%'; }
+
+  function updateSlider(val){
+    const pct = parseFloat(val);
+
+    // Recalculate distributions
+    const remaining = 100 - pct;
+    const ambPct = remaining * AMB_RATIO;
+    const grnPct = remaining * GRN_RATIO;
+
+    // Update gauge bars (right side)
+    const simRed = document.getElementById('sim-bar-red');
+    const simAmb = document.getElementById('sim-bar-amb');
+    const simGrn = document.getElementById('sim-bar-grn');
+    if(simRed){ simRed.style.transition='width 0.35s ease'; simRed.style.width = pct + '%'; }
+    if(simAmb){ simAmb.style.transition='width 0.35s ease'; simAmb.style.width = ambPct + '%'; }
+    if(simGrn){ simGrn.style.transition='width 0.35s ease'; simGrn.style.width = grnPct + '%'; }
+
+    // Update pct labels
+    const spRed = document.getElementById('sim-pct-red');
+    const spAmb = document.getElementById('sim-pct-amb');
+    const spGrn = document.getElementById('sim-pct-grn');
+    if(spRed) spRed.textContent = fmtPct(pct);
+    if(spAmb) spAmb.textContent = fmtPct(ambPct);
+    if(spGrn) spGrn.textContent = fmtPct(grnPct);
+
+    // Color the pct based on direction
+    if(spRed) spRed.style.color = pct > ACTUAL_RED ? 'var(--green)' : 'var(--red)';
+    if(spGrn) spGrn.style.color = grnPct < ACTUAL_GRN ? 'var(--amber)' : 'var(--green)';
+
+    // Slider display
+    const disp = document.getElementById('slider-display-pct');
+    if(disp) disp.textContent = fmtPct(pct);
+
+    // Stats
+    const dana = pct / 100 * TOTAL;
+    const selisih = dana - (ACTUAL_RED / 100 * TOTAL);
+    const multiplier = dana / (ACTUAL_RED / 100 * TOTAL);
+
+    const rssDana = document.getElementById('rss-dana');
+    const rssSelisih = document.getElementById('rss-selisih');
+    const rssMult = document.getElementById('rss-multiplier');
+    if(rssDana) rssDana.textContent = fmtT(dana);
+    if(rssSelisih){
+      rssSelisih.textContent = (selisih >= 0 ? '+' : '') + fmtT(selisih);
+      rssSelisih.style.color = selisih > 0 ? 'var(--green)' : 'var(--red)';
+    }
+    if(rssMult){
+      rssMult.textContent = multiplier.toFixed(1) + '×';
+      rssMult.style.color = multiplier >= 9 ? 'var(--green)' : multiplier >= 3 ? 'var(--teal)' : 'var(--amber)';
+    }
+
+    // Update slider gradient track
+    const progress = ((pct - 2.9) / (26.79 - 2.9) * 100).toFixed(1);
+    slider.style.setProperty('--progress', progress + '%');
+
+    // Show ideal badge when at ideal value
+    const badge = document.getElementById('ideal-badge');
+    if(badge) badge.style.opacity = pct >= 26.7 ? '1' : '0';
+  }
+
+  slider.addEventListener('input', function(){ updateSlider(this.value); });
+
+  // Buttons
+  const btnIdeal = document.getElementById('btn-set-ideal');
+  if(btnIdeal) btnIdeal.addEventListener('click', function(){
+    slider.value = IDEAL_RED;
+    updateSlider(IDEAL_RED);
+    // Small bounce animation
+    slider.style.transform = 'scaleY(1.3)';
+    setTimeout(()=>{ slider.style.transform = ''; }, 250);
+  });
+
+  const btnReset = document.getElementById('btn-reset-slider');
+  if(btnReset) btnReset.addEventListener('click', function(){
+    slider.value = ACTUAL_RED;
+    updateSlider(ACTUAL_RED);
+  });
+
+  // Animate bars in on first view via IntersectionObserver
+  const widget = document.querySelector('.realloc-widget');
+  if(widget){
+    const obs = new IntersectionObserver(entries=>{
+      if(entries[0].isIntersecting){
+        // Animate the left (current) bars
+        setTimeout(()=>{
+          const cr = document.getElementById('curr-bar-red');
+          const ca = document.getElementById('curr-bar-amb');
+          const cg = document.getElementById('curr-bar-grn');
+          if(cr){ cr.style.transition='width 1.3s cubic-bezier(0.34,1.56,0.64,1)'; cr.style.width='2.9%'; }
+          if(ca){ ca.style.transition='width 1.3s cubic-bezier(0.34,1.56,0.64,1)'; ca.style.width='24.5%'; }
+          if(cg){ cg.style.transition='width 1.3s cubic-bezier(0.34,1.56,0.64,1)'; cg.style.width='72.6%'; }
+          // Also animate sim bars to match current
+          updateSlider(2.9);
+        }, 200);
+        obs.disconnect();
+      }
+    }, {threshold:0.3});
+    obs.observe(widget);
+  }
+
+  // Set initial widths to 0 so they animate in
+  ['curr-bar-red','curr-bar-amb','curr-bar-grn','sim-bar-red','sim-bar-amb','sim-bar-grn'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.style.width = '0%';
+  });
+})();
+
+</script>
+</body>
+</html>
