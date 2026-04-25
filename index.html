@@ -1657,11 +1657,11 @@ input[type='range'].alloc-range::-moz-range-thumb{
           <option value="ALL">Semua Provinsi</option>
         </select>
         <select class="filter-sel" id="sort-by" onchange="searchKabupaten()">
-          <option value="rank">Rank CRS (tertinggi)</option>
-          <option value="stunting">Stunting (tertinggi)</option>
-          <option value="alokasi">Alokasi (terbesar)</option>
-          <option value="kemiskinan">Kemiskinan (tertinggi)</option>
-          <option value="sppg">SPPG (terendah)</option>
+          <option value="rank">Rank CRS ↓</option>
+          <option value="stunting">Stunting ↓</option>
+          <option value="alokasi">Alokasi ↓</option>
+          <option value="kemiskinan">Kemiskinan ↓</option>
+          <option value="sppg">SPPG ↓</option>
         </select>
         <button class="btn-primary" onclick="searchKabupaten()">Terapkan Filter</button>
       </div>
@@ -2199,27 +2199,19 @@ let mapInstance=null;
 function initMap(){
   mapInit=true;
   const COLORS={MERAH:'#ff4757',KUNING:'#ffa502',HIJAU:'#2ed573'};
-  const FILL={MERAH:0.92,KUNING:0.85,HIJAU:0.78};
+  const FILL={MERAH:0.75,KUNING:0.65,HIJAU:0.55};
 
   mapInstance=L.map('map',{
-    scrollWheelZoom:false,
+    center:[-2.5,118],
+    zoom:5,
     zoomControl:true,
+    scrollWheelZoom:false,
     preferCanvas:true,
-    zoomSnap:0.25,
-    zoomDelta:0.5,
-    minZoom:4,
-    maxZoom:12,
-    maxBounds:[[-15,90],[10,145]],
-    maxBoundsViscosity:1.0,
-    attributionControl:false,
   });
 
-  // Set fallback view centered on Indonesia while GeoJSON loads
-  mapInstance.setView([-2.5, 118], 5);
-
-  // Subtle dark tile for geographic context only (very low opacity)
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{
-    subdomains:'abcd', maxZoom:19, opacity:0.18
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+    attribution:'© OpenStreetMap © CARTO',
+    subdomains:'abcd',maxZoom:19
   }).addTo(mapInstance);
 
   const loadDiv=document.createElement('div');
@@ -2237,7 +2229,7 @@ function initMap(){
       const layer=L.geoJSON(gj,{
         style:f=>{
           const z=f.properties.zona||'HIJAU';
-          return{fillColor:COLORS[z],fillOpacity:FILL[z],color:'#061612',weight:0.3,opacity:0.7};
+          return{fillColor:COLORS[z],fillOpacity:FILL[z],color:'#061612',weight:0.5,opacity:0.9};
         },
         onEachFeature:(f,lyr)=>{
           const p=f.properties;
@@ -2274,9 +2266,7 @@ function initMap(){
           });
         }
       }).addTo(mapInstance);
-
-      // Fit tightly to actual GeoJSON bounds
-      mapInstance.fitBounds(layer.getBounds(), {padding:[8,8], maxZoom:7});
+      mapInstance.fitBounds(layer.getBounds(),{padding:[10,10]});
 
       // Custom legend
       const legend=L.control({position:'bottomright'});
