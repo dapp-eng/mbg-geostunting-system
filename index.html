@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>GeoStunting Indonesia: Precision Targeting Program MBG</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=Nunito:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="data.js"></script>
 <style>
@@ -215,14 +214,12 @@ body::before{
 }
 
 /* ── MAP ── */
-#map{height:440px;border-radius:14px;border:1px solid var(--border);margin-bottom:18px;position:relative;overflow:hidden;}
-.map-overlay{position:absolute;top:10px;left:10px;z-index:500;}
-.map-title-tag{
-  background:rgba(6,22,18,0.92);backdrop-filter:blur(8px);
-  border:1px solid var(--border2);border-radius:10px;
-  padding:8px 14px;font-size:12px;font-weight:700;color:var(--text);
-}
-.leaflet-container{background:#071510 !important;}
+#map{height:440px;border-radius:14px;border:1px solid var(--border);margin-bottom:18px;position:relative;overflow:hidden;background:#071510;}
+#map svg{display:block;border-radius:14px;}
+.map-popup-d3{position:absolute;z-index:20;background:#fff;border-radius:10px;padding:12px 14px;min-width:230px;box-shadow:0 8px 30px rgba(0,0,0,0.4);font-family:'Nunito',sans-serif;pointer-events:none;display:none;}
+.map-zoom-btn{width:30px;height:30px;background:rgba(6,22,18,0.92);border:1px solid #1e4a32;color:#e8f5ee;border-radius:6px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+.map-zoom-btn:hover{background:rgba(30,74,50,0.95);}
+
 
 /* ── TABLES ── */
 .table-wrap{
@@ -503,7 +500,7 @@ canvas{max-height:280px;}
 .hero-stats{
   display:flex;
   flex-wrap:wrap;
-  justify-content:center;
+  justify-content:flex-start;
   align-items:flex-start;
   gap:0;
   row-gap:20px;
@@ -852,7 +849,7 @@ canvas{max-height:280px;}
   .hero-title{font-size:22px;line-height:1.2;}
   .hero-sub{font-size:13px;}
   .hero-stats{justify-content:center;row-gap:16px;}
-  .hero-stat{padding:0 16px;border-right:1px solid var(--border);}
+  .hero-stat{padding:0 14px;border-right:1px solid var(--border);}
   .hero-stat:last-child{border-right:none;}
   .hero-stat-val{font-size:22px;}
   .hero-divider{display:none;}
@@ -2137,9 +2134,6 @@ function navigate(page){
   document.getElementById('topbar-sub').textContent=m.sub;
 
   if(page==='dashboard' && !mapInit){initMap();}
-  else if(page==='dashboard' && mapInstance){
-    setTimeout(()=>{ mapInstance.invalidateSize(true); }, 100);
-  }
   if(page==='dashboard' && !dashChartsInit){initDashCharts();}
   if(page==='data' && !dataInit){initDataPage();}
   if(page==='simulasi'){initSimulasi();}
@@ -2217,105 +2211,144 @@ function renderTop10(){
 renderTop10();
 
 // ═══════════════════════════════════════════════════════════
-// MAP
+// MAP — D3.js (SVG, no tiles, no alignment issues)
 // ═══════════════════════════════════════════════════════════
 let mapInit=false;
-let mapInstance=null;
 function initMap(){
   mapInit=true;
   const COLORS={MERAH:'#ff4757',KUNING:'#ffa502',HIJAU:'#2ed573'};
-  const FILL={MERAH:0.75,KUNING:0.65,HIJAU:0.55};
+  const OPACITY={MERAH:0.78,KUNING:0.68,HIJAU:0.58};
 
-  mapInstance=L.map('map',{
-    center:[-2.5,118],
-    zoom:5,
-    zoomControl:true,
-    scrollWheelZoom:false,
-    preferCanvas:true,
-  });
+  const container=document.getElementById('map');
+  const W=container.clientWidth||900;
+  const H=container.clientHeight||440;
 
-  // Ensure Leaflet reads correct container size after CSS transitions settle
-  setTimeout(()=>{ mapInstance.invalidateSize(true); }, 50);
-
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-    attribution:'© OpenStreetMap © CARTO',
-    subdomains:'abcd',maxZoom:19
-  }).addTo(mapInstance);
-
+  // Loading
   const loadDiv=document.createElement('div');
   loadDiv.id='map-loading';
-  loadDiv.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(6,22,18,0.95);color:#e8f5ee;padding:14px 22px;border-radius:12px;font-size:13px;z-index:1000;border:1px solid #1e4a32;font-family:Nunito,sans-serif;backdrop-filter:blur(8px);';
-  loadDiv.innerHTML='Memuat peta 514 kabupaten...';
-  document.getElementById('map').appendChild(loadDiv);
+  loadDiv.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(6,22,18,0.95);color:#e8f5ee;padding:14px 22px;border-radius:12px;font-size:13px;z-index:10;border:1px solid #1e4a32;font-family:Nunito,sans-serif;backdrop-filter:blur(8px);';
+  loadDiv.textContent='Memuat peta 514 kabupaten...';
+  container.appendChild(loadDiv);
 
-  let selectedLayer=null;
+  // SVG
+  const svg=d3.select('#map').append('svg')
+    .attr('width',W).attr('height',H)
+    .style('display','block').style('cursor','grab');
+  svg.append('rect').attr('width',W).attr('height',H).attr('fill','#071510');
+
+  const g=svg.append('g');
+
+  // Zoom & pan
+  const zoom=d3.zoom().scaleExtent([0.6,14])
+    .on('zoom',e=>{ g.attr('transform',e.transform); svg.style('cursor','grabbing'); })
+    .on('end',()=>svg.style('cursor','grab'));
+  svg.call(zoom).on('dblclick.zoom',null);
+
+  // Zoom buttons
+  const zCtrl=document.createElement('div');
+  zCtrl.style.cssText='position:absolute;top:12px;left:12px;z-index:10;display:flex;flex-direction:column;gap:4px;';
+  zCtrl.innerHTML=`
+    <button class="map-zoom-btn" onclick="window._mapZoom(1.5)">+</button>
+    <button class="map-zoom-btn" onclick="window._mapZoom(0.67)">−</button>
+    <button class="map-zoom-btn" style="font-size:12px;margin-top:4px;" title="Reset view" onclick="window._mapReset()">⌂</button>
+  `;
+  container.appendChild(zCtrl);
+  window._mapZoom=f=>svg.transition().duration(280).call(zoom.scaleBy,f);
+  window._mapReset=()=>svg.transition().duration(400).call(zoom.transform,d3.zoomIdentity);
+
+  // Popup
+  const popup=document.createElement('div');
+  popup.className='map-popup-d3';
+  container.appendChild(popup);
+
+  const hidePopup=()=>{ popup.style.display='none'; };
 
   fetch('indonesia_kabupaten.geojson')
     .then(r=>r.json())
     .then(gj=>{
       document.getElementById('map-loading')?.remove();
-      const layer=L.geoJSON(gj,{
-        style:f=>{
-          const z=f.properties.zona||'HIJAU';
-          return{fillColor:COLORS[z],fillOpacity:FILL[z],color:'#061612',weight:0.5,opacity:0.9};
-        },
-        onEachFeature:(f,lyr)=>{
-          const p=f.properties;
+
+      // Fit projection to data bounds
+      const proj=d3.geoMercator().fitExtent([[10,10],[W-10,H-10]],gj);
+      const path=d3.geoPath().projection(proj);
+
+      let selEl=null;
+
+      const paths=g.selectAll('path')
+        .data(gj.features)
+        .join('path')
+        .attr('d',path)
+        .attr('fill',d=>COLORS[d.properties.zona||'HIJAU'])
+        .attr('fill-opacity',d=>OPACITY[d.properties.zona||'HIJAU'])
+        .attr('stroke','#061612')
+        .attr('stroke-width',0.5)
+        .attr('stroke-linejoin','round')
+        .style('transition','fill-opacity .15s')
+        .on('mouseover',function(e,d){
+          if(this!==selEl){
+            d3.select(this).attr('stroke','#ffffff').attr('stroke-width',1.8).raise();
+          }
+        })
+        .on('mouseout',function(e,d){
+          if(this!==selEl){
+            d3.select(this).attr('stroke','#061612').attr('stroke-width',0.5);
+          }
+        })
+        .on('click',function(e,d){
+          e.stopPropagation();
+          // Reset previous
+          if(selEl) d3.select(selEl).attr('stroke','#061612').attr('stroke-width',0.5);
+          selEl=this;
+          d3.select(this).attr('stroke','#ff6b35').attr('stroke-width',2.2).raise();
+
+          const p=d.properties;
           const z=p.zona||'HIJAU';
           const c=COLORS[z];
-          lyr.on({
-            mouseover:()=>{if(selectedLayer!==lyr){lyr.setStyle({weight:2,color:'#fff',fillOpacity:0.95});lyr.bringToFront();}},
-            mouseout:()=>{if(selectedLayer!==lyr)layer.resetStyle(lyr);},
-            click:e=>{
-              if(selectedLayer&&selectedLayer!==lyr)layer.resetStyle(selectedLayer);
-              selectedLayer=lyr;
-              lyr.setStyle({weight:2.5,color:'#ff6b35',fillOpacity:1.0});
-              lyr.bringToFront();
-              L.popup({maxWidth:270,className:'geo-popup'})
-                .setLatLng(e.latlng)
-                .setContent(`
-                  <div style="font-family:Nunito,sans-serif;min-width:230px;padding:4px;">
-                    <div style="font-weight:900;font-size:14px;margin-bottom:3px;color:#1a1a1a">${p.nama_kab_kota}</div>
-                    <div style="font-size:11px;color:#666;margin-bottom:10px">${p.provinsi}</div>
-                    <div style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800;background:${c}22;color:${c};border:1px solid ${c}66;margin-bottom:10px">${z}</div>
-                    <table style="width:100%;font-size:11px;border-collapse:collapse">
-                      <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">Rank Nasional</td><td style="font-weight:800;color:#1a1a1a">#${p.rank_global}</td></tr>
-                      <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">Risk Score (CRS)</td><td style="font-weight:800;color:${c}">${(p.risk_score||0).toFixed(1)}</td></tr>
-                      <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">Stunting</td><td style="font-weight:800;color:#ff4757">${(p.stunting_pct||0).toFixed(1)}%</td></tr>
-                      <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">Kemiskinan</td><td style="font-weight:800;color:#1a1a1a">${(p.tingkat_kemiskinan||0).toFixed(1)}%</td></tr>
-                      <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">IPM</td><td style="font-weight:800;color:#1a1a1a">${(p.ipm||0).toFixed(1)}</td></tr>
-                      <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">SPPG Aktif</td><td style="font-weight:800;color:${(p.jumlah_sppg||0)===0?'#ff4757':'#1a1a1a'}">${p.jumlah_sppg||0}${(p.jumlah_sppg||0)===0?' (!!)':''}</td></tr>
-                      <tr><td style="color:#888;padding:4px 0">Alokasi Ideal/Bulan</td><td style="font-weight:800;color:#ff6b35">Rp${(p.alokasi_M||0).toFixed(1)}M</td></tr>
-                    </table>
-                  </div>
-                `)
-                .openOn(mapInstance);
-            }
-          });
-        }
-      }).addTo(mapInstance);
-      mapInstance.fitBounds(layer.getBounds(),{padding:[10,10]});
-      // Invalidate again after fitBounds to ensure tiles and polygons align
-      setTimeout(()=>{ mapInstance.invalidateSize(true); }, 200);
+          const rect=container.getBoundingClientRect();
+          let px=e.clientX-rect.left+16;
+          let py=e.clientY-rect.top-10;
+          if(px+250>W) px=e.clientX-rect.left-260;
+          if(py+250>H) py=H-260;
+          if(py<10) py=10;
 
-      // Custom legend
-      const legend=L.control({position:'bottomright'});
-      legend.onAdd=()=>{
-        const div=L.DomUtil.create('div');
-        div.innerHTML=`
-          <div style="background:rgba(6,22,18,0.95);border:1px solid #1e4a32;border-radius:12px;padding:12px 16px;font-family:Nunito,sans-serif;font-size:11px;color:#e8f5ee;backdrop-filter:blur(8px);">
-            <div style="font-weight:800;margin-bottom:10px;color:#7eb89a;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;">ZONA PRIORITAS MBG</div>
-            <div style="display:flex;align-items:center;gap:8px;margin:6px 0"><div style="width:12px;height:12px;border-radius:3px;background:#ff4757;box-shadow:0 0 6px rgba(255,71,87,0.4)"></div><div>Merah — Prioritas Tinggi (68 kab)</div></div>
-            <div style="display:flex;align-items:center;gap:8px;margin:6px 0"><div style="width:12px;height:12px;border-radius:3px;background:#ffa502;box-shadow:0 0 6px rgba(255,165,2,0.4)"></div><div>Kuning — Prioritas Sedang (183 kab)</div></div>
-            <div style="display:flex;align-items:center;gap:8px;margin:6px 0"><div style="width:12px;height:12px;border-radius:3px;background:#2ed573;box-shadow:0 0 6px rgba(46,213,115,0.4)"></div><div>Hijau — Relatif Aman (263 kab)</div></div>
-            <div style="margin-top:8px;padding-top:8px;border-top:1px solid #1e4a32;font-size:9.5px;color:#4a7a5e">Klik wilayah untuk detail lengkap</div>
-          </div>`;
-        return div;
-      };
-      legend.addTo(mapInstance);
+          popup.style.left=px+'px';
+          popup.style.top=py+'px';
+          popup.style.display='block';
+          popup.innerHTML=`
+            <div style="font-weight:900;font-size:14px;margin-bottom:2px;color:#1a1a1a">${p.nama_kab_kota||p.kabupaten||'—'}</div>
+            <div style="font-size:11px;color:#666;margin-bottom:8px">${p.provinsi||''}</div>
+            <div style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800;background:${c}22;color:${c};border:1px solid ${c}66;margin-bottom:8px">${z}</div>
+            <table style="width:100%;font-size:11px;border-collapse:collapse">
+              <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">Rank Nasional</td><td style="font-weight:800;color:#1a1a1a">#${p.rank_global||'—'}</td></tr>
+              <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">Risk Score (CRS)</td><td style="font-weight:800;color:${c}">${(p.risk_score||0).toFixed(1)}</td></tr>
+              <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">Stunting</td><td style="font-weight:800;color:#ff4757">${(p.stunting_pct||0).toFixed(1)}%</td></tr>
+              <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">Kemiskinan</td><td style="font-weight:800">${(p.tingkat_kemiskinan||0).toFixed(1)}%</td></tr>
+              <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">IPM</td><td style="font-weight:800">${(p.ipm||0).toFixed(1)}</td></tr>
+              <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">SPPG Aktif</td><td style="font-weight:800;color:${(p.jumlah_sppg||0)===0?'#ff4757':'#1a1a1a'}">${p.jumlah_sppg||0}${(p.jumlah_sppg||0)===0?' (!!)':''}</td></tr>
+              <tr><td style="color:#888;padding:4px 0">Alokasi Ideal/Bulan</td><td style="font-weight:800;color:#ff6b35">Rp${(p.alokasi_M||0).toFixed(1)}M</td></tr>
+            </table>`;
+        });
+
+      // Click on SVG background closes popup
+      svg.on('click',()=>{
+        if(selEl){ d3.select(selEl).attr('stroke','#061612').attr('stroke-width',0.5); selEl=null; }
+        hidePopup();
+      });
+
+      // Legend
+      const leg=document.createElement('div');
+      leg.style.cssText='position:absolute;bottom:12px;right:12px;background:rgba(6,22,18,0.95);border:1px solid #1e4a32;border-radius:12px;padding:12px 16px;font-family:Nunito,sans-serif;font-size:11px;color:#e8f5ee;backdrop-filter:blur(8px);max-width:220px;';
+      leg.innerHTML=`
+        <div style="font-weight:800;margin-bottom:10px;color:#7eb89a;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;">ZONA PRIORITAS MBG</div>
+        <div style="display:flex;align-items:center;gap:8px;margin:6px 0"><div style="width:12px;height:12px;border-radius:3px;background:#ff4757;flex-shrink:0;"></div><span>Merah — Prioritas Tinggi (68 kab)</span></div>
+        <div style="display:flex;align-items:center;gap:8px;margin:6px 0"><div style="width:12px;height:12px;border-radius:3px;background:#ffa502;flex-shrink:0;"></div><span>Kuning — Prioritas Sedang (183 kab)</span></div>
+        <div style="display:flex;align-items:center;gap:8px;margin:6px 0"><div style="width:12px;height:12px;border-radius:3px;background:#2ed573;flex-shrink:0;"></div><span>Hijau — Relatif Aman (263 kab)</span></div>
+        <div style="margin-top:8px;padding-top:8px;border-top:1px solid #1e4a32;font-size:9.5px;color:#4a7a5e;">Scroll/pinch untuk zoom · Klik untuk detail</div>`;
+      container.appendChild(leg);
     })
     .catch(()=>{
-      document.getElementById('map-loading').textContent='Peta tidak dapat dimuat. Pastikan file indonesia_kabupaten.geojson tersedia.';
+      const ld=document.getElementById('map-loading');
+      if(ld) ld.textContent='Peta tidak dapat dimuat. Pastikan file indonesia_kabupaten.geojson tersedia.';
     });
 }
 
