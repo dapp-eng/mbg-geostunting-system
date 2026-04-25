@@ -501,23 +501,33 @@ canvas{max-height:280px;}
   font-size:14px;color:var(--text2);line-height:1.8;max-width:540px;margin-bottom:28px;
 }
 .hero-stats{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:flex-start;
+  display:grid;
+  grid-template-columns:repeat(4,auto);
+  justify-content:start;
   align-items:center;
   gap:0;
   row-gap:20px;
 }
+@media(max-width:700px){
+  .hero-stats{
+    grid-template-columns:repeat(2,1fr);
+    justify-content:center;
+  }
+}
 .hero-stat{
   text-align:center;
-  flex:0 0 auto;
   padding:0 28px;
   border-right:1px solid var(--border);
 }
 .hero-stat:first-child{padding-left:0;}
 .hero-stat:last-child{border-right:none;}
-/* Saat last stat wrap ke baris baru: auto-center dengan trick flex */
-.hero-stat-spacer{flex:1 1 100%;height:0;display:none;}/* fallback */
+/* 2x2 grid: remove right border on 2nd col, keep visual dividers */
+@media(max-width:700px){
+  .hero-stat{padding:0 20px;border-right:1px solid var(--border);}
+  .hero-stat:nth-child(2){border-right:none;}
+  .hero-stat:nth-child(4){border-right:none;}
+  .hero-stat:first-child{padding-left:20px;}
+}
 .hero-stat-val{
   font-family:'Sora',sans-serif;font-size:28px;font-weight:900;
   background:linear-gradient(135deg,var(--orange),#ff8c42);
@@ -2887,31 +2897,25 @@ window.addEventListener('load', function(){
 })();
 
 // ═══════════════════════════════════════════════════════════
-// HERO STATS — Auto-center last stat when it wraps to new row
+// HERO STATS — Auto-center when stats wrap to multiple rows
 // ═══════════════════════════════════════════════════════════
 (function(){
   function checkHeroWrap(){
-    const stats = document.querySelectorAll('.hero-stat');
-    if(stats.length < 2) return;
-    const lastStat = stats[stats.length - 1];
-    const firstStat = stats[0];
-    // If last stat is on a different row than first stat, center it
-    const isWrapped = lastStat.getBoundingClientRect().top > firstStat.getBoundingClientRect().top + 10;
-    if(isWrapped){
-      lastStat.style.marginLeft = 'auto';
-      lastStat.style.marginRight = 'auto';
-      lastStat.style.paddingLeft = '28px';
-    } else {
-      lastStat.style.marginLeft = '';
-      lastStat.style.marginRight = '';
-      // Restore left-flush on first stat
-    }
+    const container = document.querySelector('.hero-stats');
+    const stats = container ? Array.from(container.querySelectorAll('.hero-stat')) : [];
+    if(!container || stats.length < 2) return;
+
+    const firstTop = stats[0].getBoundingClientRect().top;
+    const hasWrap = stats.some(s => s.getBoundingClientRect().top > firstTop + 10);
+
+    // Kalau wrap (jadi 2+2 atau 3+1): center semua baris
+    // Kalau tidak wrap (semua 1 baris): flush-left sejajar teks
+    container.style.justifyContent = hasWrap ? 'center' : 'flex-start';
   }
-  // Run on load and resize
   window.addEventListener('load', checkHeroWrap);
   window.addEventListener('resize', checkHeroWrap);
-  // Also run shortly after for fonts/layout settle
-  setTimeout(checkHeroWrap, 300);
+  setTimeout(checkHeroWrap, 200);
+  setTimeout(checkHeroWrap, 600);
 })();
 
 </script>
