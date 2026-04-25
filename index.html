@@ -516,6 +516,8 @@ canvas{max-height:280px;}
 }
 .hero-stat:first-child{padding-left:0;}
 .hero-stat:last-child{border-right:none;}
+/* Saat last stat wrap ke baris baru: auto-center dengan trick flex */
+.hero-stat-spacer{flex:1 1 100%;height:0;display:none;}/* fallback */
 .hero-stat-val{
   font-family:'Sora',sans-serif;font-size:28px;font-weight:900;
   background:linear-gradient(135deg,var(--orange),#ff8c42);
@@ -2882,6 +2884,34 @@ window.addEventListener('load', function(){
     const el = document.getElementById(id);
     if(el) el.style.width = '0%';
   });
+})();
+
+// ═══════════════════════════════════════════════════════════
+// HERO STATS — Auto-center last stat when it wraps to new row
+// ═══════════════════════════════════════════════════════════
+(function(){
+  function checkHeroWrap(){
+    const stats = document.querySelectorAll('.hero-stat');
+    if(stats.length < 2) return;
+    const lastStat = stats[stats.length - 1];
+    const firstStat = stats[0];
+    // If last stat is on a different row than first stat, center it
+    const isWrapped = lastStat.getBoundingClientRect().top > firstStat.getBoundingClientRect().top + 10;
+    if(isWrapped){
+      lastStat.style.marginLeft = 'auto';
+      lastStat.style.marginRight = 'auto';
+      lastStat.style.paddingLeft = '28px';
+    } else {
+      lastStat.style.marginLeft = '';
+      lastStat.style.marginRight = '';
+      // Restore left-flush on first stat
+    }
+  }
+  // Run on load and resize
+  window.addEventListener('load', checkHeroWrap);
+  window.addEventListener('resize', checkHeroWrap);
+  // Also run shortly after for fonts/layout settle
+  setTimeout(checkHeroWrap, 300);
 })();
 
 </script>
