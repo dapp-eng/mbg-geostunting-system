@@ -14,18 +14,21 @@
    DARK MODE (default)
 ══════════════════════════════════════════════ */
 :root{
-  --red:#ef4444;--amber:#f59e0b;--green:#10b981;
-  --orange:#3b82f6;--teal:#06b6d4;--sky:#93c5fd;
-  --bg:#03111f;--bg2:#061828;--bg3:#0a2240;--bg4:#0f2d55;
-  --border:#1a3a60;--border2:#1e4a78;
-  --text:#e0f0ff;--text2:#6baed6;--text3:#3a6d99;
-  --card:rgba(10,34,64,0.88);
-  --card-solid:#0a2240;
+  --red:#ff4757;--amber:#ffa502;--green:#2ed573;
+  --orange:#ff6b35;--teal:#00cec9;--sky:#74b9ff;
+  /* accent-warm: orange-gold for variation */
+  --accent-warm:#ff6b35;--accent-warm-soft:rgba(255,107,53,0.18);--accent-warm-border:rgba(255,107,53,0.3);
+  --bg:#061612;--bg2:#0b1f18;--bg3:#112a1f;--bg4:#1a3d2b;
+  --border:#1e4a32;--border2:#265c3e;
+  --text:#e8f5ee;--text2:#7eb89a;--text3:#4a7a5e;
+  --card:rgba(17,42,31,0.85);
+  --card-solid:#112a1f;
   --sidebar-w:248px;
-  --glow-red:rgba(255,71,87,0.25);--glow-amber:rgba(245,158,11,0.25);--glow-green:rgba(6,182,212,0.25);--glow-orange:rgba(59,130,246,0.3);
-  --popup-bg:#0a2240;--popup-text:#e0f0ff;--popup-sub:#6baed6;--popup-border:#1a3a60;
-  --table-head:rgba(10,34,64,0.9);--table-row-alt:rgba(15,45,85,0.4);
-  --input-bg:#061828;--input-border:#1a3a60;
+  --glow-red:rgba(255,71,87,0.25);--glow-amber:rgba(255,165,2,0.25);--glow-green:rgba(46,213,115,0.25);--glow-orange:rgba(255,107,53,0.3);
+  --glow-warm:rgba(255,107,53,0.22);
+  --popup-bg:#112a1f;--popup-text:#e8f5ee;--popup-sub:#7eb89a;--popup-border:#1e4a32;
+  --table-head:rgba(17,42,31,0.9);--table-row-alt:rgba(26,61,43,0.4);
+  --input-bg:#0b1f18;--input-border:#1e4a32;
 }
 
 /* ══════════════════════════════════════════════
@@ -34,35 +37,38 @@
 ══════════════════════════════════════════════ */
 [data-theme="light"]{
   /* Semantic colors — kept vibrant but readable on light */
-  --red:#c9241c;--amber:#b45309;--green:#047857;
-  --orange:#1d4ed8;--teal:#0882a8;--sky:#2563eb;
+  --red:#e53935;--amber:#e65100;--green:#1b8c4e;
+  --orange:#d84315;--teal:#00838f;--sky:#1565c0;
+  /* accent-warm */
+  --accent-warm:#d84315;--accent-warm-soft:rgba(216,67,21,0.1);--accent-warm-border:rgba(216,67,21,0.25);
+  --glow-warm:rgba(216,67,21,0.14);
 
   /* Background layers — clean white → soft SPPG-navy tint */
-  --bg:#f2f8ff;--bg2:#e6f0fc;--bg3:#d4e6f8;--bg4:#c0d8f4;
-  --border:#a8c9ea;--border2:#7aafd8;
+  --bg:#f2fcf5;--bg2:#e5f7ec;--bg3:#ccedd7;--bg4:#b0e0c1;
+  --border:#8ec9a5;--border2:#5daa7e;
 
   /* Text — navy tray dark → mid-blue */
-  --text:#0d1f3a;--text2:#1a4a7a;--text3:#3d6d9c;
+  --text:#0b2115;--text2:#1a5c34;--text3:#3a7a55;
 
   /* Cards */
   --card:rgba(255,255,255,0.96);
   --card-solid:#ffffff;
 
   /* Glows */
-  --glow-red:rgba(201,36,28,0.12);--glow-amber:rgba(180,83,9,0.12);
-  --glow-green:rgba(4,120,87,0.12);--glow-orange:rgba(29,78,216,0.15);
+  --glow-red:rgba(229,57,53,0.12);--glow-amber:rgba(230,81,0,0.12);
+  --glow-green:rgba(27,140,78,0.12);--glow-orange:rgba(216,67,21,0.15);
 
   /* Popups */
-  --popup-bg:#ffffff;--popup-text:#0d1f3a;--popup-sub:#1a4a7a;--popup-border:#a8c9ea;
+  --popup-bg:#ffffff;--popup-text:#0b2115;--popup-sub:#1a5c34;--popup-border:#8ec9a5;
 
   /* Tables */
-  --table-head:rgba(212,230,248,0.98);--table-row-alt:rgba(196,220,244,0.35);
+  --table-head:rgba(204,237,215,0.98);--table-row-alt:rgba(176,224,193,0.35);
 
   /* Inputs */
-  --input-bg:#ffffff;--input-border:#a8c9ea;
+  --input-bg:#ffffff;--input-border:#8ec9a5;
 
   /* Progress / track helper */
-  --track-bg:rgba(13,31,58,0.08);
+  --track-bg:rgba(11,33,21,0.08);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 *,*::before,*::after{transition:background-color .25s ease,border-color .25s ease,color .2s ease,box-shadow .25s ease;}
@@ -76,9 +82,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 body::before{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:
-    radial-gradient(ellipse at 20% 50%, rgba(59,130,246,0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(6,182,212,0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 60% 80%, rgba(6,182,212,0.03) 0%, transparent 40%);
+    radial-gradient(ellipse at 20% 50%, rgba(255,107,53,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(0,206,201,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 80%, rgba(46,213,115,0.03) 0%, transparent 40%),
+    radial-gradient(ellipse at 92% 55%, rgba(255,107,53,0.035) 0%, transparent 38%),
+    radial-gradient(ellipse at 5% 88%, rgba(255,107,53,0.025) 0%, transparent 35%);
 }
 
 /* ── PARTICLES ── */
@@ -102,15 +110,15 @@ body::before{
 
 /* ── MBG PLATE ICON ── */
 .mbg-plate-wrap{display:flex;justify-content:center;align-items:center;margin-bottom:10px;position:relative;}
-.mbg-plate-svg{width:56px;height:56px;filter:drop-shadow(0 0 8px rgba(59,130,246,0.4));animation:plate-pulse 3s ease-in-out infinite;}
+.mbg-plate-svg{width:56px;height:56px;filter:drop-shadow(0 0 8px rgba(255,107,53,0.4));animation:plate-pulse 3s ease-in-out infinite;}
 @keyframes plate-pulse{
-  0%,100%{filter:drop-shadow(0 0 6px rgba(59,130,246,0.3));transform:scale(1);}
-  50%{filter:drop-shadow(0 0 14px rgba(59,130,246,0.55));transform:scale(1.04);}
+  0%,100%{filter:drop-shadow(0 0 6px rgba(255,107,53,0.3));transform:scale(1);}
+  50%{filter:drop-shadow(0 0 14px rgba(255,107,53,0.55));transform:scale(1.04);}
 }
 /* Spinning ring around plate */
 .plate-ring{
   position:absolute;width:68px;height:68px;
-  border:1.5px dashed rgba(59,130,246,0.3);
+  border:1.5px dashed rgba(255,107,53,0.3);
   border-radius:50%;animation:ring-spin 12s linear infinite;
 }
 @keyframes ring-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
@@ -118,67 +126,78 @@ body::before{
 /* ── SIDEBAR ── */
 .sidebar{
   width:var(--sidebar-w);
-  background:linear-gradient(180deg,#020d1a 0%,#03111f 100%);
+  background:linear-gradient(180deg,#030e09 0%,#061612 70%,#071a0e 100%);
   border-right:1px solid var(--border);
   display:flex;flex-direction:column;flex-shrink:0;
   position:relative;z-index:10;
   box-shadow:4px 0 40px rgba(0,0,0,0.5);
   transition:background .3s,border-color .3s,box-shadow .3s;
 }
-[data-theme="light"] .sidebar{
-  background:linear-gradient(180deg,#daeeff 0%,#eaf5ff 100%);
-  box-shadow:4px 0 32px rgba(8,130,168,0.14);
+/* Warm accent strip on top of sidebar */
+.sidebar::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#ff6b35,#00cec9,#2ed573);
+  border-radius:0 0 2px 2px;pointer-events:none;
 }
-[data-theme="light"] .brand{color:#0d1f3a;}
-[data-theme="light"] .brand .geo{color:#1d4ed8;}
-[data-theme="light"] .brand .stunting{color:#0882a8;}
-[data-theme="light"] .brand-sub{color:#3d6d9c;}
+[data-theme="light"] .sidebar::before{
+  background:linear-gradient(90deg,#d84315,#00838f,#1b8c4e);
+}
+[data-theme="light"] .sidebar{
+  background:linear-gradient(180deg,#e5f7ec 0%,#f0fdf5 70%,#fef9ec 100%);
+  box-shadow:4px 0 32px rgba(0,131,143,0.14);
+}
+[data-theme="light"] .brand{color:#0b2115;}
+[data-theme="light"] .brand .geo{color:#d84315;}
+[data-theme="light"] .brand .stunting{color:#00838f;}
+[data-theme="light"] .brand-sub{color:#3a7a55;}
 [data-theme="light"] .sidebar-logo{
-  background:linear-gradient(135deg,rgba(29,78,216,0.07),rgba(8,130,168,0.05));
+  background:linear-gradient(135deg,rgba(216,67,21,0.07),rgba(0,131,143,0.04),rgba(27,140,78,0.04));
   border-bottom-color:var(--border);
 }
-[data-theme="light"] .nav-section-label{color:#3d6d9c;}
+[data-theme="light"] .nav-section-label{color:#3a7a55;}
 [data-theme="light"] .nav-item{color:var(--text2);}
-[data-theme="light"] .nav-item:hover{background:rgba(29,78,216,0.07);color:var(--text);border-color:rgba(29,78,216,0.15);}
-[data-theme="light"] .nav-item.active{background:rgba(29,78,216,0.11);color:var(--orange);border-color:rgba(29,78,216,0.25);}
-[data-theme="light"] .sdg-badge{background:linear-gradient(135deg,rgba(8,130,168,0.1),rgba(29,78,216,0.07));border-color:rgba(8,130,168,0.28);color:var(--teal);}
-[data-theme="light"] .budget-badge{background:linear-gradient(135deg,rgba(29,78,216,0.07),rgba(8,130,168,0.05));border-color:rgba(29,78,216,0.2);color:var(--text2);}
+[data-theme="light"] .nav-item:hover{background:rgba(216,67,21,0.07);color:var(--text);border-color:rgba(216,67,21,0.15);}
+[data-theme="light"] .nav-item.active{background:rgba(216,67,21,0.11);color:var(--orange);border-color:rgba(216,67,21,0.25);}
+[data-theme="light"] .sdg-badge{background:linear-gradient(135deg,rgba(0,131,143,0.1),rgba(27,140,78,0.07));border-color:rgba(0,131,143,0.28);color:var(--teal);}
+[data-theme="light"] .budget-badge{background:linear-gradient(135deg,rgba(216,67,21,0.08),rgba(0,131,143,0.05));border-color:rgba(216,67,21,0.2);color:var(--text2);}
 [data-theme="light"] .budget-badge span{color:var(--orange);}
 
 /* Light mode — body bg & texture */
 [data-theme="light"] body::before{
   background-image:
-    radial-gradient(ellipse at 15% 30%, rgba(29,78,216,0.06) 0%, transparent 55%),
-    radial-gradient(ellipse at 85% 70%, rgba(8,130,168,0.06) 0%, transparent 55%),
-    radial-gradient(ellipse at 50% 100%, rgba(8,130,168,0.04) 0%, transparent 40%);
+    radial-gradient(ellipse at 15% 30%, rgba(27,140,78,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 70%, rgba(0,131,143,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 100%, rgba(27,140,78,0.04) 0%, transparent 40%),
+    radial-gradient(ellipse at 92% 15%, rgba(216,67,21,0.04) 0%, transparent 40%),
+    radial-gradient(ellipse at 8% 82%, rgba(216,67,21,0.03) 0%, transparent 35%);
 }
 [data-theme="light"] .main-content{background:var(--bg);}
 [data-theme="light"] .ticker-bar{
-  background:rgba(218,238,255,0.97);
+  background:rgba(216,243,228,0.97);
   border-bottom:1px solid var(--border);
 }
 [data-theme="light"] .ticker-inner{border-bottom:none;}
 [data-theme="light"] .ticker-label{
-  background:rgba(196,220,244,0.7);
+  background:rgba(176,224,193,0.7);
   border-right:1px solid var(--border);
   color:var(--orange);
 }
 [data-theme="light"] .ticker-item{
   color:var(--text2);
-  border-right-color:rgba(168,201,234,0.5);
+  border-right-color:rgba(94,170,126,0.45);
 }
-[data-theme="light"] .page-header{background:rgba(242,248,255,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+[data-theme="light"] .page-header{background:rgba(242,252,245,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
 [data-theme="light"] .topbar{
-  background:rgba(234,245,255,0.97);
+  background:rgba(242,252,245,0.97);
   border-bottom:1px solid var(--border);
   backdrop-filter:blur(12px);
 }
 [data-theme="light"] .topbar-title{color:var(--text);}
 [data-theme="light"] .topbar-sub{color:var(--text3);}
-[data-theme="light"] .ttag-orange{background:rgba(29,78,216,0.1);color:#1d4ed8;border-color:rgba(29,78,216,0.28);}
-[data-theme="light"] .ttag-teal{background:rgba(8,130,168,0.1);color:#0882a8;border-color:rgba(8,130,168,0.28);}
-[data-theme="light"] .ttag-green{background:rgba(4,120,87,0.1);color:#047857;border-color:rgba(4,120,87,0.28);}
-[data-theme="light"] .ttag-red{background:rgba(201,36,28,0.09);color:#c9241c;border-color:rgba(201,36,28,0.25);}
+[data-theme="light"] .ttag-orange{background:rgba(216,67,21,0.1);color:#d84315;border-color:rgba(216,67,21,0.28);}
+[data-theme="light"] .ttag-teal{background:rgba(0,131,143,0.1);color:#00838f;border-color:rgba(0,131,143,0.28);}
+[data-theme="light"] .ttag-green{background:rgba(27,140,78,0.1);color:#1b8c4e;border-color:rgba(27,140,78,0.28);}
+[data-theme="light"] .ttag-red{background:rgba(229,57,53,0.09);color:#e53935;border-color:rgba(229,57,53,0.25);}
 [data-theme="light"] .search-box{background:var(--input-bg);border-color:var(--input-border);color:var(--text);}
 [data-theme="light"] .search-box::placeholder{color:var(--text3);}
 [data-theme="light"] .filter-sel{background:var(--input-bg);border-color:var(--input-border);color:var(--text);}
@@ -189,36 +208,36 @@ body::before{
   border-bottom-color:var(--border);
 }
 [data-theme="light"] .table-wrap table tbody tr:nth-child(even){background:var(--table-row-alt);}
-[data-theme="light"] .table-wrap table tbody tr:hover{background:rgba(168,201,234,0.4);}
-[data-theme="light"] .table-wrap table td{border-bottom-color:rgba(168,201,234,0.35);}
-[data-theme="light"] #map{border-color:var(--border);background:#daeeff;}
+[data-theme="light"] .table-wrap table tbody tr:hover{background:rgba(142,201,165,0.35);}
+[data-theme="light"] .table-wrap table td{border-bottom-color:rgba(142,201,165,0.4);}
+[data-theme="light"] #map{border-color:var(--border);background:#d8f3e8;}
 [data-theme="light"] .map-zoom-btn{
-  background:rgba(242,248,255,0.96);
+  background:rgba(242,252,245,0.96);
   border-color:var(--border);
   color:var(--text);
 }
-[data-theme="light"] .map-zoom-btn:hover{background:rgba(212,230,248,0.9);}
+[data-theme="light"] .map-zoom-btn:hover{background:rgba(204,237,215,0.9);}
 [data-theme="light"] .particle{opacity:0.15;}
-[data-theme="light"] .info-banner{background:rgba(218,238,255,0.7);border-color:rgba(29,78,216,0.2);color:var(--text2);}
+[data-theme="light"] .info-banner{background:rgba(216,243,228,0.7);border-color:rgba(27,140,78,0.2);color:var(--text2);}
 [data-theme="light"] .info-banner-icon{color:var(--orange);}
 
-/* ── LIGHT MODE: Hero title gradient (navy→blue→teal, SPPG palette) ── */
+
 [data-theme="light"] .hero-title{
-  background:linear-gradient(135deg,#0d1f3a 25%,#1d4ed8 65%,#0882a8 100%);
+  background:linear-gradient(135deg,#0b2115 0%,#d84315 45%,#00838f 80%,#1b8c4e 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 [data-theme="light"] .hero-eyebrow{
-  background:rgba(29,78,216,0.09);border-color:rgba(29,78,216,0.25);color:#1d4ed8;
+  background:rgba(216,67,21,0.09);border-color:rgba(216,67,21,0.25);color:#d84315;
 }
 [data-theme="light"] .hero-sub{color:var(--text2);}
 [data-theme="light"] .hero-stat{border-right-color:var(--border);}
 [data-theme="light"] .hero-stat-val{
-  background:linear-gradient(135deg,#0d1f3a,#1d4ed8);
+  background:linear-gradient(135deg,#d84315,#00838f);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 [data-theme="light"] .hero-stat-label{color:var(--text3);}
 [data-theme="light"] .hero{
-  background:linear-gradient(135deg,rgba(29,78,216,0.06) 0%,rgba(8,130,168,0.04) 40%,rgba(242,248,255,0) 80%);
+  background:linear-gradient(135deg,rgba(216,67,21,0.06) 0%,rgba(216,67,21,0.04) 40%,rgba(0,131,143,0.03) 70%,rgba(242,252,245,0) 100%);
   border-color:var(--border);
 }
 
@@ -238,30 +257,30 @@ body::before{
   background:var(--bg3);border-color:var(--border);
 }
 [data-theme="light"] .how-step:hover{border-color:var(--border2);}
-[data-theme="light"] .how-step-num{color:rgba(29,78,216,0.55);}
-[data-theme="light"] .zone-expl-card.red{background:rgba(201,36,28,0.05);border-color:rgba(201,36,28,0.18);}
-[data-theme="light"] .zone-expl-card.amber{background:rgba(180,83,9,0.05);border-color:rgba(180,83,9,0.18);}
-[data-theme="light"] .zone-expl-card.green{background:rgba(8,130,168,0.05);border-color:rgba(8,130,168,0.18);}
+[data-theme="light"] .how-step-num{color:rgba(216,67,21,0.55);}
+[data-theme="light"] .zone-expl-card.red{background:rgba(229,57,53,0.05);border-color:rgba(229,57,53,0.18);}
+[data-theme="light"] .zone-expl-card.amber{background:rgba(230,81,0,0.05);border-color:rgba(230,81,0,0.18);}
+[data-theme="light"] .zone-expl-card.green{background:rgba(0,131,143,0.05);border-color:rgba(0,131,143,0.18);}
 [data-theme="light"] .zone-expl-stat-label{color:var(--text3);}
 
 /* ── LIGHT MODE: Paradox visual ── */
 [data-theme="light"] .paradox-visual{border-color:var(--border);}
-[data-theme="light"] .paradox-side.bad{background:rgba(201,36,28,0.05);}
-[data-theme="light"] .paradox-side.good{background:rgba(8,130,168,0.05);}
+[data-theme="light"] .paradox-side.bad{background:rgba(229,57,53,0.05);}
+[data-theme="light"] .paradox-side.good{background:rgba(0,131,143,0.05);}
 [data-theme="light"] .paradox-divider{background:var(--border);}
 [data-theme="light"] .paradox-divider::after{background:var(--bg);border-color:var(--border);color:var(--text3);}
 [data-theme="light"] .paradox-label{color:var(--text3);}
 [data-theme="light"] .paradox-desc{color:var(--text2);}
 
 /* ── LIGHT MODE: Stunting ring ── */
-[data-theme="light"] .ring-track{stroke:rgba(13,31,58,0.1);}
+[data-theme="light"] .ring-track{stroke:rgba(11,33,21,0.1);}
 [data-theme="light"] .ring-val{color:var(--amber);}
 [data-theme="light"] .ring-sub{color:var(--text3);}
 
 /* ── LIGHT MODE: Progress tracks (all the rgba(255,255,255,0.06) ones) ── */
-[data-theme="light"] .zona-progress-track{background:rgba(13,31,58,0.08);}
-[data-theme="light"] .budget-bar-track{background:rgba(13,31,58,0.08);}
-[data-theme="light"] .realloc-bar-track{background:rgba(13,31,58,0.08);}
+[data-theme="light"] .zona-progress-track{background:rgba(11,33,21,0.08);}
+[data-theme="light"] .budget-bar-track{background:rgba(11,33,21,0.08);}
+[data-theme="light"] .realloc-bar-track{background:rgba(11,33,21,0.08);}
 
 /* ── LIGHT MODE: Zona big cards ── */
 [data-theme="light"] .zona-big-card{background:var(--card);border-color:var(--border);}
@@ -270,26 +289,26 @@ body::before{
 
 /* ── LIGHT MODE: Impact counter ── */
 [data-theme="light"] .impact-counter{
-  background:linear-gradient(135deg,rgba(201,36,28,0.06),rgba(29,78,216,0.04));
-  border-color:rgba(201,36,28,0.18);
+  background:linear-gradient(135deg,rgba(229,57,53,0.05),rgba(216,67,21,0.04),rgba(216,67,21,0.03));
+  border-color:rgba(229,57,53,0.15);
 }
 [data-theme="light"] .impact-label{color:var(--text3);}
 [data-theme="light"] .impact-sub{color:var(--text2);}
-[data-theme="light"] .impact-divider{background:rgba(201,36,28,0.14);}
+[data-theme="light"] .impact-divider{background:rgba(229,57,53,0.14);}
 [data-theme="light"] .impact-mini-label{color:var(--text3);}
 
 /* ── LIGHT MODE: Budget compare ── */
 [data-theme="light"] .budget-col{background:var(--card);border-color:var(--border);}
 [data-theme="light"] .budget-arrow-el{color:var(--text3);}
-[data-theme="light"] .budget-bar-track{background:rgba(13,31,58,0.09);}
+[data-theme="light"] .budget-bar-track{background:rgba(11,33,21,0.09);}
 
 /* ── LIGHT MODE: Formula box ── */
 [data-theme="light"] .formula-box{
-  background:rgba(242,248,255,0.9);border-color:var(--border);
+  background:rgba(242,252,245,0.9);border-color:var(--border);
 }
 [data-theme="light"] .formula-line{color:var(--text);}
-[data-theme="light"] .fk{color:#b45309;}
-[data-theme="light"] .fv{color:#1d4ed8;}
+[data-theme="light"] .fk{color:#e65100;}
+[data-theme="light"] .fv{color:#00838f;}
 [data-theme="light"] .feq{color:var(--text3);}
 
 /* ── LIGHT MODE: Pipeline steps ── */
@@ -301,7 +320,7 @@ body::before{
 /* ── LIGHT MODE: Detail panel & stat boxes ── */
 [data-theme="light"] .detail-panel{background:var(--card);border-color:var(--orange);}
 [data-theme="light"] .detail-stat{
-  background:rgba(212,230,248,0.45);border-color:var(--border);
+  background:rgba(204,237,215,0.45);border-color:var(--border);
 }
 [data-theme="light"] .ds-label{color:var(--text3);}
 [data-theme="light"] .detail-name{color:var(--text);}
@@ -311,12 +330,12 @@ body::before{
 [data-theme="light"] .realloc-widget{background:var(--card);border-color:var(--border);}
 [data-theme="light"] .realloc-sub{color:var(--text3);}
 [data-theme="light"] .realloc-col{
-  background:rgba(212,230,248,0.45);border-color:var(--border);
+  background:rgba(204,237,215,0.45);border-color:var(--border);
 }
 [data-theme="light"] .realloc-col-head{color:var(--text3);}
 [data-theme="light"] .realloc-row-label{color:var(--text);}
 [data-theme="light"] .realloc-slider-zone{
-  background:rgba(218,238,255,0.55);border-color:var(--border);
+  background:rgba(216,243,228,0.55);border-color:var(--border);
 }
 [data-theme="light"] .realloc-slider-title{color:var(--text2);}
 [data-theme="light"] .rss-label{color:var(--text3);}
@@ -326,7 +345,7 @@ body::before{
 
 /* ── LIGHT MODE: About hero & metric cards ── */
 [data-theme="light"] .about-hero{
-  background:linear-gradient(135deg,rgba(29,78,216,0.05) 0%,rgba(8,130,168,0.05) 50%,rgba(8,130,168,0.03) 100%);
+  background:linear-gradient(135deg,rgba(216,67,21,0.05) 0%,rgba(216,67,21,0.03) 45%,rgba(0,131,143,0.05) 80%,rgba(0,131,143,0.03) 100%);
   border-color:var(--border);
 }
 [data-theme="light"] .about-hero p{color:var(--text2);}
@@ -351,11 +370,11 @@ body::before{
 /* ── LIGHT MODE: Mobile bottom-bar sidebar ── */
 @media(max-width:600px){
   [data-theme="light"] .sidebar{
-    background:rgba(234,245,255,0.98);
+    background:rgba(229,247,236,0.98);
     border-top-color:var(--border);
-    box-shadow:0 -4px 20px rgba(29,78,216,0.12);
+    box-shadow:0 -4px 20px rgba(216,67,21,0.12);
   }
-  [data-theme="light"] .nav-item.active{background:rgba(29,78,216,0.1);color:var(--orange);}
+  [data-theme="light"] .nav-item.active{background:rgba(216,67,21,0.1);color:var(--orange);}
 }
 
 
@@ -365,8 +384,9 @@ body::before{
 body::after{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background:
-    radial-gradient(ellipse 60% 40% at 10% 80%,rgba(6,182,212,0.035) 0%,transparent 55%),
-    radial-gradient(ellipse 50% 35% at 90% 20%,rgba(59,130,246,0.03) 0%,transparent 55%);
+    radial-gradient(ellipse 60% 40% at 10% 80%,rgba(0,206,201,0.035) 0%,transparent 55%),
+    radial-gradient(ellipse 50% 35% at 90% 20%,rgba(255,107,53,0.03) 0%,transparent 55%),
+    radial-gradient(ellipse 40% 30% at 85% 70%,rgba(255,107,53,0.028) 0%,transparent 50%);
   animation:aurora-drift 18s ease-in-out infinite alternate;
 }
 @keyframes aurora-drift{
@@ -376,8 +396,9 @@ body::after{
 }
 [data-theme="light"] body::after{
   background:
-    radial-gradient(ellipse 60% 40% at 10% 80%,rgba(8,130,168,0.04) 0%,transparent 55%),
-    radial-gradient(ellipse 50% 35% at 90% 20%,rgba(29,78,216,0.04) 0%,transparent 55%);
+    radial-gradient(ellipse 60% 40% at 10% 80%,rgba(0,131,143,0.04) 0%,transparent 55%),
+    radial-gradient(ellipse 50% 35% at 90% 20%,rgba(216,67,21,0.04) 0%,transparent 55%),
+    radial-gradient(ellipse 40% 30% at 85% 70%,rgba(216,67,21,0.03) 0%,transparent 50%);
 }
 
 /* ══════════════════════════════════════════════
@@ -385,14 +406,14 @@ body::after{
 ══════════════════════════════════════════════ */
 .glow-divider{
   height:1px;
-  background:linear-gradient(90deg,transparent,rgba(59,130,246,0.4),rgba(6,182,212,0.4),transparent);
+  background:linear-gradient(90deg,transparent,rgba(255,107,53,0.4),rgba(255,165,2,0.35),rgba(0,206,201,0.3),transparent);
   margin:20px 0;
   position:relative;
   overflow:visible;
 }
 .glow-divider::after{
   content:'';position:absolute;top:-2px;left:20%;width:60%;height:5px;
-  background:linear-gradient(90deg,transparent,rgba(59,130,246,0.2),transparent);
+  background:linear-gradient(90deg,transparent,rgba(255,107,53,0.2),rgba(255,165,2,0.18),transparent);
   filter:blur(4px);
   animation:divider-shimmer 3s ease-in-out infinite;
 }
@@ -420,7 +441,17 @@ body::after{
 }
 .val-flashed{animation:value-flash 0.6s ease forwards;}
 
-/* Dashboard scan line on KPI cards */
+/* Animated warm accent dot on card top-right for visual variety */
+.card::before{
+  content:'';position:absolute;top:12px;right:14px;
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent-warm);
+  box-shadow:0 0 6px var(--accent-warm),0 0 14px rgba(255,107,53,0.3);
+  opacity:0;
+  transition:opacity .3s;
+  pointer-events:none;
+}
+.card:hover::before{opacity:0.7;}
 .card::after{
   content:'';position:absolute;top:0;left:-100%;
   width:50%;height:100%;
@@ -441,7 +472,7 @@ body::after{
   top:50%;left:50%;
   width:80px;height:80px;
   margin:-40px 0 0 -40px;
-  border:1.5px solid rgba(59,130,246,0.3);
+  border:1.5px solid rgba(255,107,53,0.3);
   border-radius:50%;
   pointer-events:none;
   z-index:400;
@@ -465,12 +496,12 @@ body::after{
 }
 /* Search box pulse when focused */
 .search-box:focus{
-  box-shadow:0 0 0 3px rgba(59,130,246,0.15),0 0 20px rgba(59,130,246,0.1)!important;
+  box-shadow:0 0 0 3px rgba(255,107,53,0.15),0 0 20px rgba(255,107,53,0.1)!important;
   animation:search-glow 2s ease-in-out infinite;
 }
 @keyframes search-glow{
-  0%,100%{box-shadow:0 0 0 3px rgba(59,130,246,0.15),0 0 16px rgba(59,130,246,0.1);}
-  50%{box-shadow:0 0 0 3px rgba(6,182,212,0.2),0 0 24px rgba(6,182,212,0.15);}
+  0%,100%{box-shadow:0 0 0 3px rgba(255,107,53,0.15),0 0 16px rgba(255,107,53,0.1);}
+  50%{box-shadow:0 0 0 3px rgba(0,206,201,0.2),0 0 24px rgba(0,206,201,0.15);}
 }
 /* Loading shimmer for table */
 .table-shimmer td{
@@ -537,8 +568,8 @@ body::after{
 /* Simulasi live-update badge */
 .sim-live-badge{
   display:inline-flex;align-items:center;gap:6px;
-  background:rgba(16,185,129,0.1);
-  border:1px solid rgba(16,185,129,0.3);
+  background:rgba(46,213,115,0.1);
+  border:1px solid rgba(46,213,115,0.3);
   border-radius:20px;padding:4px 10px;
   font-size:10.5px;font-weight:700;color:var(--green);
   margin-left:10px;
@@ -557,12 +588,12 @@ body::after{
 }
 .metric-card:hover{
   transform:translateY(-4px) scale(1.02);
-  box-shadow:0 8px 30px rgba(59,130,246,0.18);
+  box-shadow:0 8px 30px rgba(255,107,53,0.18);
   border-color:var(--border2);
 }
 .metric-card::before{
   content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% 0%,rgba(59,130,246,0.06),transparent 60%);
+  background:radial-gradient(ellipse at 50% 0%,rgba(255,107,53,0.06),transparent 60%);
   opacity:0;transition:opacity .3s;
 }
 .metric-card:hover::before{opacity:1;}
@@ -572,7 +603,7 @@ body::after{
 }
 .pipeline-step:hover{
   transform:translateY(-3px);
-  box-shadow:0 6px 24px rgba(59,130,246,0.15);
+  box-shadow:0 6px 24px rgba(255,107,53,0.15);
   border-color:var(--border2);
 }
 /* About hero animated orbs */
@@ -612,7 +643,7 @@ body::after{
    CARD DEPTH SHADOW on hover
 ══════════════════════════════════════════════ */
 .zona-big-card:hover{
-  box-shadow:0 12px 40px rgba(0,0,0,0.35),0 0 0 1px var(--border2)!important;
+  box-shadow:0 12px 40px rgba(0,0,0,0.4),0 0 0 1px var(--border2)!important;
 }
 .chart-card:hover{
   border-color:var(--border2);
@@ -627,22 +658,36 @@ body::after{
 
 
 /* ── LIGHT MODE: Card hover ── */
-[data-theme="light"] .card:hover{border-color:var(--border2);box-shadow:0 4px 24px rgba(29,78,216,0.12);}
-[data-theme="light"] .zona-big-card:hover{box-shadow:0 8px 28px rgba(29,78,216,0.12);}
+[data-theme="light"] .card:hover{border-color:var(--border2);box-shadow:0 4px 24px rgba(216,67,21,0.12);}
+[data-theme="light"] .zona-big-card:hover{box-shadow:0 8px 28px rgba(216,67,21,0.12);}
 
 /* ── LIGHT MODE: Zone pills & status pills ── */
-[data-theme="light"] .status-defisit-ekstrim{background:rgba(201,36,28,0.09);border-color:rgba(201,36,28,0.25);}
-[data-theme="light"] .status-defisit-sedang{background:rgba(180,83,9,0.09);border-color:rgba(180,83,9,0.25);}
-[data-theme="light"] .status-surplus{background:rgba(4,120,87,0.09);border-color:rgba(4,120,87,0.25);}
-[data-theme="light"] .gap-neg{background:rgba(201,36,28,0.08);}
-[data-theme="light"] .gap-pos{background:rgba(8,130,168,0.08);}
-[data-theme="light"] .zero-sppg-badge{background:rgba(201,36,28,0.09);border-color:rgba(201,36,28,0.25);}
+[data-theme="light"] .status-defisit-ekstrim{background:rgba(229,57,53,0.09);border-color:rgba(229,57,53,0.25);}
+[data-theme="light"] .status-defisit-sedang{background:rgba(230,81,0,0.09);border-color:rgba(230,81,0,0.25);}
+[data-theme="light"] .status-surplus{background:rgba(27,140,78,0.09);border-color:rgba(27,140,78,0.25);}
+[data-theme="light"] .gap-neg{background:rgba(229,57,53,0.08);}
+[data-theme="light"] .gap-pos{background:rgba(0,131,143,0.08);}
+[data-theme="light"] .zero-sppg-badge{background:rgba(229,57,53,0.09);border-color:rgba(229,57,53,0.25);}
 
-/* ── LIGHT MODE: CTA buttons ── */
-[data-theme="light"] .btn-cta-secondary{
+/* ── LIGHT MODE: btn-primary & btn-cta-primary ── */
+[data-theme="light"] .btn-primary{
+  background:linear-gradient(135deg,#d84315,#00838f);
+  box-shadow:0 4px 15px rgba(216,67,21,0.22);
+  color:#fff;
+}
+[data-theme="light"] .btn-primary:hover{
+  box-shadow:0 6px 20px rgba(216,67,21,0.32);
+}
+[data-theme="light"] .btn-cta-primary{
+  background:linear-gradient(135deg,#d84315,#00838f);
+  box-shadow:0 6px 18px rgba(216,67,21,0.28);
+}
+[data-theme="light"] .btn-cta-primary:hover{
+  box-shadow:0 8px 22px rgba(216,67,21,0.38),0 0 18px rgba(0,131,143,0.18);
+}
   color:var(--teal);border-color:var(--teal);
 }
-[data-theme="light"] .btn-cta-secondary:hover{background:rgba(8,130,168,0.08);}
+[data-theme="light"] .btn-cta-secondary:hover{background:rgba(0,131,143,0.08);}
 
 /* ── LIGHT MODE: Topbar bg fix (dark hardcoded) ── */
 [data-theme="light"] th{
@@ -650,23 +695,29 @@ body::after{
   color:var(--text3);
   border-bottom-color:var(--border);
 }
-[data-theme="light"] td{border-bottom-color:rgba(168,201,234,0.4);}
-[data-theme="light"] tr:hover td{background:rgba(29,78,216,0.04);}
+[data-theme="light"] td{border-bottom-color:rgba(142,201,165,0.4);}
+[data-theme="light"] tr:hover td{background:rgba(216,67,21,0.04);}
 
 /* ── THEME TOGGLE BUTTON ── */
 #theme-toggle{
   position:fixed;bottom:28px;right:28px;z-index:9999;
-  width:52px;height:52px;border-radius:50%;
-  border:none;cursor:pointer;
+  width:48px;height:48px;border-radius:14px;
+  border:1.5px solid rgba(255,107,53,0.35);cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  font-size:22px;line-height:1;
-  background:linear-gradient(135deg,var(--orange),var(--teal));
-  box-shadow:0 3px 14px rgba(59,130,246,0.32),0 0 0 2px rgba(255,255,255,0.08);
-  transition:transform .25s cubic-bezier(0.34,1.56,0.64,1),box-shadow .25s;
+  font-size:20px;line-height:1;
+  background:rgba(6,22,18,0.92);
+  box-shadow:0 4px 16px rgba(0,0,0,0.4),0 0 0 1px rgba(255,107,53,0.15);
+  backdrop-filter:blur(12px);
+  transition:transform .25s cubic-bezier(0.34,1.56,0.64,1),box-shadow .25s,background .25s,border-color .25s;
   will-change:transform;
   padding:0;
 }
-#theme-toggle:hover{transform:scale(1.12);box-shadow:0 4px 18px rgba(59,130,246,0.4),0 0 0 3px rgba(255,255,255,0.1);}
+#theme-toggle:hover{
+  transform:scale(1.1) translateY(-2px);
+  box-shadow:0 6px 22px rgba(255,107,53,0.25),0 0 0 2px rgba(255,107,53,0.3);
+  border-color:rgba(255,107,53,0.55);
+  background:rgba(10,30,22,0.96);
+}
 #theme-toggle:active{transform:scale(0.93);}
 #theme-toggle .ico-moon,
 #theme-toggle .ico-sun{
@@ -680,13 +731,18 @@ body::after{
 [data-theme="light"] #theme-toggle .ico-moon{opacity:0;transform:rotate(-90deg);}
 [data-theme="light"] #theme-toggle .ico-sun{opacity:1;transform:rotate(0deg);}
 [data-theme="light"] #theme-toggle{
-  background:linear-gradient(135deg,#f59e0b,#f97316);
-  box-shadow:0 4px 20px rgba(245,158,11,0.4),0 0 0 3px rgba(0,0,0,0.06);
+  background:rgba(255,255,255,0.94);
+  border-color:rgba(216,67,21,0.3);
+  box-shadow:0 4px 16px rgba(0,0,0,0.12),0 0 0 1px rgba(216,67,21,0.1);
+}
+[data-theme="light"] #theme-toggle:hover{
+  border-color:rgba(216,67,21,0.55);
+  box-shadow:0 6px 22px rgba(216,67,21,0.2),0 0 0 2px rgba(216,67,21,0.25);
 }
 .sidebar-logo{
   padding:28px 20px 22px;
   border-bottom:1px solid var(--border);
-  background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(6,182,212,0.05));
+  background:linear-gradient(135deg,rgba(255,107,53,0.08),rgba(0,206,201,0.05),rgba(46,213,115,0.04));
   text-align:center;
 }
 .brand{font-family:'Sora',sans-serif;font-size:18px;font-weight:900;letter-spacing:1px;color:#fff;line-height:1.1;}
@@ -712,23 +768,23 @@ body::after{
   border-radius:3px;background:var(--orange);
   transform:scaleY(0);transition:transform .2s;
 }
-.nav-item:hover{background:rgba(59,130,246,0.06);color:var(--text);border-color:rgba(59,130,246,0.15);}
-.nav-item.active{background:rgba(59,130,246,0.1);color:var(--orange);border-color:rgba(59,130,246,0.25);}
+.nav-item:hover{background:rgba(255,107,53,0.06);color:var(--text);border-color:rgba(255,107,53,0.15);}
+.nav-item.active{background:rgba(255,107,53,0.1);color:var(--orange);border-color:rgba(255,107,53,0.25);}
 .nav-item.active::before{transform:scaleY(1);}
 .nav-label{flex:1;}
 
 .sidebar-footer{margin-top:auto;padding:16px;}
 .sdg-badge{
-  background:linear-gradient(135deg,rgba(6,182,212,0.1),rgba(147,197,253,0.08));
-  border:1px solid rgba(6,182,212,0.2);
+  background:linear-gradient(135deg,rgba(0,206,201,0.1),rgba(255,107,53,0.07),rgba(116,185,255,0.06));
+  border:1px solid rgba(0,206,201,0.2);
   border-radius:10px;padding:10px 12px;
   font-size:11px;color:var(--teal);font-weight:700;
   text-align:center;letter-spacing:0.5px;margin-bottom:8px;
   display:flex;align-items:center;justify-content:center;gap:6px;
 }
 .budget-badge{
-  background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(245,158,11,0.08));
-  border:1px solid rgba(59,130,246,0.2);
+  background:linear-gradient(135deg,rgba(255,107,53,0.1),rgba(0,206,201,0.07),rgba(46,213,115,0.05));
+  border:1px solid rgba(255,107,53,0.2);
   border-radius:10px;padding:10px 12px;
   font-size:11px;color:var(--text2);
   text-align:center;line-height:1.6;
@@ -740,7 +796,7 @@ body::after{
 
 /* ── TOPBAR ── */
 .topbar{
-  background:rgba(9,26,19,0.95);
+  background:rgba(6,22,18,0.97);
   backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);
   padding:0 28px;height:60px;
@@ -754,9 +810,9 @@ body::after{
   padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;
   letter-spacing:0.3px;
 }
-.ttag-orange{background:rgba(59,130,246,0.12);color:var(--orange);border:1px solid rgba(59,130,246,0.3);}
-.ttag-teal{background:rgba(6,182,212,0.1);color:var(--teal);border:1px solid rgba(6,182,212,0.25);}
-.ttag-green{background:rgba(16,185,129,0.1);color:var(--green);border:1px solid rgba(16,185,129,0.25);}
+.ttag-orange{background:rgba(255,107,53,0.12);color:var(--orange);border:1px solid rgba(255,107,53,0.3);}
+.ttag-teal{background:rgba(0,206,201,0.1);color:var(--teal);border:1px solid rgba(0,206,201,0.25);}
+.ttag-green{background:rgba(46,213,115,0.1);color:var(--green);border:1px solid rgba(46,213,115,0.25);}
 .ttag-red{background:rgba(255,71,87,0.1);color:var(--red);border:1px solid rgba(255,71,87,0.25);}
 
 /* ── CONTENT ── */
@@ -767,11 +823,53 @@ body::after{
 
 .page{display:none;}.page.active{display:block;animation:page-in .3s ease;}
 /* Off-screen sections: skip rendering until visible */
-.chart-card,.table-wrap,.formula-box,.zona-big-card,.budget-compare{
+.table-wrap,.formula-box,.zona-big-card,.budget-compare{
   content-visibility:auto;
   contain-intrinsic-size:0 300px;
 }
+/* chart-card intentionally NOT using content-visibility — Chart.js needs full render access */
 @keyframes page-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══════════════════════════════════════════════
+   STAGGER ENTRY ANIMATIONS — used on navigate
+══════════════════════════════════════════════ */
+@keyframes slide-up-fade{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes slide-left-fade{
+  from{opacity:0;transform:translateX(-16px);}
+  to{opacity:1;transform:translateX(0);}
+}
+@keyframes scale-in{
+  from{opacity:0;transform:scale(0.94);}
+  to{opacity:1;transform:scale(1);}
+}
+@keyframes pop-in{
+  0%{opacity:0;transform:scale(0.88) translateY(14px);}
+  70%{transform:scale(1.03) translateY(-2px);}
+  100%{opacity:1;transform:scale(1) translateY(0);}
+}
+.anim-slide-up{animation:slide-up-fade .4s cubic-bezier(0.34,1.56,0.64,1) both;}
+.anim-pop{animation:pop-in .45s cubic-bezier(0.34,1.56,0.64,1) both;}
+.anim-scale{animation:scale-in .35s ease both;}
+
+/* Simulasi: budget-col hover enhancement */
+.budget-col{transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;}
+.budget-col:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.25);}
+/* Simulasi: chart-card subtle lift */
+.chart-card{transition:transform .22s ease, border-color .22s ease, box-shadow .22s ease;}
+/* Data: stat pill pop on hover */
+.data-stat-pill{transition:transform .2s cubic-bezier(0.34,1.56,0.64,1),border-color .2s,box-shadow .2s;}
+.data-stat-pill:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 6px 20px rgba(0,0,0,0.2);}
+/* Dampak: impact-card scale pop */
+.impact-card{transition:transform .22s cubic-bezier(0.34,1.56,0.64,1),border-color .22s,box-shadow .22s;}
+.impact-card:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 8px 28px rgba(0,0,0,0.25);}
+/* Simulasi table row hover */
+#simulasi-tbody tr{transition:background .15s;}
+/* Prov bar row hover */
+.prov-bar-row{transition:opacity .2s;cursor:default;}
+.prov-bar-row:hover{opacity:0.85;}
 
 /* ── CARDS ── */
 .card{
@@ -810,7 +908,8 @@ body::after{
 
 /* ── ZONA CARDS ── */
 .zona-big-card{
-  background:var(--card);border:1px solid var(--border);
+  background:linear-gradient(145deg,var(--card) 75%,rgba(255,107,53,0.03) 100%);
+  border:1px solid var(--border);
   border-radius:16px;padding:20px;
   transition:all .2s;cursor:default;
 }
@@ -833,13 +932,13 @@ body::after{
 }
 
 /* ── MAP ── */
-#map{height:440px;border-radius:14px;border:1px solid var(--border);margin-bottom:18px;position:relative;overflow:hidden;background:#03111f;}
+#map{height:440px;border-radius:14px;border:1px solid var(--border);margin-bottom:18px;position:relative;overflow:hidden;background:#061612;}
 .leaflet-container{border-radius:14px;font-family:'Plus Jakarta Sans',sans-serif;}
 .leaflet-popup-content-wrapper{background:#fff;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,0.4);}
 .leaflet-popup-content{margin:12px 14px;min-width:220px;}
 .leaflet-popup-tip{background:#fff;}
-.map-zoom-btn{width:30px;height:30px;background:rgba(3,17,31,0.92);border:1px solid #1a3a60;color:#e0f0ff;border-radius:6px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .15s;}
-.map-zoom-btn:hover{background:rgba(26,58,96,0.95);}
+.map-zoom-btn{width:30px;height:30px;background:rgba(6,22,18,0.92);border:1px solid #1e4a32;color:#e8f5ee;border-radius:6px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+.map-zoom-btn:hover{background:rgba(30,74,50,0.95);}
 
 
 /* ── TABLES ── */
@@ -858,7 +957,7 @@ table{width:100%;border-collapse:collapse;}
 th{
   padding:10px 14px;font-size:11px;color:var(--text3);
   text-align:left;border-bottom:1px solid var(--border);
-  background:rgba(10,34,64,0.6);font-weight:700;
+  background:rgba(17,42,31,0.6);font-weight:700;
   letter-spacing:0.6px;text-transform:uppercase;white-space:nowrap;
 }
 td{
@@ -867,7 +966,7 @@ td{
   white-space:nowrap;transition:background .15s;
 }
 tr:last-child td{border-bottom:none;}
-tr:hover td{background:rgba(59,130,246,0.04);}
+tr:hover td{background:rgba(255,107,53,0.04);}
 .rank-num{
   font-family:'Sora',sans-serif;font-weight:800;font-size:12px;
   color:var(--text2);
@@ -881,7 +980,7 @@ tr:hover td{background:rgba(59,130,246,0.04);}
 }
 .zona-pill.MERAH{background:rgba(255,71,87,0.12);color:var(--red);border:1px solid rgba(255,71,87,0.3);}
 .zona-pill.KUNING{background:rgba(245,158,11,0.12);color:var(--amber);border:1px solid rgba(245,158,11,0.3);}
-.zona-pill.HIJAU{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.3);}
+.zona-pill.HIJAU{background:rgba(46,213,115,0.12);color:var(--green);border:1px solid rgba(46,213,115,0.3);}
 
 .lisa-pill{
   padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;
@@ -890,7 +989,7 @@ tr:hover td{background:rgba(59,130,246,0.04);}
 .lisa-hh{background:rgba(255,71,87,0.12);color:var(--red);}
 .lisa-ll{background:rgba(147,197,253,0.12);color:var(--sky);}
 .lisa-lh{background:rgba(245,158,11,0.12);color:var(--amber);}
-.lisa-hl{background:rgba(16,185,129,0.12);color:var(--green);}
+.lisa-hl{background:rgba(46,213,115,0.12);color:var(--green);}
 .lisa-ns{background:rgba(107,174,214,0.08);color:var(--text3);}
 
 .crs-bar-wrap{display:flex;align-items:center;gap:8px;}
@@ -899,7 +998,8 @@ tr:hover td{background:rgba(59,130,246,0.04);}
 
 /* ── CHART CARDS ── */
 .chart-card{
-  background:var(--card);border:1px solid var(--border);
+  background:linear-gradient(145deg,var(--card) 80%,rgba(255,107,53,0.025) 100%);
+  border:1px solid var(--border);
   border-radius:16px;padding:20px;margin-bottom:18px;
 }
 .chart-card-title{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px;}
@@ -915,7 +1015,7 @@ canvas{max-height:280px;}
   color:var(--text);font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;
   outline:none;transition:border-color .2s,box-shadow .2s;
 }
-.search-box:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(59,130,246,0.12);}
+.search-box:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,107,53,0.12);}
 .search-box::placeholder{color:var(--text3);}
 .filter-sel{
   background:var(--bg3);border:1px solid var(--border);
@@ -925,12 +1025,12 @@ canvas{max-height:280px;}
 }
 .filter-sel:focus{border-color:var(--orange);}
 .btn-primary{
-  background:linear-gradient(135deg,var(--orange),#60a5fa);
+  background:linear-gradient(135deg,#ff6b35,#00cec9);
   color:#fff;border:none;border-radius:10px;
   padding:11px 20px;font-size:13px;font-weight:700;
   cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;
   transition:opacity .2s,transform .1s;
-  box-shadow:0 4px 15px rgba(59,130,246,0.3);
+  box-shadow:0 4px 15px rgba(255,107,53,0.3);
 }
 .btn-primary:hover{opacity:0.9;transform:translateY(-1px);}
 .btn-primary:active{transform:translateY(0);}
@@ -952,8 +1052,8 @@ canvas{max-height:280px;}
 
 /* ── INFO BANNER ── */
 .info-banner{
-  background:linear-gradient(135deg,rgba(59,130,246,0.06),rgba(6,182,212,0.04));
-  border:1px solid rgba(59,130,246,0.2);border-radius:14px;
+  background:linear-gradient(135deg,rgba(255,107,53,0.06),rgba(0,206,201,0.04));
+  border:1px solid rgba(255,107,53,0.2);border-radius:14px;
   padding:14px 18px;margin-bottom:18px;
   display:flex;align-items:flex-start;gap:12px;font-size:13px;line-height:1.7;
   color:var(--text2);
@@ -963,7 +1063,8 @@ canvas{max-height:280px;}
 
 /* ── FORMULA BOX ── */
 .formula-box{
-  background:rgba(3,17,31,0.6);border:1px solid var(--border);
+  background:linear-gradient(145deg,rgba(6,22,18,0.7) 80%,rgba(255,107,53,0.04) 100%);
+  border:1px solid var(--border);
   border-radius:14px;padding:18px;margin-bottom:18px;
 }
 .formula-title{
@@ -972,18 +1073,18 @@ canvas{max-height:280px;}
   display:flex;align-items:center;gap:8px;
 }
 .formula-line{font-size:12.5px;color:var(--text);margin:4px 0;font-family:'Courier New',monospace;line-height:1.7;}
-.fk{color:var(--amber);}.fv{color:#93c5fd;}.feq{color:var(--text3);}
+.fk{color:var(--amber);}.fv{color:var(--teal);}.feq{color:var(--text3);}
 
 /* ── ABOUT PAGE ── */
 .about-hero{
-  background:linear-gradient(135deg,rgba(59,130,246,0.06) 0%,rgba(6,182,212,0.06) 50%,rgba(6,182,212,0.04) 100%);
+  background:linear-gradient(135deg,rgba(255,107,53,0.06) 0%,rgba(255,107,53,0.04) 45%,rgba(0,206,201,0.06) 80%,rgba(0,206,201,0.03) 100%);
   border:1px solid var(--border);border-radius:20px;
   padding:36px;margin-bottom:22px;text-align:center;
   position:relative;overflow:hidden;
 }
 .about-hero::before{
   content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% 50%,rgba(59,130,246,0.05) 0%,transparent 70%);
+  background:radial-gradient(ellipse at 50% 50%,rgba(255,107,53,0.05) 0%,transparent 70%);
 }
 .about-hero h1{
   font-family:'Sora',sans-serif;font-size:26px;font-weight:900;
@@ -994,7 +1095,8 @@ canvas{max-height:280px;}
 .about-hero p{font-size:13px;color:var(--text2);line-height:1.8;max-width:600px;margin:0 auto;position:relative;}
 .model-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;}
 .metric-card{
-  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  background:linear-gradient(145deg,var(--card) 70%,rgba(255,107,53,0.03) 100%);
+  border:1px solid var(--border);border-radius:14px;
   padding:18px;text-align:center;
   transition:border-color .2s;
 }
@@ -1013,7 +1115,7 @@ canvas{max-height:280px;}
 .pipeline-step:not(:last-child)::after{
   content:'';position:absolute;right:-10px;top:50%;transform:translateY(-50%);
   width:20px;height:20px;z-index:2;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/contain no-repeat;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff6b35'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/contain no-repeat;
   background-color:var(--bg);border-radius:50%;padding:2px;
 }
 .ps-num{font-size:10px;color:var(--text3);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
@@ -1031,7 +1133,7 @@ canvas{max-height:280px;}
 .detail-prov{font-size:13px;color:var(--text3);margin-bottom:14px;}
 .detail-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
 .detail-stat{
-  background:rgba(10,34,64,0.7);border:1px solid var(--border);
+  background:rgba(17,42,31,0.7);border:1px solid var(--border);
   border-radius:10px;padding:12px;text-align:center;
 }
 .ds-val{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:4px;}
@@ -1041,17 +1143,17 @@ canvas{max-height:280px;}
 .status-pill{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:800;display:inline-block;letter-spacing:0.3px;}
 .status-defisit-ekstrim{background:rgba(255,71,87,0.12);color:var(--red);border:1px solid rgba(255,71,87,0.3);}
 .status-defisit-sedang{background:rgba(245,158,11,0.12);color:var(--amber);border:1px solid rgba(245,158,11,0.3);}
-.status-surplus{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.3);}
+.status-surplus{background:rgba(46,213,115,0.12);color:var(--green);border:1px solid rgba(46,213,115,0.3);}
 .gap-pill{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:800;}
 .gap-neg{background:rgba(255,71,87,0.1);color:var(--red);}
-.gap-pos{background:rgba(16,185,129,0.1);color:var(--green);}
+.gap-pos{background:rgba(46,213,115,0.1);color:var(--green);}
 
 /* ============================================================
    BERANDA PAGE
    ============================================================ */
 .hero{
   position:relative;
-  background:linear-gradient(135deg,rgba(59,130,246,0.06) 0%,rgba(6,182,212,0.04) 40%,rgba(3,17,31,0) 80%);
+  background:linear-gradient(135deg,rgba(255,107,53,0.06) 0%,rgba(255,107,53,0.04) 40%,rgba(0,206,201,0.03) 70%,rgba(6,22,18,0) 100%);
   border:1px solid var(--border);border-radius:20px;
   padding:48px 40px;margin-bottom:22px;overflow:hidden;
   display:flex;align-items:center;gap:20px;
@@ -1061,7 +1163,7 @@ canvas{max-height:280px;}
 .hero-tray-wrap{position:relative;width:400px;height:400px;}
 .hero-tray-glow{
   position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% 60%,rgba(59,130,246,0.22) 0%,rgba(6,182,212,0.1) 50%,transparent 75%);
+  background:radial-gradient(ellipse at 50% 60%,rgba(255,107,53,0.18) 0%,rgba(255,107,53,0.10) 40%,rgba(0,206,201,0.07) 60%,transparent 78%);
   border-radius:50%;animation:tray-glow-pulse 3s ease-in-out infinite;
 }
 @keyframes tray-glow-pulse{
@@ -1070,17 +1172,17 @@ canvas{max-height:280px;}
 }
 .hero-tray-ring{
   position:absolute;inset:6px;
-  border:1.5px dashed rgba(59,130,246,0.22);
+  border:1.5px dashed rgba(255,107,53,0.22);
   border-radius:50%;animation:ring-spin 20s linear infinite;
 }
 .hero-tray-ring2{
   position:absolute;inset:20px;
-  border:1px dashed rgba(6,182,212,0.15);
+  border:1px dashed rgba(0,206,201,0.15);
   border-radius:50%;animation:ring-spin 30s linear infinite reverse;
 }
 .hero-tray-svg{
   width:400px;height:400px;position:relative;z-index:2;
-  filter:drop-shadow(0 10px 40px rgba(59,130,246,0.35)) drop-shadow(0 2px 10px rgba(0,0,0,0.6));
+  filter:drop-shadow(0 10px 40px rgba(255,107,53,0.30)) drop-shadow(0 4px 16px rgba(255,107,53,0.18)) drop-shadow(0 2px 10px rgba(0,0,0,0.6));
   animation:tray-float 4s ease-in-out infinite;
 }
 @keyframes tray-float{
@@ -1092,18 +1194,18 @@ canvas{max-height:280px;}
 .hero-bg-art{
   position:absolute;right:-20px;top:-20px;
   width:320px;height:320px;
-  background:radial-gradient(ellipse,rgba(59,130,246,0.08) 0%,transparent 70%);
+  background:radial-gradient(ellipse,rgba(255,107,53,0.08) 0%,transparent 70%);
   border-radius:50%;pointer-events:none;
 }
 .hero-bg-art2{
   position:absolute;right:100px;bottom:-40px;
   width:200px;height:200px;
-  background:radial-gradient(ellipse,rgba(6,182,212,0.07) 0%,transparent 70%);
+  background:radial-gradient(ellipse,rgba(0,206,201,0.07) 0%,transparent 70%);
   border-radius:50%;pointer-events:none;
 }
 .hero-eyebrow{
   display:inline-flex;align-items:center;gap:8px;
-  background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);
+  background:rgba(255,107,53,0.1);border:1px solid rgba(255,107,53,0.25);
   border-radius:20px;padding:5px 14px;
   font-size:11.5px;font-weight:700;color:var(--orange);
   letter-spacing:0.5px;text-transform:uppercase;margin-bottom:18px;
@@ -1112,7 +1214,7 @@ canvas{max-height:280px;}
 .hero-title{
   font-family:'Sora',sans-serif;font-size:34px;font-weight:900;
   line-height:1.15;margin-bottom:16px;
-  background:linear-gradient(135deg,#fff 30%,rgba(59,130,246,0.9) 70%,rgba(6,182,212,0.9) 100%);
+  background:linear-gradient(135deg,#fff 0%,#ff6b35 35%,#00cec9 70%,#2ed573 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 .hero-sub{
@@ -1148,7 +1250,7 @@ canvas{max-height:280px;}
 }
 .hero-stat-val{
   font-family:'Sora',sans-serif;font-size:28px;font-weight:900;
-  background:linear-gradient(135deg,var(--orange),#60a5fa);
+  background:linear-gradient(135deg,#ff6b35,#2ed573);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 .hero-stat-label{font-size:11.5px;color:var(--text3);margin-top:2px;line-height:1.4;}
@@ -1170,7 +1272,7 @@ canvas{max-height:280px;}
 }
 .paradox-side{flex:1;padding:18px;text-align:center;}
 .paradox-side.bad{background:rgba(255,71,87,0.06);}
-.paradox-side.good{background:rgba(6,182,212,0.06);}
+.paradox-side.good{background:rgba(0,206,201,0.06);}
 .paradox-divider{
   width:2px;background:var(--border);align-self:stretch;position:relative;
 }
@@ -1198,7 +1300,7 @@ canvas{max-height:280px;}
 .how-step:hover{border-color:var(--border2);transform:translateY(-3px);}
 .how-step-num{
   font-family:'Sora',sans-serif;font-size:30px;font-weight:900;
-  color:rgba(59,130,246,0.65);line-height:1;margin-bottom:10px;
+  color:rgba(255,107,53,0.65);line-height:1;margin-bottom:10px;
 }
 .how-step-icon{width:28px;height:28px;margin-bottom:10px;color:var(--orange);}
 .how-step-icon svg{width:100%;height:100%;fill:currentColor;}
@@ -1219,7 +1321,7 @@ canvas{max-height:280px;}
 .zone-expl-card:hover{transform:translateY(-3px);}
 .zone-expl-card.red{background:rgba(255,71,87,0.06);border:1px solid rgba(255,71,87,0.2);}
 .zone-expl-card.amber{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);}
-.zone-expl-card.green{background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);}
+.zone-expl-card.green{background:rgba(46,213,115,0.06);border:1px solid rgba(46,213,115,0.2);}
 .zone-expl-dot{width:14px;height:14px;border-radius:50%;margin-bottom:12px;animation:zona-pulse 2.5s ease-in-out infinite;}
 .zone-expl-count{font-family:'Sora',sans-serif;font-size:32px;font-weight:900;line-height:1;margin-bottom:4px;}
 .zone-expl-name{font-size:13px;font-weight:800;margin-bottom:8px;}
@@ -1237,14 +1339,14 @@ canvas{max-height:280px;}
   gap:14px;padding:24px;margin-bottom:10px;
 }
 .btn-cta-primary{
-  background:linear-gradient(135deg,var(--orange),#60a5fa);
+  background:linear-gradient(135deg,#ff6b35,#00cec9);
   color:#fff;border:none;border-radius:12px;
   padding:14px 28px;font-size:14px;font-weight:800;
   cursor:pointer;font-family:'Sora',sans-serif;
-  box-shadow:0 6px 20px rgba(59,130,246,0.35);
+  box-shadow:0 6px 20px rgba(255,107,53,0.35),0 0 0 1px rgba(0,206,201,0.2);
   transition:all .2s;display:flex;align-items:center;gap:8px;
 }
-.btn-cta-primary:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(59,130,246,0.28);}
+.btn-cta-primary:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(255,107,53,0.45),0 0 18px rgba(0,206,201,0.2);}
 .btn-cta-primary svg{width:18px;height:18px;fill:currentColor;}
 .btn-cta-secondary{
   background:transparent;color:var(--teal);border:1px solid var(--teal);
@@ -1252,13 +1354,13 @@ canvas{max-height:280px;}
   cursor:pointer;font-family:'Sora',sans-serif;
   transition:all .2s;display:flex;align-items:center;gap:8px;
 }
-.btn-cta-secondary:hover{background:rgba(6,182,212,0.08);}
+.btn-cta-secondary:hover{background:rgba(0,206,201,0.08);}
 .btn-cta-secondary svg{width:18px;height:18px;fill:currentColor;}
 
 /* Animated highlight numbers */
 .highlight-num{
   font-family:'Sora',sans-serif;font-weight:900;
-  background:linear-gradient(135deg,var(--orange),#06b6d4);
+  background:linear-gradient(135deg,#ffa502,#ff4757);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 
@@ -1300,15 +1402,15 @@ canvas{max-height:280px;}
 
 /* ── TICKER BAR ── */
 .ticker-bar{
-  background:rgba(3,17,31,0.97);border-bottom:1px solid rgba(59,130,246,0.15);
+  background:rgba(6,22,18,0.97);border-bottom:1px solid rgba(255,107,53,0.15);
   height:32px;overflow:hidden;position:relative;flex-shrink:0;
   display:flex;align-items:center;
 }
 .ticker-label{
   padding:0 16px;font-size:10px;font-weight:800;color:var(--orange);
   letter-spacing:1px;text-transform:uppercase;white-space:nowrap;flex-shrink:0;
-  border-right:1px solid rgba(59,130,246,0.2);height:100%;
-  display:flex;align-items:center;gap:6px;background:rgba(59,130,246,0.06);
+  border-right:1px solid rgba(255,107,53,0.2);height:100%;
+  display:flex;align-items:center;gap:6px;background:rgba(255,107,53,0.06);
 }
 .ticker-label svg{width:12px;height:12px;fill:currentColor;}
 .ticker-track{flex:1;overflow:hidden;position:relative;}
@@ -1322,7 +1424,7 @@ canvas{max-height:280px;}
 .ticker-item{
   display:inline-flex;align-items:center;gap:8px;
   padding:0 24px;font-size:11px;color:var(--text2);font-weight:600;
-  border-right:1px solid rgba(26,58,96,0.5);
+  border-right:1px solid rgba(30,74,50,0.5);
 }
 .ticker-item strong{font-weight:800;}
 .ticker-item .ticker-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
@@ -1337,7 +1439,7 @@ canvas{max-height:280px;}
 .ring-fill-current{fill:none;stroke:var(--amber);stroke-width:7;stroke-linecap:round;
   stroke-dasharray:188;stroke-dashoffset:152;
   transition:stroke-dashoffset 2s cubic-bezier(.4,0,.2,1);transform:rotate(-90deg);transform-origin:50% 50%;}
-.ring-fill-target{fill:none;stroke:#06b6d4;stroke-width:3;stroke-linecap:round;stroke-dasharray:2 6;
+.ring-fill-target{fill:none;stroke:#00cec9;stroke-width:3;stroke-linecap:round;stroke-dasharray:2 6;
   stroke-dashoffset:166;transform:rotate(-90deg);transform-origin:50% 50%;opacity:0.6;}
 .ring-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
 .ring-val{font-family:'Sora',sans-serif;font-size:13px;font-weight:900;color:var(--amber);}
@@ -1345,7 +1447,7 @@ canvas{max-height:280px;}
 
 /* ── MISALOKASI IMPACT COUNTER ── */
 .impact-counter{
-  background:linear-gradient(135deg,rgba(255,71,87,0.08),rgba(59,130,246,0.05));
+  background:linear-gradient(135deg,rgba(255,71,87,0.08),rgba(255,107,53,0.05));
   border:1px solid rgba(255,71,87,0.2);border-radius:16px;
   padding:22px 28px;margin-bottom:18px;
   display:flex;align-items:center;gap:28px;flex-wrap:wrap;
@@ -1454,7 +1556,7 @@ canvas{max-height:280px;}
     line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     max-width:56px;
   }
-  .nav-item.active{background:rgba(59,130,246,0.12);color:var(--orange);}
+  .nav-item.active{background:rgba(255,107,53,0.12);color:var(--orange);}
 
   /* Main: full width, with bottom padding for nav */
   .main{width:100%;}
@@ -1582,7 +1684,7 @@ canvas{max-height:280px;}
   .realloc-mid{display:none;}
 }
 .realloc-col{
-  background:rgba(10,34,64,0.5);border:1px solid var(--border);
+  background:rgba(17,42,31,0.5);border:1px solid var(--border);
   border-radius:14px;padding:16px;
 }
 .realloc-col-head{
@@ -1614,7 +1716,7 @@ canvas{max-height:280px;}
 
 /* Slider zone */
 .realloc-slider-zone{
-  background:rgba(10,34,64,0.4);border:1px solid var(--border);
+  background:rgba(17,42,31,0.4);border:1px solid var(--border);
   border-radius:14px;padding:16px 20px;
 }
 .realloc-slider-head{
@@ -1637,12 +1739,12 @@ input[type='range'].alloc-range::-webkit-slider-thumb{
   -webkit-appearance:none;appearance:none;
   width:20px;height:20px;border-radius:50%;
   background:var(--orange);border:3px solid var(--bg);
-  box-shadow:0 0 5px rgba(59,130,246,0.3);cursor:pointer;
+  box-shadow:0 0 5px rgba(255,107,53,0.3);cursor:pointer;
 }
 input[type='range'].alloc-range::-moz-range-thumb{
   width:20px;height:20px;border-radius:50%;
   background:var(--orange);border:3px solid var(--bg);
-  box-shadow:0 0 5px rgba(59,130,246,0.3);cursor:pointer;
+  box-shadow:0 0 5px rgba(255,107,53,0.3);cursor:pointer;
   border:none;
 }
 .realloc-slider-stats{
@@ -1662,107 +1764,58 @@ input[type='range'].alloc-range::-moz-range-thumb{
 .realloc-reset svg{width:13px;height:13px;fill:currentColor;}
 .ideal-badge{
   display:inline-block;padding:3px 9px;border-radius:20px;
-  font-size:10px;font-weight:700;background:rgba(16,185,129,0.12);
-  color:var(--green);border:1px solid rgba(16,185,129,0.25);margin-left:8px;
+  font-size:10px;font-weight:700;background:rgba(46,213,115,0.12);
+  color:var(--green);border:1px solid rgba(46,213,115,0.25);margin-left:8px;
   transition:opacity 0.3s;
 }
 
 /* ══════════════════════════════════════════════
-   LIGHT MODE — OMPRENG SILVER METALIK
-   Mirip nampan aluminium beneran!
+   LIGHT MODE — TRAY MBG (GREEN THEME)
 ══════════════════════════════════════════════ */
 
-/* Glow aura: silver shimmer lebih kuat */
 [data-theme="light"] .hero-tray-glow{
-  background:radial-gradient(ellipse at 50% 60%,rgba(100,130,160,0.28) 0%,rgba(80,110,140,0.12) 50%,transparent 75%);
+  background:radial-gradient(ellipse at 50% 60%,rgba(216,67,21,0.10) 0%,rgba(0,131,143,0.06) 50%,transparent 75%);
 }
-[data-theme="light"] .hero-tray-ring{
-  border-color:rgba(90,115,140,0.4);
-}
-[data-theme="light"] .hero-tray-ring2{
-  border-color:rgba(80,105,130,0.25);
-}
-/* Shadow jauh lebih kuat supaya ompreng "ngangkat" dari background */
+[data-theme="light"] .hero-tray-ring{ border-color:rgba(216,67,21,0.2); }
+[data-theme="light"] .hero-tray-ring2{ border-color:rgba(0,131,143,0.15); }
 [data-theme="light"] .hero-tray-svg{
-  filter:
-    drop-shadow(0 14px 36px rgba(50,80,110,0.45))
-    drop-shadow(0 4px 12px rgba(40,65,95,0.35))
-    drop-shadow(0 1px 3px rgba(30,55,85,0.3));
+  filter:drop-shadow(0 10px 32px rgba(216,67,21,0.18)) drop-shadow(0 3px 10px rgba(0,0,0,0.12));
 }
 
-/* TRAY BASE — steel aluminum gelap biar kontras */
-[data-theme="light"] .tray-outer-ring{stroke:rgba(80,110,140,0.25);}
-[data-theme="light"] .tray-base-outer{
-  fill:url(#silverGradOuter);
-  stroke:rgba(65,90,115,0.85);
-  stroke-width:2;
-}
-[data-theme="light"] .tray-base-inner{
-  fill:url(#silverGradInner);
-}
+/* TRAY BASE */
+[data-theme="light"] .tray-outer-ring{ stroke:rgba(216,67,21,0.1) !important; }
+[data-theme="light"] .tray-base-outer{ fill:#1a5c34 !important; stroke:rgba(216,67,21,0.5) !important; }
+[data-theme="light"] .tray-base-inner{ fill:#e8f5ee !important; }
 
-/* TRAY DIVIDERS — groove lebih tegas */
-[data-theme="light"] .tray-div{
-  stroke:rgba(70,95,120,0.55);
-  stroke-width:1.5;
-}
+/* TRAY DIVIDERS */
+[data-theme="light"] .tray-div{ stroke:rgba(26,92,52,0.3) !important; stroke-width:1.5; }
 
 /* CELL BACKGROUNDS */
-[data-theme="light"] .tray-rice-bg{
-  fill:rgba(220,180,80,0.15);stroke:rgba(190,145,55,0.35);
-}
-[data-theme="light"] .tray-cell-bg{
-  fill:rgba(80,110,145,0.1);stroke:rgba(75,105,138,0.22);
-}
-[data-theme="light"] .tray-cell-bg2{
-  fill:rgba(80,110,145,0.07);
-}
+[data-theme="light"] .tray-rice-bg{ fill:rgba(245,158,11,0.14) !important; stroke:rgba(180,120,20,0.3) !important; }
+[data-theme="light"] .tray-cell-bg{ fill:rgba(216,67,21,0.07) !important; stroke:rgba(216,67,21,0.18) !important; }
+[data-theme="light"] .tray-cell-bg2{ fill:rgba(26,140,78,0.07) !important; }
 
 /* TRAY LABELS */
-[data-theme="light"] .tray-label{
-  fill:rgba(30,60,90,0.8) !important;
-  font-weight:700;
-}
+[data-theme="light"] .tray-label{ fill:rgba(11,33,21,0.7) !important; }
 
 /* MILK CARTON */
-[data-theme="light"] .tray-milk-body{
-  fill:#d8e8f4;stroke:rgba(80,120,160,0.8);stroke-width:1.5;
-}
-[data-theme="light"] .tray-milk-inner{
-  fill:#e4f0fa;
-}
-[data-theme="light"] .tray-milk-top{
-  fill:#c8daea;stroke:rgba(75,115,155,0.6);
-}
-[data-theme="light"] .tray-milk-label{
-  fill:rgba(29,78,216,0.18);
-}
-[data-theme="light"] .tray-milk-text{
-  fill:rgba(20,60,140,0.85) !important;
-}
-[data-theme="light"] .tray-milk-dot{
-  fill:rgba(29,78,216,0.15) !important;
-}
+[data-theme="light"] .tray-milk-body{ fill:#1a5c34 !important; stroke:rgba(46,180,100,0.5) !important; }
+[data-theme="light"] .tray-milk-inner{ fill:#236b3e !important; }
+[data-theme="light"] .tray-milk-top{ fill:#1a5c34 !important; stroke:rgba(46,180,100,0.35) !important; }
+[data-theme="light"] .tray-milk-label{ fill:rgba(255,255,255,0.2) !important; }
+[data-theme="light"] .tray-milk-text{ fill:rgba(180,240,210,0.95) !important; }
+[data-theme="light"] .tray-milk-dot{ fill:rgba(255,255,255,0.25) !important; }
 
 /* MBG BADGE */
-[data-theme="light"] .tray-badge{
-  fill:rgba(90,120,150,0.2);stroke:rgba(60,95,130,0.75);stroke-width:1.5;
-}
-[data-theme="light"] .tray-badge-text{
-  fill:#0f2d5a !important;
-}
+[data-theme="light"] .tray-badge{ fill:rgba(216,67,21,0.1) !important; stroke:rgba(216,67,21,0.45) !important; }
+[data-theme="light"] .tray-badge-text{ fill:#d84315 !important; }
 
 /* SPARKLES */
-[data-theme="light"] .tray-sparkle{opacity:0.55;}
+[data-theme="light"] .tray-sparkle{ opacity:0.5; }
 
 /* CUTLERY */
 [data-theme="light"] .tray-cutlery rect,
-[data-theme="light"] .tray-cutlery ellipse{
-  fill:#0882a8 !important;
-}
-
-/* SVG gradient defs — inject via CSS can't do, we use a defs trick */
-/* The silver gradient is injected by JS below */
+[data-theme="light"] .tray-cutlery ellipse{ fill:#00838f !important; }
 
 /* ═══════════════════════════════════════════════
    DAMPAK PAGE STYLES
@@ -1776,7 +1829,7 @@ input[type='range'].alloc-range::-moz-range-thumb{
    DAMPAK PAGE — ANIMATED IMPACT PROJECTIONS
 ═══════════════════════════════════════════════ */
 .dampak-hero {
-  background: linear-gradient(135deg, rgba(239,68,68,0.07) 0%, rgba(245,158,11,0.05) 40%, rgba(16,185,129,0.06) 100%);
+  background: linear-gradient(135deg, rgba(239,68,68,0.07) 0%, rgba(245,158,11,0.05) 40%, rgba(46,213,115,0.06) 100%);
   border: 1px solid var(--border); border-radius: 20px;
   padding: 36px 40px; margin-bottom: 18px;
   position: relative; overflow: hidden; text-align: center;
@@ -1796,11 +1849,11 @@ input[type='range'].alloc-range::-moz-range-thumb{
 .dampak-title {
   font-family: 'Sora', sans-serif; font-size: 30px; font-weight: 900;
   line-height: 1.2; margin-bottom: 12px;
-  background: linear-gradient(135deg, #fff 20%, rgba(239,68,68,0.9) 55%, rgba(16,185,129,0.9) 100%);
+  background: linear-gradient(135deg, #fff 20%, rgba(239,68,68,0.9) 55%, rgba(46,213,115,0.9) 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 [data-theme="light"] .dampak-title {
-  background: linear-gradient(135deg, #0d1f3a 20%, #c9241c 55%, #047857 100%);
+  background: linear-gradient(135deg, #0b2115 20%, #e53935 55%, #1b8c4e 100%);
   -webkit-background-clip: text; background-clip: text;
 }
 .dampak-sub { font-size: 13px; color: var(--text2); line-height: 1.8; max-width: 560px; margin: 0 auto 24px; }
@@ -1816,11 +1869,14 @@ input[type='range'].alloc-range::-moz-range-thumb{
 .countdown-unit:last-child { border-right: none; }
 .countdown-val {
   font-family: 'Sora', sans-serif; font-size: 42px; font-weight: 900; line-height: 1;
-  background: linear-gradient(135deg, var(--orange), #60a5fa);
+  background: linear-gradient(135deg, #ff6b35, #2ed573);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   animation: cd-pulse 1s ease-in-out infinite alternate;
 }
-@keyframes cd-pulse { from { opacity: 0.85; } to { opacity: 1; } }
+[data-theme="light"] .countdown-val {
+  background: linear-gradient(135deg, #d84315, #1b8c4e);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
 .countdown-label { font-size: 10px; color: var(--text3); font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; margin-top: 4px; }
 @media(max-width:600px) {
   .countdown-val { font-size: 28px; }
@@ -1878,25 +1934,25 @@ input[type='range'].alloc-range::-moz-range-thumb{
 }
 .prov-bar-name { min-width: 130px; font-weight: 600; color: var(--text2); font-size: 11px; }
 .prov-bar-track { flex: 1; height: 10px; background: rgba(255,255,255,0.06); border-radius: 8px; overflow: hidden; }
-[data-theme="light"] .prov-bar-track { background: rgba(13,31,58,0.08); }
+[data-theme="light"] .prov-bar-track { background: rgba(11,33,21,0.08); }
 .prov-bar-fill { height: 100%; border-radius: 8px; width: 0%; transition: width 1.4s cubic-bezier(0.34,1.56,0.64,1); }
 .prov-bar-gain { font-family: 'Sora', sans-serif; font-size: 11px; font-weight: 800; min-width: 52px; text-align: right; }
 
 /* Realokasi impact big visual */
 .realo-impact-visual {
-  background: linear-gradient(135deg, rgba(16,185,129,0.06), rgba(59,130,246,0.04));
-  border: 1px solid rgba(16,185,129,0.22);
+  background: linear-gradient(135deg, rgba(46,213,115,0.06), rgba(255,107,53,0.04));
+  border: 1px solid rgba(46,213,115,0.22);
   border-radius: 20px; padding: 30px; margin-bottom: 18px;
   text-align: center;
 }
 .rib-number {
   font-family: 'Sora', sans-serif; font-size: 56px; font-weight: 900; line-height: 1;
-  color: var(--green); text-shadow: 0 0 20px rgba(16,185,129,0.25);
+  color: var(--green); text-shadow: 0 0 20px rgba(46,213,115,0.25);
   animation: rib-glow 2s ease-in-out infinite alternate;
 }
 @keyframes rib-glow {
-  from { text-shadow: 0 0 10px rgba(16,185,129,0.2); }
-  to   { text-shadow: 0 0 30px rgba(16,185,129,0.4); }
+  from { text-shadow: 0 0 10px rgba(46,213,115,0.2); }
+  to   { text-shadow: 0 0 30px rgba(46,213,115,0.4); }
 }
 .rib-sub { font-size: 16px; color: var(--text2); margin-top: 8px; line-height: 1.6; }
 .rib-note { font-size: 12px; color: var(--text3); margin-top: 10px; }
@@ -1904,9 +1960,9 @@ input[type='range'].alloc-range::-moz-range-thumb{
 [data-theme="light"] .impact-card { background: var(--card); border-color: var(--border); }
 [data-theme="light"] .trajectory-section { background: var(--card); border-color: var(--border); }
 [data-theme="light"] .prov-impact-section { background: var(--card); border-color: var(--border); }
-[data-theme="light"] .dampak-hero { background: linear-gradient(135deg, rgba(201,36,28,0.05), rgba(180,83,9,0.04), rgba(4,120,87,0.04)); border-color: var(--border); }
-[data-theme="light"] .realo-impact-visual { background: linear-gradient(135deg, rgba(4,120,87,0.05), rgba(29,78,216,0.03)); border-color: rgba(4,120,87,0.2); }
-[data-theme="light"] .crisis-stats-section { background: rgba(201,36,28,0.04); border-color: rgba(201,36,28,0.18); }
+[data-theme="light"] .dampak-hero { background: linear-gradient(135deg, rgba(229,57,53,0.05), rgba(230,81,0,0.04), rgba(27,140,78,0.04)); border-color: var(--border); }
+[data-theme="light"] .realo-impact-visual { background: linear-gradient(135deg, rgba(27,140,78,0.05), rgba(216,67,21,0.03)); border-color: rgba(27,140,78,0.2); }
+[data-theme="light"] .crisis-stats-section { background: rgba(229,57,53,0.04); border-color: rgba(229,57,53,0.18); }
 
 
 /* ═══════════════════════════════════════════════
@@ -1945,7 +2001,7 @@ input[type='range'].alloc-range::-moz-range-thumb{
   line-height: 1; margin-bottom: 6px;
 }
 .csi-label { font-size: 11px; color: var(--text2); line-height: 1.5; font-weight: 600; }
-[data-theme="light"] .crisis-stat-item { background: rgba(201,36,28,0.04); border-color: rgba(201,36,28,0.12); }
+[data-theme="light"] .crisis-stat-item { background: rgba(229,57,53,0.04); border-color: rgba(229,57,53,0.12); }
 
 /* ═══════════════════════════════════════════════
    ALIRAN DANA ANIMATED FLOW SECTION
@@ -2060,9 +2116,9 @@ input[type='range'].alloc-range::-moz-range-thumb{
   font-size: 9px; font-weight: 900;
   padding: 2px 7px; border-radius: 5px; white-space: nowrap; flex-shrink: 0;
 }
-[data-theme="light"] .darurat-panel { background: rgba(201,36,28,0.04); border-color: rgba(201,36,28,0.25); }
-[data-theme="light"] .darurat-kab-card { background: rgba(201,36,28,0.04); border-color: rgba(201,36,28,0.16); }
-[data-theme="light"] .darurat-zero-badge { background: rgba(201,36,28,0.12); }
+[data-theme="light"] .darurat-panel { background: rgba(229,57,53,0.04); border-color: rgba(229,57,53,0.25); }
+[data-theme="light"] .darurat-kab-card { background: rgba(229,57,53,0.04); border-color: rgba(229,57,53,0.16); }
+[data-theme="light"] .darurat-zero-badge { background: rgba(229,57,53,0.12); }
 
 /* ══════════════════════════════════════════════
    ENHANCED ANIMATIONS & EFFECTS
@@ -2074,8 +2130,8 @@ input[type='range'].alloc-range::-moz-range-thumb{
   100%{background-position:-200% center}
 }
 @keyframes glow-pulse {
-  0%,100%{box-shadow:0 0 20px rgba(6,182,212,0.15),0 4px 40px rgba(0,0,0,0.3);}
-  50%{box-shadow:0 0 40px rgba(6,182,212,0.3),0 8px 60px rgba(0,0,0,0.4);}
+  0%,100%{box-shadow:0 0 20px rgba(0,206,201,0.15),0 4px 40px rgba(0,0,0,0.3);}
+  50%{box-shadow:0 0 40px rgba(0,206,201,0.3),0 8px 60px rgba(0,0,0,0.4);}
 }
 @keyframes float-up-down {
   0%,100%{transform:translateY(0);}
@@ -2089,8 +2145,8 @@ input[type='range'].alloc-range::-moz-range-thumb{
   0%{opacity:1} 50%{opacity:0.6} 100%{opacity:1}
 }
 @keyframes border-glow {
-  0%,100%{border-color:rgba(6,182,212,0.25);}
-  50%{border-color:rgba(6,182,212,0.55);}
+  0%,100%{border-color:rgba(0,206,201,0.25);}
+  50%{border-color:rgba(0,206,201,0.55);}
 }
 @keyframes slide-in-right {
   from{opacity:0;transform:translateX(30px);}
@@ -2104,7 +2160,7 @@ input[type='range'].alloc-range::-moz-range-thumb{
 @keyframes rainbow-border {
   0%{border-color:rgba(239,68,68,0.5);}
   33%{border-color:rgba(245,158,11,0.5);}
-  66%{border-color:rgba(16,185,129,0.5);}
+  66%{border-color:rgba(46,213,115,0.5);}
   100%{border-color:rgba(239,68,68,0.5);}
 }
 
@@ -2112,10 +2168,10 @@ input[type='range'].alloc-range::-moz-range-thumb{
 .temuan-kunci-box {
   position: relative;
   background: linear-gradient(135deg,
-    rgba(6,182,212,0.08) 0%,
-    rgba(59,130,246,0.06) 40%,
-    rgba(16,185,129,0.04) 100%);
-  border: 1px solid rgba(6,182,212,0.3);
+    rgba(0,206,201,0.08) 0%,
+    rgba(255,107,53,0.06) 40%,
+    rgba(46,213,115,0.04) 100%);
+  border: 1px solid rgba(0,206,201,0.3);
   border-radius: 24px;
   padding: 36px 32px;
   margin-bottom: 18px;
@@ -2126,7 +2182,7 @@ input[type='range'].alloc-range::-moz-range-thumb{
 .temuan-kunci-box::before {
   content:'';
   position:absolute;inset:0;
-  background: radial-gradient(ellipse at 50% 0%, rgba(6,182,212,0.1) 0%, transparent 70%);
+  background: radial-gradient(ellipse at 50% 0%, rgba(0,206,201,0.1) 0%, transparent 70%);
   pointer-events:none;
 }
 .temuan-kunci-box::after {
@@ -2188,16 +2244,16 @@ input[type='range'].alloc-range::-moz-range-thumb{
   transform: translateY(-6px) scale(1.02);
 }
 .ic-red  { background: rgba(239,68,68,0.08);  border: 1px solid rgba(239,68,68,0.25);  color:var(--red); }
-.ic-green{ background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25); color:var(--green); }
+.ic-green{ background: rgba(46,213,115,0.08); border: 1px solid rgba(46,213,115,0.25); color:var(--green); }
 .ic-amber{ background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); color:var(--amber); }
-.ic-blue { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.25); color:var(--orange); }
-.ic-teal { background: rgba(16,185,129,0.08);  border: 1px solid rgba(16,185,129,0.25);  color:var(--green); }
+.ic-blue { background: rgba(255,107,53,0.08); border: 1px solid rgba(255,107,53,0.25); color:var(--orange); }
+.ic-teal { background: rgba(46,213,115,0.08);  border: 1px solid rgba(46,213,115,0.25);  color:var(--green); }
 .ic-sky  { background: rgba(147,197,253,0.08);border: 1px solid rgba(147,197,253,0.25);color:var(--sky); }
 .ic-red:hover  { box-shadow: 0 12px 40px rgba(239,68,68,0.2);   border-color: rgba(239,68,68,0.5);  }
-.ic-green:hover{ box-shadow: 0 12px 40px rgba(16,185,129,0.2);  border-color: rgba(16,185,129,0.5); }
+.ic-green:hover{ box-shadow: 0 12px 40px rgba(46,213,115,0.2);  border-color: rgba(46,213,115,0.5); }
 .ic-amber:hover{ box-shadow: 0 12px 40px rgba(245,158,11,0.2);  border-color: rgba(245,158,11,0.5); }
-.ic-blue:hover { box-shadow: 0 12px 40px rgba(59,130,246,0.2);  border-color: rgba(59,130,246,0.5); }
-.ic-teal:hover { box-shadow: 0 12px 40px rgba(16,185,129,0.2);   border-color: rgba(16,185,129,0.5);  }
+.ic-blue:hover { box-shadow: 0 12px 40px rgba(255,107,53,0.2);  border-color: rgba(255,107,53,0.5); }
+.ic-teal:hover { box-shadow: 0 12px 40px rgba(46,213,115,0.2);   border-color: rgba(46,213,115,0.5);  }
 .ic-sky:hover  { box-shadow: 0 12px 40px rgba(147,197,253,0.2); border-color: rgba(147,197,253,0.5);}
 .ic-icon {
   display:flex;align-items:center;justify-content:center;
@@ -2231,7 +2287,7 @@ input[type='range'].alloc-range::-moz-range-thumb{
   content:'';
   position:absolute;top:0;left:0;right:0;
   height:1px;
-  background: linear-gradient(90deg, transparent, rgba(6,182,212,0.5), rgba(59,130,246,0.5), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0,206,201,0.5), rgba(255,107,53,0.5), transparent);
 }
 
 /* ── COUNTDOWN enhancement ── */
@@ -2313,7 +2369,7 @@ input[type='range'].alloc-range::-moz-range-thumb{
 .trajectory-section::before {
   content:'';
   position:absolute;top:0;left:0;right:0;bottom:0;
-  background:radial-gradient(ellipse at 50% 100%, rgba(16,185,129,0.04) 0%, transparent 70%);
+  background:radial-gradient(ellipse at 50% 100%, rgba(46,213,115,0.04) 0%, transparent 70%);
   pointer-events:none;
 }
 
@@ -2354,7 +2410,7 @@ input[type='range'].alloc-range::-moz-range-thumb{
 
 /* ── TABLE ROW hover enhancement ── */
 tr:hover td {
-  background: rgba(59,130,246,0.06) !important;
+  background: rgba(255,107,53,0.06) !important;
 }
 
 /* ── HIGHLIGHT NUM enhancement ── */
@@ -2370,7 +2426,7 @@ tr:hover td {
   transition: box-shadow .3s;
 }
 .realloc-widget:hover {
-  box-shadow: 0 8px 50px rgba(59,130,246,0.12);
+  box-shadow: 0 8px 50px rgba(255,107,53,0.12);
 }
 
 /* ── BUDGET COMPARE enhancement ── */
@@ -2390,7 +2446,7 @@ tr:hover td {
 .hero::after {
   content:'';
   position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(59,130,246,0.3),rgba(6,182,212,0.3),transparent);
+  background:linear-gradient(90deg,transparent,rgba(255,107,53,0.3),rgba(0,206,201,0.3),transparent);
 }
 
 /* ── PROV BAR ROW ── */
@@ -2433,13 +2489,13 @@ tr:hover td {
 .ba-after  {
   text-align:left;
   padding:28px 32px;
-  background:linear-gradient(225deg,rgba(16,185,129,0.07) 0%,transparent 65%);
+  background:linear-gradient(225deg,rgba(46,213,115,0.07) 0%,transparent 65%);
   border-left:1px solid var(--border);
   position:relative;
 }
 .ba-arrow  {
   display:flex;align-items:center;justify-content:center;
-  background:rgba(6,182,212,0.05);
+  background:rgba(0,206,201,0.05);
   flex-direction:column;gap:4px;
 }
 .ba-label  { font-size:10.5px;color:var(--text3);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px; }
@@ -2451,7 +2507,7 @@ tr:hover td {
 .ba-val-good{
   font-family:'Sora',sans-serif;font-size:26px;font-weight:900;
   color:var(--green);line-height:1.1;margin-bottom:6px;
-  text-shadow:0 0 12px rgba(16,185,129,0.2);
+  text-shadow:0 0 12px rgba(46,213,115,0.2);
 }
 .ba-desc   { font-size:12px;color:var(--text2);line-height:1.5; }
 
@@ -2468,9 +2524,12 @@ tr:hover td {
 /* Scrollbar progress indicator for long pages */
 .page-progress {
   position:fixed;top:0;left:var(--sidebar-w);right:0;height:2px;
-  background:linear-gradient(90deg,var(--orange),var(--teal));
+  background:linear-gradient(90deg,#ff6b35,#00cec9,#2ed573);
   transform-origin:left;z-index:100;
   transition:transform .1s linear;
+}
+[data-theme="light"] .page-progress {
+  background:linear-gradient(90deg,#d84315,#00838f,#1b8c4e);
 }
 
 /* ══════════════════════════════════════════════
@@ -2487,8 +2546,8 @@ tr:hover td {
 }
 .bcp-drop{
   border-radius:50% 50% 50% 50% / 30% 30% 70% 70%;
-  background:rgba(6,182,212,0.82);
-  box-shadow:0 0 6px rgba(6,182,212,0.55);
+  background:rgba(0,206,201,0.82);
+  box-shadow:0 0 6px rgba(0,206,201,0.55);
 }
 .bcp-spark{
   clip-path:polygon(50% 0%,56% 43%,100% 50%,56% 57%,50% 100%,44% 57%,0% 50%,44% 43%);
@@ -2497,8 +2556,8 @@ tr:hover td {
 }
 .bcp-veg{
   border-radius:50% 40% 60% 40% / 45% 50% 50% 55%;
-  background:rgba(16,185,129,0.80);
-  box-shadow:0 0 6px rgba(16,185,129,0.5);
+  background:rgba(46,213,115,0.80);
+  box-shadow:0 0 6px rgba(46,213,115,0.5);
 }
 .bcp-alert{
   border-radius:50%;
@@ -2538,36 +2597,10 @@ tr:hover td {
 [data-theme="light"] .bcp-rice{background:rgba(160,110,10,0.45);box-shadow:0 0 8px rgba(140,90,5,0.35),0 0 18px rgba(140,90,5,0.15);}
 [data-theme="light"] .bcp-drop{background:rgba(6,130,168,0.38);box-shadow:0 0 8px rgba(6,130,168,0.28),0 0 18px rgba(6,130,168,0.12);}
 [data-theme="light"] .bcp-spark{background:rgba(180,100,0,0.42);box-shadow:0 0 8px rgba(160,90,0,0.3),0 0 18px rgba(160,90,0,0.12);}
-[data-theme="light"] .bcp-veg{background:rgba(4,120,87,0.38);box-shadow:0 0 8px rgba(4,120,87,0.28),0 0 18px rgba(4,120,87,0.12);}
-[data-theme="light"] .bcp-alert{background:rgba(201,36,28,0.35);box-shadow:0 0 8px rgba(201,36,28,0.25),0 0 18px rgba(201,36,28,0.1);}
+[data-theme="light"] .bcp-veg{background:rgba(27,140,78,0.38);box-shadow:0 0 8px rgba(27,140,78,0.28),0 0 18px rgba(27,140,78,0.12);}
+[data-theme="light"] .bcp-alert{background:rgba(229,57,53,0.35);box-shadow:0 0 8px rgba(229,57,53,0.25),0 0 18px rgba(229,57,53,0.1);}
 </style>
-<script>
-/* Inject SVG silver gradient defs for light mode tray */
-(function(){
-  var svgNS='http://www.w3.org/2000/svg';
-  var svg=document.querySelector('.hero-tray-svg');
-  if(!svg)return;
-  var defs=document.createElementNS(svgNS,'defs');
 
-  /* Outer tray — dark brushed steel, kontras dari background */
-  var g1=document.createElementNS(svgNS,'linearGradient');
-  g1.setAttribute('id','silverGradOuter');g1.setAttribute('x1','0');g1.setAttribute('y1','0');
-  g1.setAttribute('x2','0.15');g1.setAttribute('y2','1');
-  var stops1=[['0%','#8fa4b8'],['20%','#7a90a8'],['50%','#6a8098'],['80%','#789aae'],['100%','#6a8898']];
-  stops1.forEach(function(s){var el=document.createElementNS(svgNS,'stop');el.setAttribute('offset',s[0]);el.setAttribute('stop-color',s[1]);g1.appendChild(el);});
-  defs.appendChild(g1);
-
-  /* Inner tray — medium steel dengan highlight */
-  var g2=document.createElementNS(svgNS,'linearGradient');
-  g2.setAttribute('id','silverGradInner');g2.setAttribute('x1','0.1');g2.setAttribute('y1','0');
-  g2.setAttribute('x2','0.3');g2.setAttribute('y2','1');
-  var stops2=[['0%','#aec4d6'],['20%','#9ab4c8'],['45%','#8aa8bc'],['70%','#96b4c8'],['100%','#88a8bc']];
-  stops2.forEach(function(s){var el=document.createElementNS(svgNS,'stop');el.setAttribute('offset',s[0]);el.setAttribute('stop-color',s[1]);g2.appendChild(el);});
-  defs.appendChild(g2);
-
-  svg.insertBefore(defs,svg.firstChild);
-})();
-</script>
 </head>
 <body>
 
@@ -2583,25 +2616,25 @@ tr:hover td {
       <div class="plate-ring"></div>
       <svg class="mbg-plate-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
         <!-- Plate -->
-        <circle cx="40" cy="44" r="26" fill="none" stroke="#3b82f6" stroke-width="2.5" opacity="0.9"/>
-        <circle cx="40" cy="44" r="21" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
+        <circle cx="40" cy="44" r="26" fill="none" stroke="#ff6b35" stroke-width="2.5" opacity="0.9"/>
+        <circle cx="40" cy="44" r="21" fill="rgba(255,107,53,0.08)" stroke="rgba(255,107,53,0.3)" stroke-width="1"/>
         <!-- Rice mound -->
-        <ellipse cx="40" cy="46" rx="12" ry="7" fill="#60a5fa" opacity="0.7"/>
+        <ellipse cx="40" cy="46" rx="12" ry="7" fill="#f5e6c0" opacity="0.9"/>
         <ellipse cx="40" cy="43" rx="9" ry="5" fill="#ffaa60" opacity="0.85"/>
         <ellipse cx="40" cy="41" rx="5" ry="3" fill="#ffc080" opacity="0.9"/>
         <!-- Veggies left -->
-        <circle cx="31" cy="50" r="3" fill="#06b6d4" opacity="0.8"/>
-        <circle cx="28" cy="47" r="2" fill="#06b6d4" opacity="0.6"/>
+        <circle cx="31" cy="50" r="3" fill="#00cec9" opacity="0.8"/>
+        <circle cx="28" cy="47" r="2" fill="#00cec9" opacity="0.6"/>
         <!-- Protein right -->
-        <ellipse cx="50" cy="50" rx="5" ry="3" fill="#3b82f6" opacity="0.75"/>
+        <ellipse cx="50" cy="50" rx="5" ry="3" fill="#ff6b35" opacity="0.75"/>
         <!-- Fork left -->
-        <line x1="13" y1="22" x2="13" y2="42" stroke="#06b6d4" stroke-width="2" stroke-linecap="round"/>
-        <line x1="10" y1="22" x2="10" y2="30" stroke="#06b6d4" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="13" y1="22" x2="13" y2="30" stroke="#06b6d4" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="16" y1="22" x2="16" y2="30" stroke="#06b6d4" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="13" y1="22" x2="13" y2="42" stroke="#00cec9" stroke-width="2" stroke-linecap="round"/>
+        <line x1="10" y1="22" x2="10" y2="30" stroke="#00cec9" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="13" y1="22" x2="13" y2="30" stroke="#00cec9" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="16" y1="22" x2="16" y2="30" stroke="#00cec9" stroke-width="1.5" stroke-linecap="round"/>
         <!-- Spoon right -->
-        <ellipse cx="67" cy="26" rx="4" ry="5.5" fill="#06b6d4" opacity="0.8"/>
-        <line x1="67" y1="31" x2="67" y2="44" stroke="#06b6d4" stroke-width="2" stroke-linecap="round"/>
+        <ellipse cx="67" cy="26" rx="4" ry="5.5" fill="#00cec9" opacity="0.8"/>
+        <line x1="67" y1="31" x2="67" y2="44" stroke="#00cec9" stroke-width="2" stroke-linecap="round"/>
       </svg>
     </div>
     <div class="brand"><span class="geo">GEO</span><span class="stunting">STUNTING</span></div>
@@ -2627,10 +2660,7 @@ tr:hover td {
     <svg class="nav-ico" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
     <span class="nav-label">Simulasi Anggaran</span>
   </div>
-  <div class="nav-item" onclick="navigate('dampak')" id="nav-dampak">
-    <svg class="nav-ico" viewBox="0 0 24 24"><path d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93s-3.05 7.44-7 7.93v2.02c5.05-.5 9-4.76 9-9.95 0-5.19-3.95-9.45-9-9.95zm-2 0c-1.96.19-3.81.94-5.33 2.2L7.1 5.74c1.12-.9 2.43-1.47 3.9-1.69V2.05zM4.26 5.67C3 7.19 2.25 9.04 2.05 11h2.02c.19-1.42.75-2.77 1.69-3.9L4.26 5.67zM2.06 13c.2 1.96.95 3.81 2.21 5.33l1.42-1.43c-.94-1.1-1.51-2.47-1.69-3.9H2.06zm5.03 7.74C8.55 21.81 10.4 22.56 12.37 22.75V20.73c-1.43-.18-2.77-.75-3.9-1.69l-1.38 1.4zm-1.5-3.05c1.1.94 2.47 1.51 3.9 1.69v2.02c-1.96-.19-3.81-.94-5.33-2.21l1.43-1.5zM12 10c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2z"/></svg>
-    <span class="nav-label">Proyeksi Dampak</span>
-  </div>
+  
   <div class="nav-item" onclick="navigate('about')" id="nav-about">
     <svg class="nav-ico" viewBox="0 0 24 24"><path d="M19.5 12c0-.23-.01-.45-.03-.68l1.86-1.41c.4-.3.51-.86.26-1.3l-1.87-3.23c-.25-.44-.79-.62-1.25-.42l-2.15.91c-.37-.26-.76-.49-1.17-.68l-.29-2.31C14.8 2.38 14.37 2 13.87 2h-3.73c-.5 0-.93.38-.99.88L8.85 5.19c-.41.19-.8.42-1.17.68L5.53 4.96c-.46-.2-1-.02-1.25.42L2.41 8.62c-.25.44-.14.99.26 1.3l1.86 1.41c-.02.22-.03.44-.03.67s.01.45.03.68l-1.86 1.41c-.4.3-.51.86-.26 1.3l1.87 3.23c.25.44.79.62 1.25.42l2.15-.91c.37.26.76.49 1.17.68l.29 2.31c.06.5.49.88.99.88h3.73c.5 0 .93-.38.99-.88l.29-2.31c.41-.19.8-.42 1.17-.68l2.15.91c.46.2 1 .02 1.25-.42l1.87-3.23c.25-.44.14-.99-.26-1.3l-1.86-1.41c.02-.22.03-.44.03-.67zm-7.46 2.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
     <span class="nav-label">Tentang Sistem</span>
@@ -2734,7 +2764,7 @@ tr:hover td {
             <div class="ring-widget">
               <svg class="ring-svg" viewBox="0 0 80 80">
                 <circle class="ring-track" cx="40" cy="40" r="30"/>
-                <circle class="ring-fill-current" id="ring-current" cx="40" cy="40" r="30" stroke-dasharray="188.5" stroke-dashoffset="37.7"/>
+                <circle class="ring-fill-current" id="ring-current" cx="40" cy="40" r="30" stroke-dasharray="188.5" stroke-dashoffset="151.2"/>
                 <circle class="ring-fill-target" cx="40" cy="40" r="30" stroke-dasharray="188.5" stroke-dashoffset="161.9"/>
               </svg>
               <div class="ring-center">
@@ -2754,14 +2784,14 @@ tr:hover td {
             <div class="hero-tray-ring"></div>
             <div class="hero-tray-ring2"></div>
             <svg class="hero-tray-svg" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="130" cy="130" r="120" fill="none" stroke="rgba(59,130,246,0.08)" stroke-width="1" class="tray-outer-ring"/>
+              <circle cx="130" cy="130" r="120" fill="none" stroke="rgba(255,107,53,0.08)" stroke-width="1" class="tray-outer-ring"/>
               <!-- TRAY BASE -->
-              <rect x="30" y="80" width="200" height="130" rx="18" ry="18" fill="#0d1f3a" stroke="rgba(59,130,246,0.35)" stroke-width="1.5" class="tray-base-outer"/>
-              <rect x="34" y="84" width="192" height="122" rx="15" ry="15" fill="#0f2545" class="tray-base-inner"/>
+              <rect x="30" y="80" width="200" height="130" rx="18" ry="18" fill="#0b2115" stroke="rgba(255,107,53,0.35)" stroke-width="1.5" class="tray-base-outer"/>
+              <rect x="34" y="84" width="192" height="122" rx="15" ry="15" fill="#0d2318" class="tray-base-inner"/>
               <!-- TRAY DIVIDERS -->
-              <line x1="30" y1="150" x2="230" y2="150" stroke="rgba(59,130,246,0.15)" stroke-width="1.5" class="tray-div"/>
-              <line x1="140" y1="84" x2="140" y2="150" stroke="rgba(59,130,246,0.15)" stroke-width="1.5" class="tray-div"/>
-              <line x1="140" y1="150" x2="140" y2="206" stroke="rgba(59,130,246,0.15)" stroke-width="1.5" class="tray-div"/>
+              <line x1="30" y1="150" x2="230" y2="150" stroke="rgba(255,107,53,0.15)" stroke-width="1.5" class="tray-div"/>
+              <line x1="140" y1="84" x2="140" y2="150" stroke="rgba(255,107,53,0.15)" stroke-width="1.5" class="tray-div"/>
+              <line x1="140" y1="150" x2="140" y2="206" stroke="rgba(255,107,53,0.15)" stroke-width="1.5" class="tray-div"/>
               <!-- RICE (top-left cell) -->
               <ellipse cx="87" cy="117" rx="38" ry="22" fill="rgba(245,158,11,0.12)" stroke="rgba(245,158,11,0.2)" stroke-width="1" class="tray-rice-bg"/>
               <ellipse cx="80" cy="120" rx="4" ry="2.5" fill="#c8a05a" opacity="0.9" transform="rotate(-15 80 120)"/>
@@ -2774,59 +2804,59 @@ tr:hover td {
               <ellipse cx="105" cy="113" rx="3.5" ry="2" fill="#d4b06a" opacity="0.75" transform="rotate(-15 105 113)"/>
               <text x="87" y="139" text-anchor="middle" font-size="8.5" fill="rgba(200,160,90,0.7)" font-family="sans-serif" font-weight="600" letter-spacing="0.5" class="tray-label">NASI</text>
               <!-- PROTEIN/CHICKEN (top-right cell) -->
-              <ellipse cx="185" cy="117" rx="35" ry="20" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.2)" stroke-width="1" class="tray-cell-bg"/>
+              <ellipse cx="185" cy="117" rx="35" ry="20" fill="rgba(255,107,53,0.1)" stroke="rgba(255,107,53,0.2)" stroke-width="1" class="tray-cell-bg"/>
               <ellipse cx="185" cy="115" rx="22" ry="14" fill="#8B4513" opacity="0.85"/>
               <ellipse cx="185" cy="113" rx="18" ry="11" fill="#A0522D" opacity="0.9"/>
               <ellipse cx="185" cy="111" rx="13" ry="8" fill="#CD853F" opacity="0.85"/>
               <ellipse cx="196" cy="122" rx="4" ry="3" fill="#D2B48C" opacity="0.9"/>
               <line x1="192" y1="122" x2="200" y2="126" stroke="#D2B48C" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
-              <circle cx="180" cy="110" r="1.5" fill="#3b82f6" opacity="0.7"/>
+              <circle cx="180" cy="110" r="1.5" fill="#ff6b35" opacity="0.7"/>
               <circle cx="188" cy="107" r="1.5" fill="#60a5fa" opacity="0.6"/>
               <circle cx="178" cy="116" r="1" fill="#ffa502" opacity="0.6"/>
-              <text x="185" y="134" text-anchor="middle" font-size="8.5" fill="rgba(59,130,246,0.7)" font-family="sans-serif" font-weight="600" letter-spacing="0.3" class="tray-label">LAUK</text>
+              <text x="185" y="134" text-anchor="middle" font-size="8.5" fill="rgba(255,107,53,0.7)" font-family="sans-serif" font-weight="600" letter-spacing="0.3" class="tray-label">LAUK</text>
               <!-- VEGETABLES (bottom-left cell) -->
-              <rect x="34" y="154" width="102" height="48" rx="8" fill="rgba(6,182,212,0.06)" class="tray-cell-bg2"/>
-              <circle cx="68" cy="172" r="10" fill="#4a6fa5" opacity="0.9"/>
-              <circle cx="58" cy="175" r="7" fill="#5a7fb5" opacity="0.85"/>
-              <circle cx="78" cy="176" r="7" fill="#4a6fa5" opacity="0.85"/>
-              <circle cx="68" cy="168" r="6" fill="#93c5fd" opacity="0.6"/>
-              <rect x="65" y="179" width="6" height="10" rx="2" fill="#2a4a7a" opacity="0.8"/>
+              <rect x="34" y="154" width="102" height="48" rx="8" fill="rgba(0,206,201,0.06)" class="tray-cell-bg2"/>
+              <circle cx="68" cy="172" r="10" fill="#2a6e3f" opacity="0.9"/>
+              <circle cx="58" cy="175" r="7" fill="#358050" opacity="0.85"/>
+              <circle cx="78" cy="176" r="7" fill="#2a6e3f" opacity="0.85"/>
+              <circle cx="68" cy="168" r="6" fill="#4caf72" opacity="0.6"/>
+              <rect x="65" y="179" width="6" height="10" rx="2" fill="#1a4a28" opacity="0.8"/>
               <ellipse cx="100" cy="173" rx="8" ry="5" fill="#ff8c00" opacity="0.85" transform="rotate(-10 100 173)"/>
               <ellipse cx="100" cy="173" rx="5" ry="3" fill="#ffaa00" opacity="0.7" transform="rotate(-10 100 173)"/>
               <ellipse cx="114" cy="177" rx="7" ry="4.5" fill="#ff8c00" opacity="0.8" transform="rotate(15 114 177)"/>
-              <text x="74" y="198" text-anchor="middle" font-size="8.5" fill="rgba(6,182,212,0.7)" font-family="sans-serif" font-weight="600" letter-spacing="0.3" class="tray-label">SAYUR</text>
+              <text x="74" y="198" text-anchor="middle" font-size="8.5" fill="rgba(0,206,201,0.7)" font-family="sans-serif" font-weight="600" letter-spacing="0.3" class="tray-label">SAYUR</text>
               <!-- MILK CARTON (bottom-right cell) -->
-              <rect x="144" y="154" width="82" height="48" rx="8" fill="rgba(147,197,253,0.06)" class="tray-cell-bg2"/>
-              <rect x="173" y="163" width="26" height="30" rx="3" fill="#1a3a5c" stroke="rgba(147,197,253,0.4)" stroke-width="1.5" class="tray-milk-body"/>
-              <rect x="174" y="164" width="24" height="28" rx="2" fill="#1e4470" class="tray-milk-inner"/>
-              <polygon points="173,163 186,155 199,163" fill="#1a3a5c" stroke="rgba(147,197,253,0.3)" stroke-width="1" class="tray-milk-top"/>
+              <rect x="144" y="154" width="82" height="48" rx="8" fill="rgba(46,213,115,0.06)" class="tray-cell-bg2"/>
+              <rect x="173" y="163" width="26" height="30" rx="3" fill="#0f3020" stroke="rgba(46,213,115,0.4)" stroke-width="1.5" class="tray-milk-body"/>
+              <rect x="174" y="164" width="24" height="28" rx="2" fill="#143828" class="tray-milk-inner"/>
+              <polygon points="173,163 186,155 199,163" fill="#0f3020" stroke="rgba(46,213,115,0.3)" stroke-width="1" class="tray-milk-top"/>
               <rect x="177" y="171" width="18" height="12" rx="2" fill="rgba(255,255,255,0.15)" class="tray-milk-label"/>
-              <text x="186" y="180" text-anchor="middle" font-size="6" fill="rgba(147,197,253,0.9)" font-family="sans-serif" font-weight="800" class="tray-milk-text">SUSU</text>
-              <text x="186" y="173" text-anchor="middle" font-size="4.5" fill="rgba(147,197,253,0.6)" font-family="sans-serif" class="tray-milk-text">MBG</text>
+              <text x="186" y="180" text-anchor="middle" font-size="6" fill="rgba(46,213,115,0.9)" font-family="sans-serif" font-weight="800" class="tray-milk-text">SUSU</text>
+              <text x="186" y="173" text-anchor="middle" font-size="4.5" fill="rgba(46,213,115,0.6)" font-family="sans-serif" class="tray-milk-text">MBG</text>
               <circle cx="180" cy="186" r="2" fill="rgba(255,255,255,0.2)" class="tray-milk-dot"/>
               <circle cx="185" cy="189" r="1.5" fill="rgba(255,255,255,0.15)" class="tray-milk-dot"/>
               <circle cx="190" cy="185" r="2" fill="rgba(255,255,255,0.18)" class="tray-milk-dot"/>
-              <text x="185" y="198" text-anchor="middle" font-size="8.5" fill="rgba(147,197,253,0.7)" font-family="sans-serif" font-weight="600" letter-spacing="0.3" class="tray-label">SUSU</text>
+              <text x="185" y="198" text-anchor="middle" font-size="8.5" fill="rgba(46,213,115,0.7)" font-family="sans-serif" font-weight="600" letter-spacing="0.3" class="tray-label">SUSU</text>
               <!-- FORK left -->
               <g transform="translate(22, 95) rotate(-25)" class="tray-cutlery">
-                <rect x="-2" y="0" width="4" height="42" rx="2" fill="#06b6d4" opacity="0.7"/>
-                <rect x="-4" y="0" width="2" height="14" rx="1" fill="#06b6d4" opacity="0.7"/>
-                <rect x="2" y="0" width="2" height="14" rx="1" fill="#06b6d4" opacity="0.7"/>
+                <rect x="-2" y="0" width="4" height="42" rx="2" fill="#00cec9" opacity="0.7"/>
+                <rect x="-4" y="0" width="2" height="14" rx="1" fill="#00cec9" opacity="0.7"/>
+                <rect x="2" y="0" width="2" height="14" rx="1" fill="#00cec9" opacity="0.7"/>
               </g>
               <!-- SPOON right -->
               <g transform="translate(238, 95) rotate(25)" class="tray-cutlery">
-                <ellipse cx="0" cy="6" rx="5" ry="7" fill="#06b6d4" opacity="0.6"/>
-                <rect x="-2" y="12" width="4" height="30" rx="2" fill="#06b6d4" opacity="0.6"/>
+                <ellipse cx="0" cy="6" rx="5" ry="7" fill="#00cec9" opacity="0.6"/>
+                <rect x="-2" y="12" width="4" height="30" rx="2" fill="#00cec9" opacity="0.6"/>
               </g>
               <!-- MBG badge top -->
-              <rect x="96" y="50" width="68" height="24" rx="12" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.4)" stroke-width="1.5" class="tray-badge"/>
-              <text x="130" y="66" text-anchor="middle" font-size="10" fill="#3b82f6" font-family="sans-serif" font-weight="800" letter-spacing="1" class="tray-badge-text">MBG 2026</text>
+              <rect x="96" y="50" width="68" height="24" rx="12" fill="rgba(255,107,53,0.15)" stroke="rgba(255,107,53,0.4)" stroke-width="1.5" class="tray-badge"/>
+              <text x="130" y="66" text-anchor="middle" font-size="10" fill="#ff6b35" font-family="sans-serif" font-weight="800" letter-spacing="1" class="tray-badge-text">MBG 2026</text>
               <!-- Sparkles -->
-              <circle cx="50" cy="65" r="3" fill="rgba(59,130,246,0.5)" class="tray-sparkle"><animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/></circle>
-              <circle cx="210" cy="60" r="2" fill="rgba(6,182,212,0.5)" class="tray-sparkle"><animate attributeName="opacity" values="1;0.3;1" dur="1.8s" repeatCount="indefinite"/></circle>
-              <circle cx="230" cy="90" r="2.5" fill="rgba(6,182,212,0.5)" class="tray-sparkle"><animate attributeName="opacity" values="0.5;1;0.5" dur="2.4s" repeatCount="indefinite"/></circle>
+              <circle cx="50" cy="65" r="3" fill="rgba(255,107,53,0.5)" class="tray-sparkle"><animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/></circle>
+              <circle cx="210" cy="60" r="2" fill="rgba(0,206,201,0.5)" class="tray-sparkle"><animate attributeName="opacity" values="1;0.3;1" dur="1.8s" repeatCount="indefinite"/></circle>
+              <circle cx="230" cy="90" r="2.5" fill="rgba(0,206,201,0.5)" class="tray-sparkle"><animate attributeName="opacity" values="0.5;1;0.5" dur="2.4s" repeatCount="indefinite"/></circle>
               <circle cx="35" cy="215" r="2" fill="rgba(245,158,11,0.5)" class="tray-sparkle"><animate attributeName="opacity" values="1;0.4;1" dur="1.6s" repeatCount="indefinite"/></circle>
-              <circle cx="220" cy="215" r="3" fill="rgba(59,130,246,0.4)" class="tray-sparkle"><animate attributeName="opacity" values="0.4;1;0.4" dur="2.2s" repeatCount="indefinite"/></circle>
+              <circle cx="220" cy="215" r="3" fill="rgba(255,107,53,0.4)" class="tray-sparkle"><animate attributeName="opacity" values="0.4;1;0.4" dur="2.2s" repeatCount="indefinite"/></circle>
             </svg>
           </div>
         </div><!-- end hero-right -->
@@ -2945,32 +2975,7 @@ tr:hover td {
         </div>
       </div>
 
-      <!-- IMPACT COUNTER -->
-      <div class="impact-counter">
-        <div class="impact-icon">
-          <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
-        </div>
-        <div class="impact-body">
-          <div class="impact-label">Dana yang tidak tepat sasaran setiap harinya</div>
-          <div class="impact-value" id="counter-daily">Rp 219,2 M</div>
-          <div class="impact-sub">Selisih Rp80,02T/tahun ÷ 365 hari atau sekitar ±Rp 2,54JT/detik — dana yang seharusnya mengalir ke 68 kabupaten Zona Merah</div>
-        </div>
-        <div class="impact-divider"></div>
-        <div class="impact-mini">
-          <div class="impact-mini-val" style="color:var(--red)" id="counter-sppg">16</div>
-          <div class="impact-mini-label">Kab tanpa SPPG</div>
-        </div>
-        <div class="impact-divider"></div>
-        <div class="impact-mini">
-          <div class="impact-mini-val" style="color:var(--amber)" id="counter-gap-pct">23,9%</div>
-          <div class="impact-mini-label">Gap distribusi Zona Merah</div>
-        </div>
-        <div class="impact-divider"></div>
-        <div class="impact-mini">
-          <div class="impact-mini-val" style="color:var(--green)">9×</div>
-          <div class="impact-mini-label">Potensi kenaikan alokasi</div>
-        </div>
-      </div>
+
 
       <!-- ── INTERACTIVE REALLOCATION WIDGET ── -->
       <div class="realloc-widget">
@@ -3094,8 +3099,8 @@ tr:hover td {
             <svg id="aliran-svg" viewBox="0 0 620 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;overflow:visible;">
               <defs>
                 <linearGradient id="srcGrad" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="rgba(59,130,246,0.8)"/>
-                  <stop offset="100%" stop-color="rgba(59,130,246,0.4)"/>
+                  <stop offset="0%" stop-color="rgba(255,107,53,0.8)"/>
+                  <stop offset="100%" stop-color="rgba(255,107,53,0.4)"/>
                 </linearGradient>
                 <filter id="glow-red">
                   <feGaussianBlur stdDeviation="3" result="blur"/>
@@ -3108,8 +3113,8 @@ tr:hover td {
               </defs>
 
               <!-- SOURCE BOX -->
-              <rect x="8" y="75" width="115" height="70" rx="14" fill="rgba(59,130,246,0.12)" stroke="rgba(59,130,246,0.45)" stroke-width="1.5"/>
-              <text x="65" y="102" text-anchor="middle" font-family="Sora,sans-serif" font-size="15" font-weight="900" fill="#93c5fd">Rp335T</text>
+              <rect x="8" y="75" width="115" height="70" rx="14" fill="rgba(255,107,53,0.12)" stroke="rgba(255,107,53,0.45)" stroke-width="1.5"/>
+              <text x="65" y="102" text-anchor="middle" font-family="Sora,sans-serif" font-size="15" font-weight="900" fill="#74b9ff">Rp335T</text>
               <text x="65" y="120" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="rgba(147,197,253,0.8)" font-weight="600">Anggaran MBG</text>
               <text x="65" y="134" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="8.5" fill="rgba(147,197,253,0.55)">2026 · APBN</text>
 
@@ -3118,66 +3123,66 @@ tr:hover td {
               <!-- FLOW PATH: AMBER (24.5% → medium) -->
               <path id="apath-amb" d="M123,110 C235,110 315,110 415,110" fill="none" stroke="rgba(245,158,11,0.35)" stroke-width="14" stroke-linecap="round"/>
               <!-- FLOW PATH: GREEN (72.6% → massive) -->
-              <path id="apath-grn" d="M123,125 C230,125 310,178 415,178" fill="none" stroke="rgba(16,185,129,0.3)" stroke-width="44" stroke-linecap="round"/>
+              <path id="apath-grn" d="M123,125 C230,125 310,178 415,178" fill="none" stroke="rgba(46,213,115,0.3)" stroke-width="44" stroke-linecap="round"/>
 
               <!-- ZONA MERAH BOX -->
               <rect x="415" y="6" width="195" height="64" rx="14" fill="rgba(239,68,68,0.1)" stroke="rgba(239,68,68,0.42)" stroke-width="1.5"/>
-              <text x="512" y="30" text-anchor="middle" font-family="Sora,sans-serif" font-size="11" font-weight="800" fill="#ef4444">Zona Merah</text>
-              <text x="512" y="50" text-anchor="middle" font-family="Sora,sans-serif" font-size="24" font-weight="900" fill="#ef4444">2,9%</text>
+              <text x="512" y="30" text-anchor="middle" font-family="Sora,sans-serif" font-size="11" font-weight="800" fill="#ff4757">Zona Merah</text>
+              <text x="512" y="50" text-anchor="middle" font-family="Sora,sans-serif" font-size="24" font-weight="900" fill="#ff4757">2,9%</text>
               <text x="512" y="64" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="rgba(239,68,68,0.75)" font-weight="600">68 Kab · Rp 9,73T · Stunting 34,5%</text>
 
               <!-- ZONA KUNING BOX -->
               <rect x="415" y="79" width="195" height="62" rx="14" fill="rgba(245,158,11,0.09)" stroke="rgba(245,158,11,0.38)" stroke-width="1.5"/>
-              <text x="512" y="101" text-anchor="middle" font-family="Sora,sans-serif" font-size="11" font-weight="800" fill="#f59e0b">Zona Kuning</text>
-              <text x="512" y="121" text-anchor="middle" font-family="Sora,sans-serif" font-size="24" font-weight="900" fill="#f59e0b">24,5%</text>
+              <text x="512" y="101" text-anchor="middle" font-family="Sora,sans-serif" font-size="11" font-weight="800" fill="#ffa502">Zona Kuning</text>
+              <text x="512" y="121" text-anchor="middle" font-family="Sora,sans-serif" font-size="24" font-weight="900" fill="#ffa502">24,5%</text>
               <text x="512" y="135" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="rgba(245,158,11,0.75)" font-weight="600">183 Kab · Rp 82,1T · Stunting 26,6%</text>
 
               <!-- ZONA HIJAU BOX -->
-              <rect x="415" y="150" width="195" height="64" rx="14" fill="rgba(16,185,129,0.09)" stroke="rgba(16,185,129,0.38)" stroke-width="1.5"/>
-              <text x="512" y="173" text-anchor="middle" font-family="Sora,sans-serif" font-size="11" font-weight="800" fill="#10b981">Zona Hijau</text>
-              <text x="512" y="193" text-anchor="middle" font-family="Sora,sans-serif" font-size="24" font-weight="900" fill="#10b981">72,6%</text>
-              <text x="512" y="207" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="rgba(16,185,129,0.75)" font-weight="600">263 Kab · Rp 243,3T · Stunting 17,4%</text>
+              <rect x="415" y="150" width="195" height="64" rx="14" fill="rgba(46,213,115,0.09)" stroke="rgba(46,213,115,0.38)" stroke-width="1.5"/>
+              <text x="512" y="173" text-anchor="middle" font-family="Sora,sans-serif" font-size="11" font-weight="800" fill="#2ed573">Zona Hijau</text>
+              <text x="512" y="193" text-anchor="middle" font-family="Sora,sans-serif" font-size="24" font-weight="900" fill="#2ed573">72,6%</text>
+              <text x="512" y="207" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="rgba(46,213,115,0.75)" font-weight="600">263 Kab · Rp 243,3T · Stunting 17,4%</text>
 
               <!-- ANIMATED DOTS: RED (1 tiny dot, slow) -->
-              <circle r="4.5" fill="#ef4444" opacity="0.95" filter="url(#glow-red)">
+              <circle r="4.5" fill="#ff4757" opacity="0.95" filter="url(#glow-red)">
                 <animateMotion dur="2.8s" repeatCount="indefinite" begin="0s"><mpath href="#apath-red"/></animateMotion>
               </circle>
-              <circle r="4.5" fill="#ef4444" opacity="0.7">
+              <circle r="4.5" fill="#ff4757" opacity="0.7">
                 <animateMotion dur="2.8s" repeatCount="indefinite" begin="1.4s"><mpath href="#apath-red"/></animateMotion>
               </circle>
 
               <!-- ANIMATED DOTS: AMBER (3 medium dots) -->
-              <circle r="7" fill="#f59e0b" opacity="0.88">
+              <circle r="7" fill="#ffa502" opacity="0.88">
                 <animateMotion dur="2.1s" repeatCount="indefinite" begin="0s"><mpath href="#apath-amb"/></animateMotion>
               </circle>
-              <circle r="7" fill="#f59e0b" opacity="0.7">
+              <circle r="7" fill="#ffa502" opacity="0.7">
                 <animateMotion dur="2.1s" repeatCount="indefinite" begin="0.7s"><mpath href="#apath-amb"/></animateMotion>
               </circle>
-              <circle r="7" fill="#f59e0b" opacity="0.6">
+              <circle r="7" fill="#ffa502" opacity="0.6">
                 <animateMotion dur="2.1s" repeatCount="indefinite" begin="1.4s"><mpath href="#apath-amb"/></animateMotion>
               </circle>
 
               <!-- ANIMATED DOTS: GREEN (many big dots — money pours here) -->
-              <circle r="13" fill="#10b981" opacity="0.72" filter="url(#glow-green)">
+              <circle r="13" fill="#2ed573" opacity="0.72" filter="url(#glow-green)">
                 <animateMotion dur="1.5s" repeatCount="indefinite" begin="0s"><mpath href="#apath-grn"/></animateMotion>
               </circle>
-              <circle r="12" fill="#10b981" opacity="0.65">
+              <circle r="12" fill="#2ed573" opacity="0.65">
                 <animateMotion dur="1.5s" repeatCount="indefinite" begin="0.38s"><mpath href="#apath-grn"/></animateMotion>
               </circle>
-              <circle r="14" fill="#10b981" opacity="0.6">
+              <circle r="14" fill="#2ed573" opacity="0.6">
                 <animateMotion dur="1.5s" repeatCount="indefinite" begin="0.75s"><mpath href="#apath-grn"/></animateMotion>
               </circle>
-              <circle r="11" fill="#10b981" opacity="0.7">
+              <circle r="11" fill="#2ed573" opacity="0.7">
                 <animateMotion dur="1.5s" repeatCount="indefinite" begin="1.12s"><mpath href="#apath-grn"/></animateMotion>
               </circle>
 
               <!-- WARNING LABEL: Red zone barely gets anything -->
               <rect x="175" y="8" width="108" height="22" rx="7" fill="rgba(239,68,68,0.18)" stroke="rgba(239,68,68,0.35)" stroke-width="1"/>
-              <text x="229" y="23" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="10" font-weight="800" fill="#ef4444">Hanya 2,9%!</text>
+              <text x="229" y="23" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="10" font-weight="800" fill="#ff4757">Hanya 2,9%!</text>
 
               <!-- ANNOTATION: Green zone overflow -->
-              <rect x="195" y="168" width="120" height="22" rx="7" fill="rgba(16,185,129,0.14)" stroke="rgba(16,185,129,0.32)" stroke-width="1"/>
-              <text x="255" y="183" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="10" font-weight="800" fill="#10b981">▲ 72,6% mengalir sini</text>
+              <rect x="195" y="168" width="120" height="22" rx="7" fill="rgba(46,213,115,0.14)" stroke="rgba(46,213,115,0.32)" stroke-width="1"/>
+              <text x="255" y="183" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="10" font-weight="800" fill="#2ed573">▲ 72,6% mengalir sini</text>
             </svg>
           </div>
         </div>
@@ -3197,35 +3202,7 @@ tr:hover td {
         </div>
       </div>
 
-      <!-- KRISIS DALAM ANGKA — animated stats -->
-      <div class="crisis-stats-section">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
-          <div style="width:4px;height:22px;background:var(--red);border-radius:4px;"></div>
-          <div style="font-family:'Sora',sans-serif;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px;">
-            <svg style="width:16px;height:16px;fill:var(--red);" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
-            Krisis dalam Angka: Realitas MBG Saat Ini
-          </div>
-        </div>
-        <div style="font-size:12px;color:var(--text3);margin-bottom:2px;">Data SSGI 2024 · BPS · Kemenkes RI · BGN — seluruh angka terverifikasi dari sumber resmi</div>
-        <div class="crisis-stats-grid">
-          <div class="crisis-stat-item">
-            <div class="csi-val" style="color:var(--red)">4,36 Juta</div>
-            <div class="csi-label">Anak balita stunting<br>di Indonesia saat ini</div>
-          </div>
-          <div class="crisis-stat-item">
-            <div class="csi-val" style="color:var(--amber)">Rp80T</div>
-            <div class="csi-label">Dana yang tidak sampai<br>ke Zona Merah per tahun</div>
-          </div>
-          <div class="crisis-stat-item">
-            <div class="csi-val" style="color:var(--red)">16 Kab</div>
-            <div class="csi-label">Kabupaten Zona Merah<br>tanpa satu pun unit SPPG</div>
-          </div>
-          <div class="crisis-stat-item">
-            <div class="csi-val" style="color:var(--amber)">2,9%</div>
-            <div class="csi-label">Porsi anggaran Zona Merah<br>padahal stunting rata-rata 34,5%</div>
-          </div>
-        </div>
-      </div>
+      
 
       <!-- 16 KAB DARURAT PANEL -->
       <div class="darurat-panel">
@@ -3258,7 +3235,7 @@ tr:hover td {
         <div class="cta-section" style="padding:0;margin:0;justify-content:center;gap:12px;">
           <button class="btn-cta-primary" onclick="navigate('dashboard')"><svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg> Lihat Dashboard <svg style="width:16px;height:16px;fill:currentColor;" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
           <button class="btn-cta-secondary" onclick="navigate('simulasi')"><svg viewBox="0 0 24 24"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5C3.9 3 3 3.9 3 5v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2.28c.59-.35 1-.98 1-1.72v-4c0-.74-.41-1.37-1-1.72zM20 17H5V5h15v2h-6c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h6v2zm0-6h-6v-2h6v2z"/></svg> Simulasi Anggaran</button>
-          <button class="btn-cta-secondary" onclick="navigate('dampak')" style="border-color:var(--green);color:var(--green);"><svg viewBox="0 0 24 24"><path d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93s-3.05 7.44-7 7.93v2.02c5.05-.5 9-4.76 9-9.95 0-5.19-3.95-9.45-9-9.95zm-2 0c-1.96.19-3.81.94-5.33 2.2L7.1 5.74c1.12-.9 2.43-1.47 3.9-1.69V2.05zM4.26 5.67C3 7.19 2.25 9.04 2.05 11h2.02c.19-1.42.75-2.77 1.69-3.9L4.26 5.67zM2.06 13c.2 1.96.95 3.81 2.21 5.33l1.42-1.43c-.94-1.1-1.51-2.47-1.69-3.9H2.06zm5.03 7.74C8.55 21.81 10.4 22.56 12.37 22.75V20.73c-1.43-.18-2.77-.75-3.9-1.69l-1.38 1.4zm-1.5-3.05c1.1.94 2.47 1.51 3.9 1.69v2.02c-1.96-.19-3.81-.94-5.33-2.21l1.43-1.5zM12 10c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2z"/></svg> Proyeksi Dampak</button>
+
         </div>
       </div>
 
@@ -3522,7 +3499,7 @@ tr:hover td {
             </div>
             <div class="budget-bar-track"><div class="budget-bar-fill" style="width:0%;background:var(--green);" data-target="33.91"></div></div>
           </div>
-          <div style="margin-top:14px;padding:12px;background:rgba(6,182,212,0.06);border-radius:10px;border:1px solid rgba(6,182,212,0.15);">
+          <div style="margin-top:14px;padding:12px;background:rgba(0,206,201,0.06);border-radius:10px;border:1px solid rgba(0,206,201,0.15);">
             <div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;margin-bottom:4px;">Dampak Ideal</div>
             <div style="font-size:12px;color:var(--text2);line-height:1.7;">Zona Merah menerima <strong style="color:var(--green)">Rp89,75T/tahun</strong> — <strong style="color:var(--green)">9× lebih besar</strong> dari saat ini.</div>
           </div>
@@ -3630,188 +3607,7 @@ tr:hover td {
       </div>
     </div><!-- end page-simulasi -->
 
-    <!-- ========================================
-         PAGE: PROYEKSI DAMPAK
-    ======================================== -->
-    <div class="page" id="page-dampak">
 
-      <!-- HERO -->
-      <div class="dampak-hero">
-        <div class="dampak-eyebrow">
-          <svg style="width:14px;height:14px;fill:currentColor;" viewBox="0 0 24 24"><path d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93s-3.05 7.44-7 7.93v2.02c5.05-.5 9-4.76 9-9.95 0-5.19-3.95-9.45-9-9.95zm-2 0c-1.96.19-3.81.94-5.33 2.2L7.1 5.74c1.12-.9 2.43-1.47 3.9-1.69V2.05z"/></svg>
-          Proyeksi Dampak Realokasi GeoStunting
-        </div>
-        <div class="dampak-title">Apa yang Berubah<br>Jika Rp335T Dialokasikan dengan Tepat?</div>
-        <p class="dampak-sub">
-          Jika realokasi berbasis CRS diimplementasikan, Zona Merah menerima 9 kali lebih banyak dana, mempercepat penurunan stunting
-          dan mendorong Indonesia mencapai target RPJMN 2029. Semua ini tanpa tambahan anggaran sepeser pun.
-        </p>
-        <!-- Countdown to RPJMN 2029 -->
-        <div style="margin-bottom:8px;font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:0.8px;">
-          Hitung Mundur Target RPJMN 2029 (31 Des 2029)
-        </div>
-        <div class="countdown-wrap" id="countdown-2029">
-          <div class="countdown-unit">
-            <div class="countdown-val" id="cd-days">---</div>
-            <div class="countdown-label">Hari</div>
-          </div>
-          <div class="countdown-unit">
-            <div class="countdown-val" id="cd-hours">--</div>
-            <div class="countdown-label">Jam</div>
-          </div>
-          <div class="countdown-unit">
-            <div class="countdown-val" id="cd-mins">--</div>
-            <div class="countdown-label">Menit</div>
-          </div>
-          <div class="countdown-unit">
-            <div class="countdown-val" id="cd-secs">--</div>
-            <div class="countdown-label">Detik</div>
-          </div>
-        </div>
-        <div style="font-size:11px;color:var(--text3);margin-top:12px;">
-          Target RPJMN: Stunting turun ke <strong style="color:var(--green)">14,2%</strong> dari 19,8% saat ini · Sisa waktu untuk bertindak
-        </div>
-      </div>
-
-      <!-- DAMPAK UTAMA JIKA REALOKASI -->
-      <div class="realo-impact-visual">
-        <div style="font-size:12px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;">Jika Realokasi GeoStunting Diimplementasikan Penuh</div>
-        <div class="rib-number" id="rib-counter">1.240.000</div>
-        <div class="rib-sub">anak berpotensi terbebas dari stunting pada 2029</div>
-        <div class="rib-note">Estimasi berdasarkan selisih proyeksi 5,6 poin pada 22 juta balita Indonesia · Bukan angka aktual resmi pemerintah</div>
-      </div>
-
-      <!-- METRIC CARDS -->
-      <div class="impact-grid">
-        <div class="impact-card ic-red">
-          <span class="ic-icon"><svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:var(--red);"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg></span>
-          <div class="ic-val" style="color:var(--red)">Rp80T</div>
-          <div class="ic-label">Dana tahunan yang kini tidak sampai ke Zona Merah</div>
-          <div class="ic-note">Selisih antara distribusi aktual (Rp9,73T) dan alokasi ideal (Rp89,75T)</div>
-        </div>
-        <div class="impact-card ic-green">
-          <span class="ic-icon"><svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:var(--green);"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg></span>
-          <div class="ic-val" style="color:var(--green)">9×</div>
-          <div class="ic-label">Kelipatan peningkatan dana Zona Merah pasca realokasi</div>
-          <div class="ic-note">Dari Rp9,73T menjadi Rp89,75T per tahun · Total anggaran tetap Rp335T</div>
-        </div>
-        <div class="impact-card ic-amber">
-          <span class="ic-icon"><svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:var(--amber);"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg></span>
-          <div class="ic-val" style="color:var(--amber)">16</div>
-          <div class="ic-label">Kabupaten yang akan mendapat unit SPPG pertamanya</div>
-          <div class="ic-note">Kini 0 unit SPPG, padahal masing-masing memiliki stunting di atas 30%</div>
-        </div>
-        <div class="impact-card ic-blue">
-          <span class="ic-icon"><svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:var(--orange);"><path d="M7 14l5-5 5 5z"/></svg></span>
-          <div class="ic-val" style="color:var(--orange)">5,6 poin</div>
-          <div class="ic-label">Target penurunan stunting nasional menuju RPJMN 2029</div>
-          <div class="ic-note">Dari 19,8% saat ini ke 14,2% · Dengan laju saat ini perlu percepatan signifikan</div>
-        </div>
-        <div class="impact-card ic-teal">
-          <span class="ic-icon"><svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:var(--teal);"><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z"/></svg></span>
-          <div class="ic-val" style="color:var(--teal)">3,5×</div>
-          <div class="ic-label">Estimasi percepatan laju penurunan stunting di Zona Merah</div>
-          <div class="ic-note">Berdasarkan elastisitas anggaran dari studi intervensi gizi literatur internasional</div>
-        </div>
-        <div class="impact-card ic-sky">
-          <span class="ic-icon"><svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:var(--sky);"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></span>
-          <div class="ic-val" style="color:var(--sky)">514</div>
-          <div class="ic-label">Kabupaten yang langsung terdampak redistribusi berbasis CRS</div>
-          <div class="ic-note">Setiap kabupaten mendapat alokasi proporsional terhadap skor risiko aktualnya</div>
-        </div>
-      </div>
-
-      <!-- TRAJECTORY CHART -->
-      <div class="trajectory-section">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-          <div style="font-family:'Sora',sans-serif;font-size:14px;font-weight:800;">Proyeksi Trajektori Stunting Nasional</div>
-        </div>
-        <div style="font-size:12px;color:var(--text3);margin-bottom:18px;">Perbandingan laju penurunan stunting: skenario saat ini vs skenario realokasi GeoStunting (2024–2030)</div>
-        <canvas id="chartTrajectory" style="max-height:280px;"></canvas>
-        <div style="margin-top:14px;display:flex;gap:20px;flex-wrap:wrap;font-size:11.5px;">
-          <div style="display:flex;align-items:center;gap:6px;"><div style="width:24px;height:3px;background:var(--red);border-radius:3px;"></div> Tanpa intervensi (laju saat ini 1,58%/thn)</div>
-          <div style="display:flex;align-items:center;gap:6px;"><div style="width:24px;height:3px;background:var(--green);border-radius:3px;"></div> Dengan realokasi GeoStunting (estimasi)</div>
-          <div style="display:flex;align-items:center;gap:6px;"><div style="width:24px;height:3px;border-top:2px dashed var(--amber);"></div> Target RPJMN 2029 (14,2%)</div>
-        </div>
-      </div>
-
-      <!-- PROVINCE IMPACT BARS -->
-      <div class="prov-impact-section">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-          <div style="width:4px;height:22px;background:var(--green);border-radius:4px;"></div>
-          <div style="font-family:'Sora',sans-serif;font-size:14px;font-weight:800;">Estimasi Peningkatan Dana per Provinsi — Zona Merah</div>
-        </div>
-        <div style="font-size:12px;color:var(--text3);margin-bottom:18px;">Provinsi yang memiliki kabupaten Zona Merah akan menerima alokasi jauh lebih besar setelah realokasi. Bilangan menunjukkan kelipatan kenaikan terhadap alokasi saat ini.</div>
-        <div id="prov-bars-container"></div>
-      </div>
-
-      <!-- WHAT CHANGES — ENHANCED BEFORE/AFTER -->
-      <div class="dampak-ba-section">
-        <div class="dampak-ba-title">
-          <div style="width:4px;height:22px;background:var(--teal);border-radius:4px;flex-shrink:0;"></div>
-          Saat Ini vs Setelah Realokasi GeoStunting
-        </div>
-        <div class="before-after-row">
-          <div class="ba-before">
-            <div class="ba-label">Dana Zona Merah Aktual</div>
-            <div class="ba-val-bad">Rp9,73T<span style="font-size:13px;font-weight:600;color:var(--text3)">/tahun</span></div>
-            <div class="ba-desc">Hanya 2,9% dari total MBG</div>
-          </div>
-          <div class="ba-arrow">
-            <svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:var(--teal);"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
-          </div>
-          <div class="ba-after">
-            <div class="ba-label">Dana Zona Merah Ideal</div>
-            <div class="ba-val-good">Rp89,75T<span style="font-size:13px;font-weight:600;color:var(--text3)">/tahun</span></div>
-            <div class="ba-desc">26,79% — naik <strong style="color:var(--green)">9×</strong> lipat</div>
-          </div>
-        </div>
-        <div class="before-after-row">
-          <div class="ba-before">
-            <div class="ba-label">Kabupaten Tanpa SPPG</div>
-            <div class="ba-val-bad">16<span style="font-size:13px;font-weight:600;color:var(--text3)"> kabupaten</span></div>
-            <div class="ba-desc">1,2 juta anak tidak terlayani</div>
-          </div>
-          <div class="ba-arrow">
-            <svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:var(--teal);"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
-          </div>
-          <div class="ba-after">
-            <div class="ba-label">Setelah Realokasi</div>
-            <div class="ba-val-good">0<span style="font-size:13px;font-weight:600;color:var(--text3)"> tanpa SPPG</span></div>
-            <div class="ba-desc">Semua 16 kabupaten terjangkau</div>
-          </div>
-        </div>
-        <div class="before-after-row">
-          <div class="ba-before">
-            <div class="ba-label">Laju Penurunan Stunting</div>
-            <div class="ba-val-bad">1,58%<span style="font-size:13px;font-weight:600;color:var(--text3)">/tahun</span></div>
-            <div class="ba-desc">Tidak akan capai target 2029</div>
-          </div>
-          <div class="ba-arrow">
-            <svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:var(--teal);"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
-          </div>
-          <div class="ba-after">
-            <div class="ba-label">Estimasi dengan GeoStunting</div>
-            <div class="ba-val-good">~2,8%<span style="font-size:13px;font-weight:600;color:var(--text3)">/tahun</span></div>
-            <div class="ba-desc">3,5× lebih cepat di Zona Merah</div>
-          </div>
-        </div>
-        <div style="margin-top:14px;padding:14px 18px;background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:12px;font-size:12px;color:var(--text2);display:flex;gap:10px;align-items:flex-start;">
-          <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:var(--teal);flex-shrink:0;margin-top:2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-          <span>Semua proyeksi bersifat estimasi berbasis pemodelan. Total anggaran tetap Rp335T — ini koreksi arah, bukan koreksi anggaran. Distribusi mengikuti Composite Risk Score aktual, bukan asumsi manual.</span>
-        </div>
-      </div>
-      <!-- CAVEAT -->
-      <div class="info-banner">
-        <span class="info-banner-icon"><svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:var(--orange);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></span>
-        <span>
-          Angka proyeksi di halaman ini bersifat estimasi berdasarkan data resmi pemerintah dan literatur akademik intervensi gizi.
-          Proyeksi bukan jaminan hasil aktual dan tidak mewakili posisi resmi Kemenkes atau BGN.
-          Simulasi realokasi murni bersifat analitis dan dapat direplikasi seluruhnya dari sumber data terbuka.
-        </span>
-      </div>
-
-    </div><!-- end page-dampak -->
 
     <!-- ========================================
          PAGE: TENTANG SISTEM
@@ -3819,8 +3615,8 @@ tr:hover td {
     <div class="page" id="page-about">
 
       <div class="about-hero">
-        <div class="about-orb" style="width:160px;height:160px;background:rgba(59,130,246,0.07);top:-40px;right:-30px;animation-delay:0s;"></div>
-        <div class="about-orb" style="width:100px;height:100px;background:rgba(6,182,212,0.07);bottom:-20px;left:10%;animation-delay:3s;"></div>
+        <div class="about-orb" style="width:160px;height:160px;background:rgba(255,107,53,0.07);top:-40px;right:-30px;animation-delay:0s;"></div>
+        <div class="about-orb" style="width:100px;height:100px;background:rgba(0,206,201,0.07);bottom:-20px;left:10%;animation-delay:3s;"></div>
         <h1><span class="geo">Geo</span><span class="stunting">Stunting</span> — Metodologi &amp; Validasi</h1>
         <p>
           Sistem precision targeting MBG berbasis Hybrid GWR-RF yang mengintegrasikan 6 sumber data resmi pemerintah
@@ -4047,14 +3843,27 @@ tr:hover td {
 // PARTICLES
 // ═══════════════════════════════════════════════════════════
 // ═══════════════════════════════════════════════════════════
-// NAVIGATION
+// CHART.JS GLOBAL DEFAULTS — set based on current theme
+// This ensures ALL charts inherit correct text color even
+// if explicit per-chart options are missed.
 // ═══════════════════════════════════════════════════════════
+function applyChartDefaults(){
+  var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  var textColor = isLight ? '#0b2115' : '#e8f5ee';
+  var gridColor = isLight ? 'rgba(100,180,130,0.2)' : 'rgba(30,74,50,0.4)';
+  if(window.Chart){
+    Chart.defaults.color = textColor;
+    Chart.defaults.borderColor = gridColor;
+    Chart.defaults.plugins.legend.labels.color = textColor;
+  }
+}
+// Apply immediately
+applyChartDefaults();
 const PAGE_META = {
   beranda:  {title:'Beranda — GeoStunting Indonesia', sub:'Sistem Precision Targeting MBG · Geospatial Machine Learning · 514 Kab/Kota'},
   dashboard:{title:'Dashboard Nasional', sub:'Analisis Prioritas MBG · Peta Interaktif · Real Data 514 Kabupaten/Kota'},
   data:     {title:'Data Explorer 514 Kabupaten', sub:'Cari, filter, dan analisis data risiko stunting per daerah'},
   simulasi: {title:'Simulasi Realokasi Anggaran', sub:'Budget-Netral Rp335T · 2-Step Burden Weight CRS · Tanpa Tambah Anggaran'},
-  dampak:   {title:'Proyeksi Dampak Realokasi', sub:'Estimasi percepatan penurunan stunting · Target RPJMN 2029 · 514 Kabupaten'},
   about:    {title:'Tentang Sistem GeoStunting', sub:'Metodologi · Hybrid GWR-RF · Validasi · Pipeline 4 Layer'},
 };
 
@@ -4068,11 +3877,15 @@ function navigate(page){
   document.getElementById('topbar-sub').textContent=m.sub;
 
   if(page==='dashboard' && !mapInit){initMap();}
-  if(page==='dashboard' && !dashChartsInit){initDashCharts();}
+  if(page==='dashboard' && !dashChartsInit){
+    // Defer so browser paints the page before Chart.js measures canvas
+    setTimeout(function(){ initDashCharts(); }, 60);
+  }
   if(page==='data' && !dataInit){initDataPage();}
   if(page==='simulasi'){initSimulasi();}
-  if(page==='dampak' && !dampakInit){initDampak();}
-  if(page==='about' && !aboutInit){initAboutCharts();}
+  if(page==='about' && !aboutInit){
+    setTimeout(function(){ initAboutCharts(); }, 60);
+  }
 }
 window.navigate=navigate;
 
@@ -4084,7 +3897,7 @@ function renderZonaCards(){
   const zonas=[
     {key:'MERAH',label:'MERAH — Prioritas Tinggi',color:'var(--red)',glow:'rgba(255,71,87,0.15)',borderColor:'rgba(255,71,87,0.3)'},
     {key:'KUNING',label:'KUNING — Prioritas Sedang',color:'var(--amber)',glow:'rgba(245,158,11,0.15)',borderColor:'rgba(245,158,11,0.3)'},
-    {key:'HIJAU',label:'HIJAU — Relatif Aman',color:'var(--green)',glow:'rgba(16,185,129,0.15)',borderColor:'rgba(16,185,129,0.3)'},
+    {key:'HIJAU',label:'HIJAU — Relatif Aman',color:'var(--green)',glow:'rgba(46,213,115,0.15)',borderColor:'rgba(46,213,115,0.3)'},
   ];
   container.innerHTML=zonas.map(z=>{
     const d=ZONA_SUMMARY[z.key];
@@ -4154,7 +3967,7 @@ function initMap(){
   mapInit=true;
   if(_leafletMap){_leafletMap.invalidateSize();return;}
 
-  const COLORS={MERAH:'#ff4757',KUNING:'#ffa502',HIJAU:'#10b981'};
+  const COLORS={MERAH:'#ff4757',KUNING:'#ffa502',HIJAU:'#2ed573'};
   const FILL_OPACITY={MERAH:0.75,KUNING:0.65,HIJAU:0.55};
 
   _leafletMap=L.map('map',{center:[-2.5,118],zoom:5,zoomControl:true,scrollWheelZoom:true});
@@ -4173,7 +3986,7 @@ function initMap(){
   const mapEl=document.getElementById('map');
   const loadDiv=document.createElement('div');
   loadDiv.id='map-loading';
-  loadDiv.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(3,17,31,0.95);color:#e0f0ff;padding:14px 22px;border-radius:12px;font-size:13px;z-index:1000;border:1px solid #1a3a60;font-family:"Plus Jakarta Sans",sans-serif;backdrop-filter:blur(8px);pointer-events:none;';
+  loadDiv.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(6,22,18,0.95);color:#e8f5ee;padding:14px 22px;border-radius:12px;font-size:13px;z-index:1000;border:1px solid #1e4a32;font-family:"Plus Jakarta Sans",sans-serif;backdrop-filter:blur(8px);pointer-events:none;';
   loadDiv.textContent='Memuat peta 514 kabupaten...';
   mapEl.appendChild(loadDiv);
 
@@ -4188,9 +4001,9 @@ function initMap(){
         style:feature=>{
           const zona=feature.properties.zona||'HIJAU';
           return{
-            fillColor:COLORS[zona]||'#10b981',
+            fillColor:COLORS[zona]||'#2ed573',
             fillOpacity:FILL_OPACITY[zona]||0.55,
-            color:'#03111f',
+            color:'#061612',
             weight:0.5,
             opacity:0.8
           };
@@ -4216,7 +4029,7 @@ function initMap(){
             click:e=>{
               if(selectedLayer&&selectedLayer!==layer) geoLayer.resetStyle(selectedLayer);
               selectedLayer=layer;
-              layer.setStyle({weight:2.5,color:'#3b82f6',fillOpacity:1.0});
+              layer.setStyle({weight:2.5,color:'#ff6b35',fillOpacity:1.0});
               layer.bringToFront();
 
               L.popup({maxWidth:270,className:'geo-popup'})
@@ -4233,7 +4046,7 @@ function initMap(){
                       <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">Kemiskinan</td><td style="font-weight:800">${(p.tingkat_kemiskinan||0).toFixed(1)}%</td></tr>
                       <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">IPM</td><td style="font-weight:800">${(p.ipm||0).toFixed(1)}</td></tr>
                       <tr style="border-bottom:1px solid #f0f0f0"><td style="color:#888;padding:4px 0">SPPG Aktif</td><td style="font-weight:800;color:${(p.jumlah_sppg||0)===0?'#ff4757':'#1a1a1a'}">${p.jumlah_sppg||0}${(p.jumlah_sppg||0)===0?' (!!)':''}</td></tr>
-                      <tr><td style="color:#888;padding:4px 0">Alokasi Ideal/Bulan</td><td style="font-weight:800;color:#3b82f6">Rp${alokasi.toFixed(1)}M</td></tr>
+                      <tr><td style="color:#888;padding:4px 0">Alokasi Ideal/Bulan</td><td style="font-weight:800;color:#ff6b35">Rp${alokasi.toFixed(1)}M</td></tr>
                     </table>
                   </div>`)
                 .openOn(_leafletMap);
@@ -4254,12 +4067,12 @@ function initMap(){
   const legend=L.control({position:'bottomright'});
   legend.onAdd=()=>{
     const div=L.DomUtil.create('div');
-    div.innerHTML=`<div style="background:rgba(3,17,31,0.95);border:1px solid #1a3a60;border-radius:12px;padding:12px 16px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:#e0f0ff;backdrop-filter:blur(8px);max-width:220px;">
-      <div style="font-weight:800;margin-bottom:10px;color:#6baed6;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;">ZONA PRIORITAS MBG</div>
+    div.innerHTML=`<div style="background:rgba(6,22,18,0.95);border:1px solid #1e4a32;border-radius:12px;padding:12px 16px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:#e8f5ee;backdrop-filter:blur(8px);max-width:220px;">
+      <div style="font-weight:800;margin-bottom:10px;color:#7eb89a;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;">ZONA PRIORITAS MBG</div>
       <div style="display:flex;align-items:center;gap:8px;margin:6px 0"><div style="width:12px;height:12px;border-radius:3px;background:#ff4757;flex-shrink:0;opacity:0.85"></div><span>Merah — Prioritas Tinggi (68 kab)</span></div>
       <div style="display:flex;align-items:center;gap:8px;margin:6px 0"><div style="width:12px;height:12px;border-radius:3px;background:#ffa502;flex-shrink:0;opacity:0.8"></div><span>Kuning — Prioritas Sedang (183 kab)</span></div>
-      <div style="display:flex;align-items:center;gap:8px;margin:6px 0"><div style="width:12px;height:12px;border-radius:3px;background:#10b981;flex-shrink:0;opacity:0.7"></div><span>Hijau — Relatif Aman (263 kab)</span></div>
-      <div style="margin-top:8px;padding-top:8px;border-top:1px solid #1a3a60;font-size:9.5px;color:#3a6d99;">Scroll/pinch untuk zoom · Klik untuk detail</div>
+      <div style="display:flex;align-items:center;gap:8px;margin:6px 0"><div style="width:12px;height:12px;border-radius:3px;background:#2ed573;flex-shrink:0;opacity:0.7"></div><span>Hijau — Relatif Aman (263 kab)</span></div>
+      <div style="margin-top:8px;padding-top:8px;border-top:1px solid #1e4a32;font-size:9.5px;color:#4a7a5e;">Scroll/pinch untuk zoom · Klik untuk detail</div>
     </div>`;
     return div;
   };
@@ -4273,13 +4086,13 @@ var dashChartsInit=false;
 function initDashCharts(){
   dashChartsInit=true;
   const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-  const tC = isDark ? '#e0f0ff' : '#1a2a3a';
-  const gC = isDark ? 'rgba(26,58,96,0.4)' : 'rgba(100,140,180,0.2)';
+  const tC = isDark ? '#e8f5ee' : '#0b2115';
+  const gC = isDark ? 'rgba(30,74,50,0.4)' : 'rgba(100,180,130,0.2)';
   const CHART_DEFAULTS={
     font:{family:'Nunito,sans-serif'},
     color:tC,
     grid:gC,
-    borderColor:'rgba(26,58,96,0.6)',
+    borderColor:'rgba(30,74,50,0.6)',
   };
   const commonOptions={
     responsive:true,maintainAspectRatio:true,
@@ -4296,8 +4109,8 @@ function initDashCharts(){
     data:{
       labels:['Zona Merah','Zona Kuning','Zona Hijau'],
       datasets:[
-        {label:'Distribusi Aktual (%)',data:[2.9,24.5,72.6],backgroundColor:['rgba(255,71,87,0.5)','rgba(245,158,11,0.5)','rgba(16,185,129,0.5)'],borderColor:['#ff4757','#ffa502','#10b981'],borderWidth:2,borderRadius:6},
-        {label:'Alokasi Ideal GeoStunting (%)',data:[26.79,39.3,33.91],backgroundColor:['rgba(255,71,87,0.2)','rgba(245,158,11,0.2)','rgba(16,185,129,0.2)'],borderColor:['#ff4757','#ffa502','#10b981'],borderWidth:2,borderRadius:6,borderDash:[6,3]},
+        {label:'Distribusi Aktual (%)',data:[2.9,24.5,72.6],backgroundColor:['rgba(255,71,87,0.5)','rgba(245,158,11,0.5)','rgba(46,213,115,0.5)'],borderColor:['#ff4757','#ffa502','#2ed573'],borderWidth:2,borderRadius:6},
+        {label:'Alokasi Ideal GeoStunting (%)',data:[26.79,39.3,33.91],backgroundColor:['rgba(255,71,87,0.2)','rgba(245,158,11,0.2)','rgba(46,213,115,0.2)'],borderColor:['#ff4757','#ffa502','#2ed573'],borderWidth:2,borderRadius:6,borderDash:[6,3]},
       ]
     },
     options:{...commonOptions,plugins:{...commonOptions.plugins,tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.raw}%`}}}}
@@ -4310,8 +4123,8 @@ function initDashCharts(){
       labels:['Zona Merah (34,5%)','Zona Kuning (26,6%)','Zona Hijau (17,4%)'],
       datasets:[{
         data:[34.5,26.6,17.4],
-        backgroundColor:['rgba(255,71,87,0.7)','rgba(245,158,11,0.7)','rgba(16,185,129,0.7)'],
-        borderColor:['#ff4757','#ffa502','#10b981'],borderWidth:2,
+        backgroundColor:['rgba(255,71,87,0.7)','rgba(245,158,11,0.7)','rgba(46,213,115,0.7)'],
+        borderColor:['#ff4757','#ffa502','#2ed573'],borderWidth:2,
         hoverOffset:8,
       }]
     },
@@ -4493,7 +4306,18 @@ function initSimulasi(){
   if(!simulasiChartsInit){
     simulasiChartsInit=true;
     renderSimulasiTable();
-    initSimulasiCharts();
+    // Defer chart creation so browser has painted the page first
+    // (canvas needs non-zero dimensions before Chart.js renders)
+    setTimeout(function(){
+      initSimulasiCharts();
+      // Force resize after 200ms so labels are sized correctly
+      setTimeout(function(){
+        ['chartGap','chartBulanan'].forEach(function(id){
+          var inst = Chart.getChart(document.getElementById(id));
+          if(inst) inst.resize();
+        });
+      }, 200);
+    }, 60);
   }
 }
 
@@ -4516,8 +4340,8 @@ function renderSimulasiTable(){
 
 function initSimulasiCharts(){
   const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-  const tC = isDark ? '#e0f0ff' : '#1a2a3a';
-  const gC = isDark ? 'rgba(26,58,96,0.4)' : 'rgba(100,140,180,0.2)';
+  const tC = isDark ? '#e8f5ee' : '#0b2115';
+  const gC = isDark ? 'rgba(30,74,50,0.4)' : 'rgba(100,180,130,0.2)';
   const commonOpts={
     responsive:true,maintainAspectRatio:true,
     plugins:{legend:{labels:{color:tC,font:{family:'Nunito,sans-serif',size:11}}}},
@@ -4535,8 +4359,8 @@ function initSimulasiCharts(){
       datasets:[{
         label:'Gap Alokasi (Rp Triliun/Tahun)',
         data:[80.02,49.55,-129.57],
-        backgroundColor:['rgba(255,71,87,0.6)','rgba(245,158,11,0.6)','rgba(16,185,129,0.6)'],
-        borderColor:['#ff4757','#ffa502','#10b981'],borderWidth:2,borderRadius:8,
+        backgroundColor:['rgba(255,71,87,0.6)','rgba(245,158,11,0.6)','rgba(46,213,115,0.6)'],
+        borderColor:['#ff4757','#ffa502','#2ed573'],borderWidth:2,borderRadius:8,
       }]
     },
     options:{...commonOpts,plugins:{...commonOpts.plugins,tooltip:{callbacks:{label:ctx=>`Gap: Rp${ctx.raw.toFixed(1)}T/tahun`}}}}
@@ -4549,8 +4373,8 @@ function initSimulasiCharts(){
       labels:['Zona Merah (Rp7,48T)','Zona Kuning (Rp10,97T)','Zona Hijau (Rp9,47T)'],
       datasets:[{
         data:[7.48,10.97,9.47],
-        backgroundColor:['rgba(255,71,87,0.7)','rgba(245,158,11,0.7)','rgba(16,185,129,0.7)'],
-        borderColor:['#ff4757','#ffa502','#10b981'],borderWidth:2,hoverOffset:10
+        backgroundColor:['rgba(255,71,87,0.7)','rgba(245,158,11,0.7)','rgba(46,213,115,0.7)'],
+        borderColor:['#ff4757','#ffa502','#2ed573'],borderWidth:2,hoverOffset:10
       }]
     },
     options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'bottom',labels:{color:tC,font:{family:'Nunito,sans-serif',size:10},padding:12}}}}
@@ -4564,8 +4388,8 @@ var aboutInit=false;
 function initAboutCharts(){
   aboutInit=true;
   const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-  const tC = isDark ? '#e0f0ff' : '#1a2a3a';
-  const gC = isDark ? 'rgba(26,58,96,0.4)' : 'rgba(100,140,180,0.2)';
+  const tC = isDark ? '#e8f5ee' : '#0b2115';
+  const gC = isDark ? 'rgba(30,74,50,0.4)' : 'rgba(100,180,130,0.2)';
   const opts={
     responsive:true,maintainAspectRatio:true,
     plugins:{legend:{labels:{color:tC,font:{family:'Nunito,sans-serif',size:11}}}},
@@ -4627,10 +4451,10 @@ function initAboutCharts(){
   // CRS weights
   const crsComponents=[
     {label:'Stunting Aktual (30%)',val:30,color:'#ff4757'},
-    {label:'GWR Fitted (20%)',val:20,color:'#3b82f6'},
+    {label:'GWR Fitted (20%)',val:20,color:'#ff6b35'},
     {label:'Klaster LISA (15%)',val:15,color:'#ffa502'},
     {label:'Indeks Deprivasi (15%)',val:15,color:'#fdcb6e'},
-    {label:'Indeks Infrastruktur (10%)',val:10,color:'#06b6d4'},
+    {label:'Indeks Infrastruktur (10%)',val:10,color:'#00cec9'},
     {label:'Rasio PIP (5%)',val:5,color:'#74b9ff'},
     {label:'Rasio Posyandu (5%)',val:5,color:'#a29bfe'},
   ];
@@ -4714,7 +4538,7 @@ window.addEventListener('load', function(){
     // Full circumference = 2π×30 ≈ 188.5
     // Current 19.8% of scale 0-40% — dashoffset
     const circ = 188.5;
-    const maxPct = 40; // treat 40% as full ring
+    const maxPct = 100; // full ring = 100%
     const currentPct = 19.8;
     const offset = circ - (currentPct / maxPct) * circ;
     setTimeout(()=>{ ring.style.strokeDashoffset = offset; }, 500);
@@ -4977,7 +4801,7 @@ function initDampak(){
     const geostunting = [19.8, 18.0, 16.0, 14.5, 13.2, 12.1, 11.0];
     const target2029 = [null, null, null, null, null, 14.2, null];
     const isDarkTraj = document.documentElement.getAttribute('data-theme') !== 'light';
-    const tCTraj = isDarkTraj ? '#e0f0ff' : '#1a2a3a';
+    const tCTraj = isDarkTraj ? '#e8f5ee' : '#1a2a3a';
     const gCTraj = isDarkTraj ? 'rgba(255,255,255,0.05)' : 'rgba(100,140,180,0.15)';
     new Chart(ctxTraj, {
       type: 'line',
@@ -4991,18 +4815,18 @@ function initDampak(){
             backgroundColor: 'rgba(239,68,68,0.06)',
             borderWidth: 2.5,
             pointRadius: 5,
-            pointBackgroundColor: '#ef4444',
+            pointBackgroundColor: '#ff4757',
             tension: 0.4,
             fill: false,
           },
           {
             label: 'Realokasi GeoStunting (estimasi)',
             data: geostunting,
-            borderColor: 'rgba(16,185,129,0.9)',
-            backgroundColor: 'rgba(16,185,129,0.06)',
+            borderColor: 'rgba(46,213,115,0.9)',
+            backgroundColor: 'rgba(46,213,115,0.06)',
             borderWidth: 2.5,
             pointRadius: 5,
-            pointBackgroundColor: '#10b981',
+            pointBackgroundColor: '#2ed573',
             tension: 0.4,
             fill: false,
           },
@@ -5014,7 +4838,7 @@ function initDampak(){
             borderDash: [6,4],
             pointRadius: 8,
             pointStyle: 'star',
-            pointBackgroundColor: '#f59e0b',
+            pointBackgroundColor: '#ffa502',
             fill: false,
           },
         ]
@@ -5093,9 +4917,82 @@ function toggleTheme(){
   var next = isLight ? 'dark' : 'light';
   root.setAttribute('data-theme', next);
   try { localStorage.setItem('geo-theme', next); } catch(e) {}
+  // Update Chart.js global defaults first so rebuilds use correct colors
+  applyChartDefaults();
   setTimeout(function(){
     if(window._leafletMap) window._leafletMap.invalidateSize();
+    // Rebuild charts with correct label colors for new theme
+    rebuildAllCharts();
   }, 300);
+}
+
+// Destroy and recreate all Chart.js instances so label/tick colors update
+function rebuildAllCharts(){
+  // Simulasi charts
+  if(simulasiChartsInit){
+    simulasiChartsInit = false;
+    ['chartGap','chartBulanan'].forEach(function(id){
+      var canvas = document.getElementById(id);
+      if(!canvas) return;
+      var inst = Chart.getChart(canvas);
+      if(inst) inst.destroy();
+    });
+    initSimulasiCharts();
+    simulasiChartsInit = true;
+    setTimeout(function(){
+      ['chartGap','chartBulanan'].forEach(function(id){
+        var inst = Chart.getChart(document.getElementById(id));
+        if(inst) inst.resize();
+      });
+    }, 100);
+  }
+  // About charts
+  if(aboutInit){
+    aboutInit = false;
+    ['chartModelComp','chartFI','chartCRS','chartDashMain','chartScatter'].forEach(function(id){
+      var canvas = document.getElementById(id);
+      if(!canvas) return;
+      var inst = Chart.getChart(canvas);
+      if(inst) inst.destroy();
+    });
+    initAboutCharts();
+    aboutInit = true;
+    setTimeout(function(){
+      ['chartModelComp','chartFI','chartCRS'].forEach(function(id){
+        var inst = Chart.getChart(document.getElementById(id));
+        if(inst) inst.resize();
+      });
+    }, 100);
+  }
+  // Dashboard charts
+  if(dashChartsInit){
+    dashChartsInit = false;
+    ['chartCompare','chartStunting'].forEach(function(id){
+      var canvas = document.getElementById(id);
+      if(!canvas) return;
+      var inst = Chart.getChart(canvas);
+      if(inst) inst.destroy();
+    });
+    initDashCharts();
+    dashChartsInit = true;
+    setTimeout(function(){
+      ['chartCompare','chartStunting'].forEach(function(id){
+        var inst = Chart.getChart(document.getElementById(id));
+        if(inst) inst.resize();
+      });
+    }, 100);
+  }
+  // Dampak trajectory chart
+  if(typeof dampakInit !== 'undefined' && dampakInit){
+    dampakInit = false;
+    var ctxTraj = document.getElementById('chartTrajectory');
+    if(ctxTraj){
+      var inst = Chart.getChart(ctxTraj);
+      if(inst) inst.destroy();
+    }
+    initDampak();
+    dampakInit = true;
+  }
 }
 // Restore saved theme
 try {
@@ -5162,10 +5059,13 @@ function animateCounter(el, target, suffix, decimals, duration){
 
 // ═══════════════════════════════════════════════════════════
 // INTERSECTION OBSERVER — fade-in for major sections
+// NOTE: .chart-card intentionally EXCLUDED — charts must be
+// visible immediately so Chart.js can size/render correctly.
+// Chart-cards get their own per-navigate fade handled below.
 // ═══════════════════════════════════════════════════════════
 (function(){
   const targets = document.querySelectorAll(
-    '.card,.zona-big-card,.chart-card,.problem-section,.how-step,.zone-expl-card,.darurat-kab-card,.impact-card,.before-after-row,.crisis-stat-item,.prov-bar-row'
+    '.card,.zona-big-card,.problem-section,.how-step,.zone-expl-card,.darurat-kab-card,.impact-card,.before-after-row,.crisis-stat-item,.prov-bar-row'
   );
   if(!('IntersectionObserver' in window)) return;
   const io = new IntersectionObserver(entries => {
@@ -5177,8 +5077,14 @@ function animateCounter(el, target, suffix, decimals, duration){
     });
   }, {threshold: 0.08});
   targets.forEach(t => {
-    t.style.opacity = '0';
-    io.observe(t);
+    // Only hide elements that are currently visible (active page)
+    const page = t.closest('.page');
+    if(page && page.classList.contains('active')){
+      t.style.opacity = '0';
+      io.observe(t);
+    }
+    // Elements on hidden pages start at opacity 1 and get observed
+    // when navigate() makes their page active
   });
 })();
 
@@ -5190,7 +5096,7 @@ function animateCounter(el, target, suffix, decimals, duration){
 // KEYBOARD SHORTCUT NAVIGATION
 // ═══════════════════════════════════════════════════════════
 (function(){
-  const pages = ['beranda','dashboard','data','simulasi','dampak','about'];
+  const pages = ['beranda','dashboard','data','simulasi','about'];
   document.addEventListener('keydown', function(e){
     if(e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
     const key = e.key;
@@ -5266,8 +5172,33 @@ function animateAboutArcs(){
   });
 }
 
-/* ── SIMULASI: animate bars on enter ── */
+/* ── SIMULASI: animate bars and cards on enter ── */
 function animateSimulasiEntry(){
+  // Stagger zone/budget cols
+  document.querySelectorAll('#page-simulasi .budget-col').forEach(function(b,i){
+    b.style.opacity='0';b.style.transform='translateY(18px)';
+    setTimeout(function(){
+      b.style.transition='opacity .4s ease,transform .4s cubic-bezier(0.34,1.56,0.64,1)';
+      b.style.opacity='1';b.style.transform='translateY(0)';
+    }, i*100+60);
+  });
+  // Stagger chart-cards
+  document.querySelectorAll('#page-simulasi .chart-card').forEach(function(c,i){
+    c.style.opacity='0';c.style.transform='scale(0.96) translateY(12px)';
+    setTimeout(function(){
+      c.style.transition='opacity .45s ease,transform .45s cubic-bezier(0.34,1.56,0.64,1)';
+      c.style.opacity='1';c.style.transform='scale(1) translateY(0)';
+    }, i*120+200);
+  });
+  // Stagger table
+  var tw = document.querySelector('#page-simulasi .table-wrap');
+  if(tw){
+    tw.style.opacity='0';tw.style.transform='translateY(10px)';
+    setTimeout(function(){
+      tw.style.transition='opacity .4s ease,transform .4s ease';
+      tw.style.opacity='1';tw.style.transform='translateY(0)';
+    }, 350);
+  }
   // pulse all realloc bars
   document.querySelectorAll('.realloc-bar-fill').forEach(function(b,i){
     var w = b.style.width;
@@ -5331,11 +5262,31 @@ window.navigate = function(page){
     });
   }
   _origNavigate(page);
+
+  // ── Ensure chart-cards are always visible on the new page ──
+  // (IntersectionObserver excludes them to avoid sizing bugs on hidden pages)
+  setTimeout(function(){
+    document.querySelectorAll('#page-'+page+' .chart-card').forEach(function(el){
+      el.style.opacity = '1';
+      el.style.animation = 'page-in 0.35s ease forwards';
+    });
+    // Force resize ALL charts on this page so labels/axes render correctly
+    // when page was previously hidden (display:none → block paint delay)
+    document.querySelectorAll('#page-'+page+' canvas').forEach(function(canvas){
+      var inst = window.Chart && Chart.getChart(canvas);
+      if(inst) inst.resize();
+    });
+  }, 80);
+
   if(page==='dashboard') setTimeout(animateDashboardEntry, 60);
   if(page==='about')     setTimeout(animateAboutArcs, 80);
   if(page==='simulasi')  setTimeout(animateSimulasiEntry, 150);
-  if(page==='dampak')    setTimeout(animateDampakEntry, 60);
   if(page==='data')      setTimeout(animateDataRows, 320);
+  if(page==='dampak')    { if(typeof initDampak==='function') initDampak(); setTimeout(animateDampakEntry, 200); }
+
+  // Scroll to top of content on page change
+  var content = document.querySelector('.content');
+  if(content) content.scrollTop = 0;
 };
 
 
@@ -5402,9 +5353,9 @@ function sprayCard(el, defs){
   container.innerHTML = '';
   var types = [
     {shape:'border-radius:60% 40% 55% 45%/50% 55% 45% 50%;', color:'rgba(255,225,70,0.25)',  glow:'rgba(255,200,0,0.12)'},
-    {shape:'border-radius:50% 50% 50% 50%/30% 30% 70% 70%;', color:'rgba(6,182,212,0.22)',  glow:'rgba(6,182,212,0.12)'},
-    {shape:'border-radius:50% 40% 60% 40%/45% 50% 50% 55%;', color:'rgba(16,185,129,0.2)', glow:'rgba(5,210,120,0.1)'},
-    {shape:'border-radius:50%;',                               color:'rgba(59,130,246,0.18)', glow:'rgba(59,130,246,0.08)'},
+    {shape:'border-radius:50% 50% 50% 50%/30% 30% 70% 70%;', color:'rgba(0,206,201,0.22)',  glow:'rgba(0,206,201,0.12)'},
+    {shape:'border-radius:50% 40% 60% 40%/45% 50% 50% 55%;', color:'rgba(46,213,115,0.2)', glow:'rgba(5,210,120,0.1)'},
+    {shape:'border-radius:50%;',                               color:'rgba(255,107,53,0.18)', glow:'rgba(255,107,53,0.08)'},
   ];
   for(var i=0;i<5;i++){
     var t   = types[Math.floor(Math.random()*types.length)];
